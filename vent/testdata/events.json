@@ -1,0 +1,236 @@
+{
+  "metadata": {
+    "selfLink": "/api/v1/namespaces/default/events",
+    "resourceVersion": "264253"
+  },
+  "items": [
+    {
+      "metadata": {
+        "name": "172.17.4.99.14867025cd6b56cd",
+        "namespace": "default",
+        "selfLink": "/api/v1/namespaces/default/events/172.17.4.99.14867025cd6b56cd",
+        "uid": "a23a8c96-a92e-11e6-a13d-080027fcc6b0",
+        "resourceVersion": "263367",
+        "creationTimestamp": "2016-11-12T23:20:43Z"
+      },
+      "involvedObject": {
+        "kind": "Node",
+        "name": "172.17.4.99",
+        "uid": "172.17.4.99"
+      },
+      "reason": "Starting",
+      "message": "Starting kubelet.",
+      "source": {
+        "component": "kubelet",
+        "host": "172.17.4.99"
+      },
+      "firstTimestamp": "2016-11-12T23:20:35Z",
+      "lastTimestamp": "2016-11-12T23:20:35Z",
+      "count": 1,
+      "type": "Normal"
+    },
+    {
+      "metadata": {
+        "name": "172.17.4.99.14867025cf7f1080",
+        "namespace": "default",
+        "selfLink": "/api/v1/namespaces/default/events/172.17.4.99.14867025cf7f1080",
+        "uid": "a23b988c-a92e-11e6-a13d-080027fcc6b0",
+        "resourceVersion": "263540",
+        "creationTimestamp": "2016-11-12T23:20:43Z"
+      },
+      "involvedObject": {
+        "kind": "Node",
+        "name": "172.17.4.99",
+        "uid": "172.17.4.99"
+      },
+      "reason": "NodeHasSufficientDisk",
+      "message": "Node 172.17.4.99 status is now: NodeHasSufficientDisk",
+      "source": {
+        "component": "kubelet",
+        "host": "172.17.4.99"
+      },
+      "firstTimestamp": "2016-11-12T23:20:35Z",
+      "lastTimestamp": "2016-11-12T23:20:48Z",
+      "count": 23,
+      "type": "Normal"
+    },
+    {
+      "metadata": {
+        "name": "172.17.4.99.14867025cf7f10cd",
+        "namespace": "default",
+        "selfLink": "/api/v1/namespaces/default/events/172.17.4.99.14867025cf7f10cd",
+        "uid": "a23bbefd-a92e-11e6-a13d-080027fcc6b0",
+        "resourceVersion": "263542",
+        "creationTimestamp": "2016-11-12T23:20:43Z"
+      },
+      "involvedObject": {
+        "kind": "Node",
+        "name": "172.17.4.99",
+        "uid": "172.17.4.99"
+      },
+      "reason": "NodeHasSufficientMemory",
+      "message": "Node 172.17.4.99 status is now: NodeHasSufficientMemory",
+      "source": {
+        "component": "kubelet",
+        "host": "172.17.4.99"
+      },
+      "firstTimestamp": "2016-11-12T23:20:35Z",
+      "lastTimestamp": "2016-11-12T23:20:48Z",
+      "count": 23,
+      "type": "Normal"
+    },
+    {
+      "metadata": {
+        "name": "172.17.4.99.14867025cf7f111a",
+        "namespace": "default",
+        "selfLink": "/api/v1/namespaces/default/events/172.17.4.99.14867025cf7f111a",
+        "uid": "a23cf135-a92e-11e6-a13d-080027fcc6b0",
+        "resourceVersion": "263539",
+        "creationTimestamp": "2016-11-12T23:20:43Z"
+      },
+      "involvedObject": {
+        "kind": "Node",
+        "name": "172.17.4.99",
+        "uid": "172.17.4.99"
+      },
+      "reason": "NodeHasNoDiskPressure",
+      "message": "Node 172.17.4.99 status is now: NodeHasNoDiskPressure",
+      "source": {
+        "component": "kubelet",
+        "host": "172.17.4.99"
+      },
+      "firstTimestamp": "2016-11-12T23:20:35Z",
+      "lastTimestamp": "2016-11-12T23:20:48Z",
+      "count": 23,
+      "type": "Normal"
+    },
+    {
+      "metadata": {
+        "name": "172.17.4.99.148670284537559c",
+        "namespace": "default",
+        "selfLink": "/api/v1/namespaces/default/events/172.17.4.99.148670284537559c",
+        "uid": "a38eb70a-a92e-11e6-a13d-080027fcc6b0",
+        "resourceVersion": "263393",
+        "creationTimestamp": "2016-11-12T23:20:45Z"
+      },
+      "involvedObject": {
+        "kind": "Node",
+        "name": "172.17.4.99",
+        "uid": "75cadab6-9c93-11e6-9c6c-080027fcc6b0"
+      },
+      "reason": "RegisteredNode",
+      "message": "Node 172.17.4.99 event: Registered Node 172.17.4.99 in NodeController",
+      "source": {
+        "component": "controllermanager"
+      },
+      "firstTimestamp": "2016-11-12T23:20:45Z",
+      "lastTimestamp": "2016-11-12T23:20:45Z",
+      "count": 1,
+      "type": "Normal"
+    },
+    {
+      "metadata": {
+        "name": "172.17.4.99.148670291aff8f58",
+        "namespace": "default",
+        "selfLink": "/api/v1/namespaces/default/events/172.17.4.99.148670291aff8f58",
+        "uid": "acf6e721-a92e-11e6-a13d-080027fcc6b0",
+        "resourceVersion": "263543",
+        "creationTimestamp": "2016-11-12T23:21:01Z"
+      },
+      "involvedObject": {
+        "kind": "Node",
+        "name": "172.17.4.99",
+        "uid": "172.17.4.99"
+      },
+      "reason": "Rebooted",
+      "message": "Node 172.17.4.99 has been rebooted, boot id: bd71cd50-898c-4e9f-9705-354374939d6f",
+      "source": {
+        "component": "kubelet",
+        "host": "172.17.4.99"
+      },
+      "firstTimestamp": "2016-11-12T23:20:49Z",
+      "lastTimestamp": "2016-11-12T23:20:49Z",
+      "count": 1,
+      "type": "Warning"
+    },
+    {
+      "metadata": {
+        "name": "localhost.148670276ca06dd2",
+        "namespace": "default",
+        "selfLink": "/api/v1/namespaces/default/events/localhost.148670276ca06dd2",
+        "uid": "a727c71e-a92e-11e6-a13d-080027fcc6b0",
+        "resourceVersion": "263475",
+        "creationTimestamp": "2016-11-12T23:20:51Z"
+      },
+      "involvedObject": {
+        "kind": "Node",
+        "name": "localhost",
+        "uid": "localhost"
+      },
+      "reason": "Starting",
+      "message": "Starting kube-proxy.",
+      "source": {
+        "component": "kube-proxy",
+        "host": "localhost"
+      },
+      "firstTimestamp": "2016-11-12T23:20:42Z",
+      "lastTimestamp": "2016-11-12T23:20:42Z",
+      "count": 1,
+      "type": "Normal"
+    },
+    {
+      "metadata": {
+        "name": "sleeper-911973398.14867029a1c55c8a",
+        "namespace": "default",
+        "selfLink": "/api/v1/namespaces/default/events/sleeper-911973398.14867029a1c55c8a",
+        "uid": "a70c3ba4-a92e-11e6-a13d-080027fcc6b0",
+        "resourceVersion": "263465",
+        "creationTimestamp": "2016-11-12T23:20:51Z"
+      },
+      "involvedObject": {
+        "kind": "ReplicaSet",
+        "namespace": "default",
+        "name": "sleeper-911973398",
+        "uid": "a7082173-a92e-11e6-a13d-080027fcc6b0",
+        "apiVersion": "extensions",
+        "resourceVersion": "263459"
+      },
+      "reason": "SuccessfulCreate",
+      "message": "Created pod: sleeper-911973398-izxe5",
+      "source": {
+        "component": "replicaset-controller"
+      },
+      "firstTimestamp": "2016-11-12T23:20:51Z",
+      "lastTimestamp": "2016-11-12T23:20:51Z",
+      "count": 1,
+      "type": "Normal"
+    },
+    {
+      "metadata": {
+        "name": "sleeper.14867029a0d82b4c",
+        "namespace": "default",
+        "selfLink": "/api/v1/namespaces/default/events/sleeper.14867029a0d82b4c",
+        "uid": "a708be14-a92e-11e6-a13d-080027fcc6b0",
+        "resourceVersion": "263460",
+        "creationTimestamp": "2016-11-12T23:20:51Z"
+      },
+      "involvedObject": {
+        "kind": "Deployment",
+        "namespace": "default",
+        "name": "sleeper",
+        "uid": "a707749c-a92e-11e6-a13d-080027fcc6b0",
+        "apiVersion": "extensions",
+        "resourceVersion": "263458"
+      },
+      "reason": "ScalingReplicaSet",
+      "message": "Scaled up replica set sleeper-911973398 to 1",
+      "source": {
+        "component": "deployment-controller"
+      },
+      "firstTimestamp": "2016-11-12T23:20:51Z",
+      "lastTimestamp": "2016-11-12T23:20:51Z",
+      "count": 1,
+      "type": "Normal"
+    }
+  ]
+}
