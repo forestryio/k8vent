@@ -6,7 +6,7 @@ Send kuberenetes events to a webhook.
 
 You can install using the normal Go method.
 
-    $ go get github.com/atomisthq/k8vent
+    $ go get github.com/atomist/k8vent
 
 If `$GO_HOME/bin` is in your `PATH`, then the `k8vent` binary will be
 in your path when the above command completes successfully.

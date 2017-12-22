@@ -313,7 +313,7 @@ function info-json() {
 {
   "app": {
     "version": "$app_version",
-    "group_id": "github.com/atomisthq",
+    "group_id": "github.com/atomist",
     "artifact_id": "$BuildTarget"
   },
   "git": {

@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/atomisthq/k8vent/vent"
+	"github.com/atomist/k8vent/vent"
 	"github.com/spf13/cobra"
 )
 
