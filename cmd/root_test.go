@@ -1,4 +1,4 @@
-// Copyright © 2017 Atomist
+// Copyright © 2018 Atomist
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ func TestEnv(t *testing.T) {
 		t.Errorf("failed to set environment variable %s: %v", webhookEnv, err)
 	}
 	initConfig()
-	if !reflect.DeepEqual(webhookURLs, []string{defaultWebhookURL}) {
+	if !reflect.DeepEqual(webhookURLs, []string{}) {
 		t.Errorf("empty value for %s did not result in default webhook: %v", webhookEnv, webhookURLs)
 	}
 

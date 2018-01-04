@@ -14,10 +14,6 @@ RUN curl -s -L -O https://github.com/Yelp/dumb-init/releases/download/v$DUMB_INI
     && dpkg -i dumb-init_${DUMB_INIT_VERSION}_amd64.deb \
     && rm -f dumb-init_${DUMB_INIT_VERSION}_amd64.deb
 
-COPY ./info.json ./
-
 COPY ./k8vent ./
 
 ENTRYPOINT ["dumb-init", "./k8vent"]
-
-CMD ["run"]

@@ -1,4 +1,4 @@
-// Copyright © 2017 Atomist
+// Copyright © 2018 Atomist
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package vent
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/signal"
@@ -23,7 +24,7 @@ import (
 	"time"
 
 	"k8s.io/api/core/v1"
-	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/apimachinery/pkg/util/wait"
@@ -46,6 +47,7 @@ type Controller struct {
 	queue     workqueue.RateLimitingInterface
 	informer  cache.SharedIndexInformer
 	urls      []string
+	env       map[string]string
 }
 
 // Vent sets up and starts the listener for pod events, which posts
@@ -82,11 +84,11 @@ func newController(client kubernetes.Interface, urls []string) *Controller {
 
 	informer := cache.NewSharedIndexInformer(
 		&cache.ListWatch{
-			ListFunc: func(options meta_v1.ListOptions) (runtime.Object, error) {
-				return client.CoreV1().Pods(meta_v1.NamespaceAll).List(options)
+			ListFunc: func(options metav1.ListOptions) (runtime.Object, error) {
+				return client.CoreV1().Pods(metav1.NamespaceAll).List(options)
 			},
-			WatchFunc: func(options meta_v1.ListOptions) (watch.Interface, error) {
-				return client.CoreV1().Pods(meta_v1.NamespaceAll).Watch(options)
+			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
+				return client.CoreV1().Pods(metav1.NamespaceAll).Watch(options)
 			},
 		},
 		&v1.Pod{},
@@ -115,12 +117,19 @@ func newController(client kubernetes.Interface, urls []string) *Controller {
 		},
 	})
 
+	env := map[string]string{}
+	for _, envVar := range os.Environ() {
+		keyVal := strings.SplitN(envVar, "=", 2)
+		env[keyVal[0]] = keyVal[1]
+	}
+
 	return &Controller{
 		logger:    logrus.WithField("pkg", "k8vent-pod"),
 		clientset: client,
 		informer:  informer,
 		queue:     queue,
 		urls:      urls,
+		env:       env,
 	}
 }
 
@@ -183,29 +192,47 @@ func (c *Controller) processNextItem() bool {
 	return true
 }
 
+// K8PodEnv is the structure serialized and sent to the webhook
+// endpoints.
+type K8PodEnv struct {
+	Pod v1.Pod            `json:"pod"`
+	Env map[string]string `json:"env"`
+}
+
 func (c *Controller) processItem(key string) error {
 	c.logger.Infof("Processing change to Pod %s", key)
 
-	obj, _, err := c.informer.GetIndexer().GetByKey(key)
+	obj, exists, err := c.informer.GetIndexer().GetByKey(key)
 	if err != nil {
 		return fmt.Errorf("Error fetching object with key %s from store: %v", key, err)
 	}
-
-	if obj != nil {
-		PostToWebhooks(c.urls, obj)
+	pod := v1.Pod{}
+	if exists {
+		objJSON, jsonErr := json.Marshal(obj)
+		if jsonErr != nil {
+			return fmt.Errorf("failed to marshal object to JSON:%v", jsonErr)
+		}
+		if err := json.Unmarshal(objJSON, &pod); err != nil {
+			return fmt.Errorf("failed to unmarshal object as Pod: %v", err)
+		}
 	} else {
 		splitName := strings.SplitN(key, "/", 2)
-		fake := map[string]interface{}{
-			"metadata": map[string]string{
-				"name":      splitName[1],
-				"namespace": splitName[0],
+		pod = v1.Pod{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      splitName[1],
+				Namespace: splitName[0],
 			},
-			"status": map[string]string{
-				"phase": "Deleted",
+			Status: v1.PodStatus{
+				Phase: "Deleted",
 			},
 		}
-		PostToWebhooks(c.urls, fake)
 	}
+
+	postIt := K8PodEnv{
+		Pod: pod,
+		Env: c.env,
+	}
+	PostToWebhooks(c.urls, postIt)
 
 	return nil
 }

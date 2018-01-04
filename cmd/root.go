@@ -1,4 +1,4 @@
-// Copyright © 2017 Atomist
+// Copyright © 2018 Atomist
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,19 +21,38 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/atomist/k8vent/vent"
 )
 
 var cfgFile string
 
+var (
+	webhookURLs = []string{}
+)
+
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "k8vent",
-	Short: "Watch for k8 events and post them to a webhook",
-	Long: `Use the internal k8 client to periodically poll the event
-endpoint and send new events as JSON to a webhook for consumption.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Short: "Send kubernetes pod state changes to webhook",
+	Long: `Watch for kubernetes pod state changes and post them to
+the configured webhooks.  You can provide the --url parameter multiple
+times to send to multiple webhooks.
+
+  $ k8vent --url=http://one.com/webhook --url=http://two.com/webhook
+
+Alternatively, you can supply a comma-delimited list of webhook URLs in
+the K8VENT_WEBHOOKS environment variable.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(webhookURLs) < 1 {
+			fmt.Fprintln(os.Stderr, "k8vent: no webhook URLs provided")
+			os.Exit(2)
+		}
+		if err := vent.Vent(webhookURLs); err != nil {
+			fmt.Fprintf(os.Stderr, "k8vent: venting failed: %v\n", err)
+			os.Exit(1)
+		}
+	},
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
@@ -56,6 +75,7 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	//RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	RootCmd.PersistentFlags().StringSliceVarP(&webhookURLs, "url", "u", []string{}, "Send event to URL")
 }
 
 const webhookEnv = "K8VENT_WEBHOOKS"

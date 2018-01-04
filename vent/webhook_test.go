@@ -1,4 +1,4 @@
-// Copyright © 2017 Atomist
+// Copyright © 2018 Atomist
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,23 +18,20 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"sync"
 	"testing"
-
-	"github.com/satori/go.uuid"
-	"k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestPostToWebhooks(t *testing.T) {
-	objFile := "testdata/pods.json"
+	objFile := "testdata/vent.json"
 	objBytes, readErr := ioutil.ReadFile(objFile)
 	if readErr != nil {
 		t.Errorf("failed to open event JSON file %s: %v", objFile, readErr)
 	}
 
-	objects := []v1.Pod{}
+	objects := []K8PodEnv{}
 	if err := json.Unmarshal(objBytes, &objects); err != nil {
 		t.Errorf("failed to unmarshal objects JSON into []interface{}: %v", err)
 	}
@@ -105,15 +102,12 @@ func extracObjectKey(obj interface{}) string {
 	objJSON, jsonErr := json.Marshal(obj)
 	if jsonErr != nil {
 		fmt.Printf("failed to marshal object to JSON:%v\n", jsonErr)
-		return "non/pod:" + uuid.NewV4().String()
+		return fmt.Sprintf("non/pod:%d", rand.Int63())
 	}
-	type K8Object struct {
-		metav1.ObjectMeta `json:"metadata"`
+	k8pe := K8PodEnv{}
+	if err := json.Unmarshal(objJSON, &k8pe); err != nil {
+		fmt.Printf("failed to unmarshal object to K8PodEnv:%v\n", err)
+		return fmt.Sprintf("non/K8PodEnv:%d", rand.Int63())
 	}
-	pod := K8Object{}
-	if err := json.Unmarshal(objJSON, &pod); err != nil {
-		fmt.Printf("failed to unmarshal object to Pod:%v\n", err)
-		return "non/pod:" + uuid.NewV4().String()
-	}
-	return pod.ObjectMeta.Namespace + "/" + pod.ObjectMeta.Name + ":" + pod.ObjectMeta.ResourceVersion
+	return k8pe.Pod.ObjectMeta.Namespace + "/" + k8pe.Pod.ObjectMeta.Name + ":" + k8pe.Pod.ObjectMeta.ResourceVersion
 }
