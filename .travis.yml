@@ -1,0 +1,27 @@
+dist: trusty
+sudo: false
+services:
+- docker
+language: go
+go:
+- 1.9
+branches:
+  except:
+  - "/^\\d+\\.\\d+\\.\\d+-.*\\d+$/"
+  - "/\\+travis\\.[0-9]+$/"
+env:
+  global:
+  - secure: rjLSIQW07Z8wRK5HVQndgzreaimEB4lp+Nra7gCdvUkMcZGrNrnGYCBzsSCuC4C+YY9YsDWNtmSjCvy4k3NRf7qfdtnH7kKtwXr1d8wZNiIISW29td1O3hZnXTrsVnW+IYvlq3Ddkgs+FbgEuCQEiPiavpM+ucq6uiO2MKmoAARMPO//sik2JTmPOEQFFBBF+p7p5G3PICTl1Wy1eRKvgxLMEx4Et8nnqlYAeOys+66QtBMaX/50Wn7N5ALYCu3u2k3vuZdyvu91cNjvEpJyWq6gLfC8p/7D+YpjWYZW7BY9IbXDQU8RNNnD9y0chHTB1kvwo5HBGKgNC9ETqSJnMWpBwa8DnLSM2kINI9Ygo6rJyhbxdYBU60NyXPgb4FRY+m/GeqE2esz0C9bNvKCaxKV44t1UEDwYfOJH/V/cC3oxGqd3V3Pg4IorKftfgDMLFaEp8LmAIkcnOjKt0G5f3x/uHw9QH9SNXPemRFOyqBRUR7Ckicuokm5zuNUUGN6FfW9CZ8oWJVKuxtJy5zgbOZi7/oUNfFzHUDhqrGz25RLUQ6GPCWNKFGzu9pwt6WXcLEOUhZoIdjOV0wTq03tDOiCx27IFEMJrLhay4DA5NtkTQTxiEANBZEyIxneaKEXPsaaWUtawZVDtodIa7xbBw9Ct6t3PgoX0ZJGi9oMF8c4=
+  - DOCKER_USER=atomist
+  - secure: tG/0IdPDabJBU/6t+6ZadhubE7RN4vEdoaLuw0XcuE2CdrXkLK0LF9DdruoDihBDetnEFb4JOFR1a0eHVlNvRu9JvyajvVTkLNokKyzUii1F/lLh+f0LeNwMiMYAfsRMUJEaxwJ3EYh+rbgNsLt15JjAHuyH70d9E/cbVp+6+K+1CNPfYrKprUDBCrsDJph9HC4VOxF7ONBDeESEipbLnTixTJagY10H/8+YgEwgStuDzCin1PEb37njoQOf4FUXgd4YsWCaDHw1HEW4A9MlyPIXghcIQw7dTqAypw1RXDAVSRWwukaBOiOApXoCODNfIAw/aTSYN+I7QM0gpxwf/Oz91VFvOFi1Y+svrHu+NCVe9b5DTecZkPNhf/RXQ/Ma7OfgI1rxjBuwHsx9c7Y3rSliE5+wkfka3AB+3E0SIQ9Djcfv0UCjEBTjm0TT9npf3Zp8oFkVqA/o2sHvDmwREk7uXVoV+ScxrBgc3stG9vdX7qGKAJnyFcddzuHMiitbl0jlPnGEz/7SGiz5wziXrU+NsJwvhxk1i3HTbgO4GODz/GoYWEQ9qFdEqVPsMmiXjtXX4/OvAOrP+w9rC5/Qb4gx1YMkLaKXLEeNODmM8YvN4hiCixNhFBVoRAayZaEd1Ib0pJOq9Wxu7p9QylD3GSSNWejpfP5B6FeNu0oGm0U=
+script: bash travis-build.bash
+notifications:
+  email: false
+  webhooks:
+    urls:
+    - https://webhook.atomist.com/atomist/travis/teams/T29E48P34
+    on_success: always
+    on_failure: always
+    on_start: always
+    on_cancel: always
+    on_error: always
