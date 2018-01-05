@@ -1,5 +1,7 @@
 # k8vent
 
+[![Build Status](https://travis-ci.org/atomist/k8vent.svg?branch=master)](https://travis-ci.org/atomist/k8vent)
+
 Send kubernetes pods as JSON to webhook endpoints.  k8vent is
 typically run from its Docker image in a kubernetes cluster to send
 pod state changes to the Atomist kubernetes webhook endpoint for your
