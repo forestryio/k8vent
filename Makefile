@@ -22,7 +22,10 @@ build: generate
 test: build
 	$(GO) test $(GO_FLAGS) $(GO_ARGS)
 
-vet: test
+install: test
+	$(GO) install $(GO_FLAGS) $(GO_ARGS)
+
+vet: install
 	$(GO) vet $(GO_FLAGS) $(GO_ARGS)
 
 $(DOCKER_TARGET): clean-local
