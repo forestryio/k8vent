@@ -13,14 +13,13 @@ You can use [k8vent-deployment.json][k8vent-deployment] as a starting
 point for running k8vent in your kubernetes cluster.  Be sure to
 update the value of the `K8VENT_WEBHOOKS` environment variable,
 replacing the last element of the URL with the ID of your Slack team.
-Slack team IDs start with a `T` and are nine characters long,
-consisting of digits and capital letters.  You can get your team ID
-from https://app.atomist.com/teams or by sending `team` as a message
-to the Atomist bot, e.g., `@atomist team`, in Slack.
+You can get your team ID from https://app.atomist.com/teams or by
+sending `team` as a message to the Atomist bot, e.g., `@atomist team`,
+in Slack.
 
 You can optionally change the value of the
 `ATOMIST_ENVIRONMENT` environment variable to a meaningful name for
-your kubernetes cluster, e.g., "prod" or "staging".
+your kubernetes cluster, e.g., "production" or "staging".
 
 Once you have made the changes, you can create the k8vent deployment
 as you normally would.
@@ -40,9 +39,56 @@ replacing `M.N.P` with the [latest version of k8vent][latest].
 [jq]: https://stedolan.github.io/jq/ (jq)
 [latest]: https://github.com/atomist/k8vent/releases/latest (k8vent Current Release)
 
+## Linking to Atomist lifecycle events
+
+To get Kubernetes pod events to display as part of the normal Git
+activity messages you see from Atomist in Slack channels or the
+Atomist dashboard event stream, you must tell Atomist what Docker
+images are connected with what commits.  The link between a commit and
+a Docker image is created by POSTing data to the Atomist webhook
+endpoint
+`https://webhook.atomist.com/atomist/link-image/teams/TEAM_ID`, where
+`TEAM_ID` should be replaced with the same team ID used in the
+`K8VENT_WEBHOOKS` environment variable above.  The POST data should be
+JSON of the form:
+
+```
+{
+  "git": {
+    "owner": "REPO_OWNER",
+    "repo": "REPO_NAME",
+    "sha": "COMMIT_SHA"
+  },
+  "docker": {
+    "image":"DOCKER_IMAGE_TAG"
+  },
+  "type":"link-image"
+}
+```
+
+where `REPO_OWNER` is the repository owner, i.e., the user or
+organization, `REPO_NAME` is the name of the repository, `COMMIT_SHA`
+is the full SHA of the commit from which the Docker image was created,
+and `DOCKER_IMAGE_TAG` is the full tag for the Docker image, i.e.,
+OWNER/IMAGE:VERSION for Docker Hub images or
+REGISTRY/OWNER/IMAGE:VERSION for images in other Docker registries.
+
+If you have a shell script executing your CI build that creates your
+Docker image, you can add the following command after the Docker image
+has been pushed to the registry.
+
+```
+curl -s -f -X POST -H "Content-Type: application/json" \
+    --data-binary '{"git":{...},"docker":{...},"type":"link-image"}' \
+    https://webhook.atomist.com/atomist/link-image/teams/TEAM_ID
+```
+
+replacing the ellipses with the appropriate JSON and `TEAM_ID` with
+the appropriate team ID.
+
 ## Webhook payload
 
-k8vent subscribes to all pods via the kubernetes watch API.  When a
+k8vent subscribes to _all_ pods via the kubernetes watch API.  When a
 pod changes, e.g., it is created, deleted or otherwise changes state,
 the current pod structure and the environment of the `k8vent` pod is
 serialized as JSON and sent to the configured webhook endpoints.  The

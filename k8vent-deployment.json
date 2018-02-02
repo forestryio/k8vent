@@ -28,7 +28,7 @@
         "containers": [
           {
             "name": "k8vent",
-            "image": "atomist/k8vent:0.4.0",
+            "image": "atomist/k8vent:0.1.0",
             "env": [
               {
                 "name": "ATOMIST_ENVIRONMENT",
