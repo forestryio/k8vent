@@ -21,7 +21,7 @@
           "version": "0"
         },
         "annotations": {
-          "atomist.com/repo-image": "{\"repo\":\"atomist/k8vent\",\"image\":\"atomist/k8vent\"}"
+          "atomist.com/repo-image": "{\"repo\":{\"owner\":\"atomist\",\"name\":\"k8vent\"},\"image\":\"atomist/k8vent\"}"
         }
       },
       "spec": {
