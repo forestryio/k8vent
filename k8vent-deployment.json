@@ -3,12 +3,14 @@
   "kind": "Deployment",
   "metadata": {
     "name": "k8vent",
+    "namespace": "default",
     "labels": {
       "app": "k8vent"
     }
   },
   "spec": {
     "replicas": 1,
+    "revisionHistoryLimit": 3,
     "selector": {
       "matchLabels": {
         "app": "k8vent"
