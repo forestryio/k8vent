@@ -17,27 +17,67 @@ You can get your team ID from https://app.atomist.com/teams or by
 sending `team` as a message to the Atomist bot, e.g., `@atomist team`,
 in Slack.
 
-You can optionally change the value of the
-`ATOMIST_ENVIRONMENT` environment variable to a meaningful name for
-your kubernetes cluster, e.g., "production" or "staging".
+You can optionally change the value of the `ATOMIST_ENVIRONMENT`
+environment variable to a meaningful name for your kubernetes cluster,
+e.g., "production", "staging", or "testing".
 
 Once you have made the changes, you can create the k8vent deployment
 as you normally would.
 
+```console
     $ kubectl create -f k8vent-deployment.json
+```
 
 If you have [jq][] installed, you can update to a new version of
 k8vent with the following command
 
+```console
     $ kubectl get deployment k8vent -o json \
         | jq ".spec.template.spec.containers[0].image=\"atomist/k8vent:M.N.P\"" \
         | kubectl replace -f -
+```
 
 replacing `M.N.P` with the [latest version of k8vent][latest].
 
 [k8vent-deployment]: k8vent-deployment.json (k8vent Kubernetes Deployment Spec)
 [jq]: https://stedolan.github.io/jq/ (jq)
 [latest]: https://github.com/atomist/k8vent/releases/latest (k8vent Current Release)
+
+## Webhook URLs
+
+When running k8vent, webhook URLs can be specified in several ways:
+
+-   Pod-specific webhook URLs in the pod's metadata annotations.  Use
+    "atomist.com/k8vent" as the annotation key and the value should be
+    a properly escaped JSON object with the key "webhooks" whose value
+    is an array of webhook URLs.  For example:
+
+        "metadata": {
+          "labels": {
+            "app": "my-app",
+          },
+          "annotations": {
+            "atomist.com/k8vent": "{\"webhooks\":[\"https://webhook.atomist.com/atomist/kube/teams/TEAM_ID\"]}"
+          }
+        },
+
+-   The `--url` command-line option, which can be specified
+    multiple times.
+
+        $ k8vent --url=https://webhook.atomist.com/atomist/kube/teams/TEAM_ID \
+            --url=https://second.com/webhook
+
+-   A comma-delimited list as the value of the `K8VENT_WEBHOOKS`
+    environment variable.
+
+        $ K8VENT_WEBHOOKS=https://webhook.atomist.com/atomist/kube/teams/TEAM_ID,https://second.com/webhook k8vent
+
+If webhooks are provided in the pod spec, they override any provided
+on the command line or by the environment.  If webhooks are set using
+the `--url` command-line option, they override any set by the
+`K8VENT_WEBHOOKS` environment variable.  In other words, webhooks
+provided by the different methods are not additive.  If no webhook
+URLs are provided, `k8vent` exits with an error.
 
 ## Linking to Atomist lifecycle events
 
@@ -52,7 +92,7 @@ endpoint
 `K8VENT_WEBHOOKS` environment variable above.  The POST data should be
 JSON of the form:
 
-```
+```javascript
 {
   "git": {
     "owner": "REPO_OWNER",
@@ -77,8 +117,8 @@ If you have a shell script executing your CI build that creates your
 Docker image, you can add the following command after the Docker image
 has been pushed to the registry.
 
-```
-curl -s -f -X POST -H "Content-Type: application/json" \
+```console
+$ curl -s -f -X POST -H "Content-Type: application/json" \
     --data-binary '{"git":{...},"docker":{...},"type":"link-image"}' \
     https://webhook.atomist.com/atomist/link-image/teams/TEAM_ID
 ```
@@ -115,39 +155,33 @@ pod POD -o json`.
 You can download, install, and develop locally using the normal Go
 build tools.
 
-    $ go get github.com/atomist/k8vent
+```console
+$ go get github.com/atomist/k8vent
+```
 
 The source code will be under `$GOPATH/src/github.com/atomist/k8vent`.
 If `$GOPATH/bin` is in your `PATH`, then the `k8vent` binary will be
 in your path when the above command completes successfully.  Then you
 can run k8vent locally simply by invoking `k8vent` from your terminal.
 
-When running from the command line, webhook URLs can be specified in
-several ways:
-
--   Using the `--url` command-line option, which can be specified
-    multiple times.
-
-        $ k8vent --url=http://first.com/webhook --url=https://second.com/webhook
-
--   A comma-delimited list as the value of the `K8VENT_WEBHOOKS`
-    environment variable.
-
-        $ K8VENT_WEBHOOKS=http://first.com/webhook,https://second.com/webhook k8vent
-
-If webhooks are set using the `--url` command-line option, they
-override any set by the `K8VENT_WEBHOOKS` environment variable.  If no
-webhook URLs are provided, `k8vent` exits with an error.  In other
-words, webhooks provided by the different methods are not additive.
-
 If you make changes to the code, you can run tests using the Go
 tooling
 
-    $ go test ./...
+```console
+$ go test ./...
+```
 
 or you can use `make`
 
-    $ make
+```console
+$ make test
+```
+
+To build, test, install, and vet, just run
+
+```console
+$ make
+```
 
 ---
 
