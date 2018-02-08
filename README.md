@@ -25,16 +25,16 @@ Once you have made the changes, you can create the k8vent deployment
 as you normally would.
 
 ```console
-    $ kubectl create -f k8vent-deployment.json
+$ kubectl create -f k8vent-deployment.json
 ```
 
 If you have [jq][] installed, you can update to a new version of
 k8vent with the following command
 
 ```console
-    $ kubectl get deployment k8vent -o json \
-        | jq ".spec.template.spec.containers[0].image=\"atomist/k8vent:M.N.P\"" \
-        | kubectl replace -f -
+$ kubectl get deployment k8vent -o json \
+    | jq ".spec.template.spec.containers[0].image=\"atomist/k8vent:M.N.P\"" \
+    | kubectl replace -f -
 ```
 
 replacing `M.N.P` with the [latest version of k8vent][latest].
@@ -117,8 +117,8 @@ If you have a shell script executing your CI build that creates your
 Docker image, you can add the following command after the Docker image
 has been pushed to the registry.
 
-```console
-$ curl -s -f -X POST -H "Content-Type: application/json" \
+```shell
+curl -s -f -X POST -H "Content-Type: application/json" \
     --data-binary '{"git":{...},"docker":{...},"type":"link-image"}' \
     https://webhook.atomist.com/atomist/link-image/teams/TEAM_ID
 ```
