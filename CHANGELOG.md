@@ -7,6 +7,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]: https://github.com/atomist/k8vent/compare/0.2.0...HEAD
 
+### Added
+
+-   Resources and instructions for deploying to Kubernetes clusters
+    using RBAC [#3][3]
+
+[3]: https://github.com/atomist/k8vent/issues/3
+
 ## [0.2.0]
 
 [0.2.0]: https://github.com/atomist/k8vent/compare/0.1.0...0.2.0
