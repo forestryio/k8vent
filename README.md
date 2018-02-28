@@ -70,7 +70,7 @@ If you are running on GKE, you can supply your user name using the
 
 ```console
 $ kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin \
-    --user$(gcloud config get-value account)
+    --user $(gcloud config get-value account)
 ```
 
 ### Without RBAC
