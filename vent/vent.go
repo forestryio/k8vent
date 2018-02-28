@@ -218,16 +218,18 @@ func (c *Controller) processItem(key string) error {
 		if extractErr != nil {
 			return extractErr
 		}
-		if annot.Environment != "" {
-			for k, v := range c.env {
-				env[k] = v
+		if annot != nil {
+			if annot.Environment != "" {
+				for k, v := range c.env {
+					env[k] = v
+				}
+				env["ATOMIST_ENVIRONMENT"] = annot.Environment
+			} else {
+				env = c.env
 			}
-			env["ATOMIST_ENVIRONMENT"] = annot.Environment
-		} else {
-			env = c.env
-		}
-		if annot.Webhooks != nil && len(annot.Webhooks) > 0 {
-			webhookURLs = annot.Webhooks
+			if annot.Webhooks != nil && len(annot.Webhooks) > 0 {
+				webhookURLs = annot.Webhooks
+			}
 		}
 	} else {
 		splitName := strings.SplitN(key, "/", 2)

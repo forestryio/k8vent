@@ -140,6 +140,35 @@ the `--url` command-line option, they override any set by the
 provided by the different methods are not additive.  If no webhook
 URLs are provided, `k8vent` exits with an error.
 
+## Environment
+
+You are able to tag each pod event sent with an _environment_ string,
+e.g., "production", "qa", or "testing".  This value is used in Atomist
+lifecycle messages to differentiate between pods deployed in different
+clusters, namespaces, etc.  You can provide this value two different
+ways:
+
+-   Pod-specific environment in the pod's metadata annotations.  Use
+    "atomist.com/k8vent" as the annotation key and the value should be
+    a properly escaped JSON object with the key "environment" whose
+    value is the environment string.  For example:
+
+        "metadata": {
+          "labels": {
+            "app": "my-app",
+          },
+          "annotations": {
+            "atomist.com/k8vent": "{\"environment\":\"production\"}"
+          }
+        },
+
+-   The environment variable `ATOMIST_ENVIRONMENT`
+
+        $ ATOMIST_ENVIRONMENT=production k8vent
+
+The pod-specific annotation overrides any value of
+`ATOMIST_ENVIRONMENT` in the k8vent process' environment.
+
 ## Linking to Atomist lifecycle events
 
 To get Kubernetes pod events to display as part of the normal Git
@@ -249,5 +278,5 @@ $ make
 Created by [Atomist][atomist].
 Need Help?  [Join our Slack team][slack].
 
-[atomist]: https://www.atomist.com/
+[atomist]: https://atomist.com/
 [slack]: https://join.atomist.com/
