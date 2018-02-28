@@ -11,8 +11,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Resources and instructions for deploying to Kubernetes clusters
     using RBAC [#3][3]
+-   Support per-pod environment via annotation [#4][4]
 
 [3]: https://github.com/atomist/k8vent/issues/3
+[4]: https://github.com/atomist/k8vent/issues/4
 
 ## [0.2.0]
 

@@ -84,9 +84,9 @@ func TestExtractPod(t *testing.T) {
 	}
 }
 
-func TestExtractPodWebhook(t *testing.T) {
+func TestExtractPodAnnotation(t *testing.T) {
 
-	objFile := "testdata/extract-wh.json"
+	objFile := "testdata/extract-annot.json"
 	objBytes, readErr := ioutil.ReadFile(objFile)
 	if readErr != nil {
 		t.Errorf("failed to open event JSON file %s: %v", objFile, readErr)
@@ -106,21 +106,30 @@ func TestExtractPodWebhook(t *testing.T) {
 		containerImage := fmt.Sprintf("atomist/sleep:0.2.%d", i)
 		hostIP := fmt.Sprintf("192.168.99.10%d", i)
 		podIP := fmt.Sprintf("172.17.0.%d", i)
-		pod, webhooks, err := extractPod(objects[i], logger)
+		pod, annot, err := extractPod(objects[i], logger)
 		if err != nil {
 			t.Errorf("failed to extract object %d: %v", i, err)
 			continue
 		}
-		if webhooks == nil {
-			t.Errorf("failed to extracted webhooks from object %d: %v", i, webhooks)
+		if annot == nil {
+			t.Errorf("failed to extract k8vent annotation from object %d: %v", i, annot)
 		} else {
-			if len(webhooks) != i+1 {
-				t.Errorf("number of webhooks (%d) from object %d does not match expected (%d)", len(webhooks), i, i)
+			if i > 0 {
+				env := fmt.Sprintf("env-%d", i)
+				if annot.Environment != env {
+					t.Errorf("environment annotation for object %d '%s' does not match '%s'",
+						i, annot.Environment, env)
+				}
 			}
-			for j := 0; j < len(webhooks); j++ {
+			if len(annot.Webhooks) != i+1 {
+				t.Errorf("number of webhooks (%d) from object %d does not match expected (%d)",
+					len(annot.Webhooks), i, i)
+			}
+			for j := 0; j < len(annot.Webhooks); j++ {
 				wh := fmt.Sprintf("https://webhook.atomist.com/atomist/kube/teams/TEAM_ID%d", j)
-				if webhooks[j] != wh {
-					t.Errorf("webhook %d (%s) for object %d does not match expected (%s)", j, webhooks[j], i, wh)
+				if annot.Webhooks[j] != wh {
+					t.Errorf("webhook %d (%s) for object %d does not match expected (%s)",
+						j, annot.Webhooks[j], i, wh)
 				}
 			}
 		}

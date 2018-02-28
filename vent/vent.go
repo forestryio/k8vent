@@ -209,16 +209,25 @@ func (c *Controller) processItem(key string) error {
 		return fmt.Errorf("Error fetching object with key %s from store: %v", key, err)
 	}
 	pod := v1.Pod{}
+	env := map[string]string{}
 	webhookURLs := c.urls
 	if exists {
 		var extractErr error
-		var webhooks []string
-		pod, webhooks, extractErr = extractPod(obj, c.logger)
+		var annot *K8VentPodAnnotation
+		pod, annot, extractErr = extractPod(obj, c.logger)
 		if extractErr != nil {
 			return extractErr
 		}
-		if webhooks != nil && len(webhooks) > 0 {
-			webhookURLs = webhooks
+		if annot.Environment != "" {
+			for k, v := range c.env {
+				env[k] = v
+			}
+			env["ATOMIST_ENVIRONMENT"] = annot.Environment
+		} else {
+			env = c.env
+		}
+		if annot.Webhooks != nil && len(annot.Webhooks) > 0 {
+			webhookURLs = annot.Webhooks
 		}
 	} else {
 		splitName := strings.SplitN(key, "/", 2)
@@ -235,7 +244,7 @@ func (c *Controller) processItem(key string) error {
 
 	postIt := K8PodEnv{
 		Pod: pod,
-		Env: c.env,
+		Env: env,
 	}
 	PostToWebhooks(webhookURLs, postIt)
 
@@ -245,7 +254,8 @@ func (c *Controller) processItem(key string) error {
 // K8VentPodAnnotation defines the valid structure of the
 // "atomist.com/k8vent" pod annotation.
 type K8VentPodAnnotation struct {
-	Webhooks []string `json:"webhooks"`
+	Webhooks    []string `json:"webhooks"`
+	Environment string   `json:"environment"`
 }
 
 // extractPod tries to convert object into a v1.Pod by marshaling it
@@ -253,7 +263,7 @@ type K8VentPodAnnotation struct {
 // "atomist.com/k8vent" annotation on the pod, it parses it as JSON
 // and returns the value of the webhooks key, if it exists, as w.  If
 // an error occurs, e will be non-nil.
-func extractPod(obj interface{}, logger *logrus.Entry) (p v1.Pod, w []string, e error) {
+func extractPod(obj interface{}, logger *logrus.Entry) (p v1.Pod, d *K8VentPodAnnotation, e error) {
 	objJSON, jsonErr := json.Marshal(obj)
 	if jsonErr != nil {
 		return p, nil, fmt.Errorf("failed to marshal object to JSON: %v", jsonErr)
@@ -268,16 +278,11 @@ func extractPod(obj interface{}, logger *logrus.Entry) (p v1.Pod, w []string, e 
 		return pod, nil, nil
 	}
 
-	annot := K8VentPodAnnotation{}
-	if err := json.Unmarshal([]byte(ventAnnot), &annot); err != nil {
+	annot := &K8VentPodAnnotation{}
+	if err := json.Unmarshal([]byte(ventAnnot), annot); err != nil {
 		logger.Infof("failed to unmarshal k8vent annotation '%s': %v", ventAnnot, err)
 		return pod, nil, nil
 	}
 
-	if len(annot.Webhooks) > 0 {
-		return pod, annot.Webhooks, nil
-	}
-	logger.Infof("webhooks parsed from %s/%s but zero length", pod.Namespace, pod.Name)
-
-	return pod, nil, nil
+	return pod, annot, nil
 }
