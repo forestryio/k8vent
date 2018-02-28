@@ -4,7 +4,7 @@
 set -o pipefail
 
 declare Pkg=travis-build-go
-declare Version=0.1.0
+declare Version=0.2.0
 
 # write message to standard out (stdout)
 # usage: msg MESSAGE
@@ -47,6 +47,40 @@ function git-tag () {
     fi
     if ! git push --quiet "$remote" "$@" > /dev/null 2>&1; then
         err "failed to push git tag(s): $*"
+        return 1
+    fi
+}
+
+# create a link between a docker image and a commit
+# usage: link-image DOCKER_TAG
+function link-image () {
+    local tag=$1
+    if [[ ! $tag ]]; then
+        err "link-image: missing required argument: DOCKER_TAG"
+        return 10
+    fi
+    shift
+
+    if [[ ! $ATOMIST_TEAM ]]; then
+        msg "no Atomist team set"
+        msg "not creating docker image-commit link"
+        return 0
+    fi
+    local url="https://webhook.atomist.com/atomist/link-image/teams/$ATOMIST_TEAM"
+    local owner=${TRAVIS_REPO_SLUG%/*}
+    local repo=${TRAVIS_REPO_SLUG#*/}
+    local sha
+    if [[ $TRAVIS_PULL_REQUEST_SHA ]]; then
+        sha=$TRAVIS_PULL_REQUEST_SHA
+    else
+        sha=$TRAVIS_COMMIT
+    fi
+    local payload
+    printf -v payload '{"git":{"owner":"%s","repo":"%s","sha":"%s"},"docker":{"image":"%s"},"type":"link-image"}' "$owner" "$repo" "$sha" "$tag"
+    msg "posting image-link payload to '$url': '$payload'"
+    if ! curl -s -f -X POST -H "Content-Type: application/json" --data-binary "$payload" "$url" > /dev/null 2>&1
+    then
+        err "failed to post payload '$payload' to '$url'"
         return 1
     fi
 }
@@ -132,6 +166,10 @@ function main () {
         msg "running make docker"
         if ! make docker DOCKER_TAG="$docker_tag"; then
             err "make docker failed: DOCKER_TAG='$docker_tag'"
+            return 1
+        fi
+        if ! link-image "$docker_tag"; then
+            err "failed to create link between commit and Docker image '$docker_tag'"
             return 1
         fi
     fi
