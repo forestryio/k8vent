@@ -26,7 +26,7 @@ spec:
       serviceAccountName: k8vent-serviceaccount
       containers:
       - name: k8vent
-        image: atomist/k8vent:0.3.0
+        image: atomist/k8vent:0.4.0
         env:
         - name: ATOMIST_ENVIRONMENT
           value: testing
