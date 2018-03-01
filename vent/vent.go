@@ -199,6 +199,19 @@ type K8PodEnv struct {
 	Env map[string]string `json:"env"`
 }
 
+const k8ventAnnotationKey = "atomist.com/k8vent"
+
+// K8VentPodAnnotation defines the valid structure of the
+// "atomist.com/k8vent" pod annotation.
+type K8VentPodAnnotation struct {
+	Webhooks    []string `json:"webhooks"`
+	Environment string   `json:"environment"`
+}
+
+// annotationCache provides a way for deleted pods to still use their
+// k8vent annotations.
+var annotationCache = map[string]string{}
+
 // processItem looks up key in the indexer, converts it into a v1.Pod,
 // and calls PostToWebhooks.
 func (c *Controller) processItem(key string) error {
@@ -229,6 +242,17 @@ func (c *Controller) processItem(key string) error {
 			if annot.Webhooks != nil && len(annot.Webhooks) > 0 {
 				webhookURLs = annot.Webhooks
 			}
+			annotJSON, jsonErr := json.Marshal(annot)
+			if jsonErr != nil {
+				c.logger.Infof("failed to marshal k8vent annotation '%v': %v", annot, jsonErr)
+			} else {
+				annotationCache[key] = string(annotJSON)
+			}
+		} else {
+			if _, ok := annotationCache[key]; ok {
+				// old version had an annotation and this one does not
+				delete(annotationCache, key)
+			}
 		}
 	} else {
 		splitName := strings.SplitN(key, "/", 2)
@@ -241,6 +265,11 @@ func (c *Controller) processItem(key string) error {
 				Phase: "Deleted",
 			},
 		}
+		if annot, ok := annotationCache[key]; ok {
+			pod.Annotations[k8ventAnnotationKey] = annot
+			// delete may happen after its replacement exists, so do not delete from cache
+			// delete(annotationCache, key)
+		}
 	}
 
 	postIt := K8PodEnv{
@@ -250,13 +279,6 @@ func (c *Controller) processItem(key string) error {
 	PostToWebhooks(webhookURLs, postIt)
 
 	return nil
-}
-
-// K8VentPodAnnotation defines the valid structure of the
-// "atomist.com/k8vent" pod annotation.
-type K8VentPodAnnotation struct {
-	Webhooks    []string `json:"webhooks"`
-	Environment string   `json:"environment"`
 }
 
 // extractPod tries to convert object into a v1.Pod by marshaling it
@@ -274,7 +296,7 @@ func extractPod(obj interface{}, logger *logrus.Entry) (p v1.Pod, d *K8VentPodAn
 		return p, nil, fmt.Errorf("failed to unmarshal object as Pod: %v", err)
 	}
 
-	ventAnnot, annotOK := pod.Annotations["atomist.com/k8vent"]
+	ventAnnot, annotOK := pod.Annotations[k8ventAnnotationKey]
 	if !annotOK {
 		return pod, nil, nil
 	}
