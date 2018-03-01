@@ -36,6 +36,9 @@ func TestPostToWebhooks(t *testing.T) {
 		t.Errorf("failed to unmarshal objects JSON into []interface{}: %v", err)
 	}
 
+	// should accept empty list of webhook URLs
+	PostToWebhooks([]string{}, objects[0])
+
 	store := map[string]interface{}{}
 	m := &sync.Mutex{}
 	stopCh := make(chan bool, len(objects))

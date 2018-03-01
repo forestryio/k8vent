@@ -42,12 +42,9 @@ times to send to multiple webhooks.
   $ k8vent --url=http://one.com/webhook --url=http://two.com/webhook
 
 Alternatively, you can supply a comma-delimited list of webhook URLs in
-the K8VENT_WEBHOOKS environment variable.`,
+the K8VENT_WEBHOOKS environment variable or provide them in the pod
+annotations.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(webhookURLs) < 1 {
-			fmt.Fprintln(os.Stderr, "k8vent: no webhook URLs provided")
-			os.Exit(2)
-		}
 		if err := vent.Vent(webhookURLs); err != nil {
 			fmt.Fprintf(os.Stderr, "k8vent: venting failed: %v\n", err)
 			os.Exit(1)
