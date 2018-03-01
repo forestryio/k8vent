@@ -5,7 +5,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/k8vent/compare/0.3.0...HEAD
+[Unreleased]: https://github.com/atomist/k8vent/compare/0.4.0...HEAD
+
+## [0.4.0]
+
+[0.4.0]: https://github.com/atomist/k8vent/compare/0.3.0...0.4.0
+
+Empty release
 
 ### Changed
 
