@@ -28,7 +28,7 @@ spec:
         image: atomist/k8vent:0.4.0
         env:
         - name: ATOMIST_ENVIRONMENT
-          value: testing
+          value: ENV_REPLACE
         - name: K8VENT_WEBHOOKS
           value: https://webhook.atomist.com/atomist/kube/teams/T0REPLACE
         resources:

@@ -41,13 +41,17 @@ e.g., "production", "qa", or "testing".
 ### RBAC
 
 If your Kubernetes cluster uses RBAC, you can deploy k8vent with the
-following commands.
+following commands
 
 ```console
 $ kubectl apply -f https://raw.githubusercontent.com/atomist/k8vent/master/kube/namespace.yaml
 $ kubectl apply -f https://raw.githubusercontent.com/atomist/k8vent/master/kube/rbac.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/atomist/k8vent/master/kube/deployment-rbac.yaml
+$ curl -sL https://raw.githubusercontent.com/atomist/k8vent/master/kube/deployment-rbac.yaml \
+    | sed -e 's/T0REPLACE/TEAM_ID/g' -e 's/ENV_REPLACE/CLUSTER_ENV/g' | kubectl apply -f -
 ```
+
+replacing `TEAM_ID` with your Atomist team ID and `CLUSTER_ENV` with
+your desired environment name.
 
 If you get the following error when running the second command,
 
@@ -73,14 +77,20 @@ $ kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-
     --user $(gcloud config get-value account)
 ```
 
+Then run the command to create the `kube/rbac.yaml` resources again.
+
 ### Without RBAC
 
-To deploy on clusters without RBAC, run the following commands.
+To deploy on clusters without RBAC, run the following commands
 
 ```console
 $ kubectl apply -f https://raw.githubusercontent.com/atomist/k8vent/master/kube/namespace.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/atomist/k8vent/master/kube/deployment-no-rbac.yaml
+$ curl -sL https://raw.githubusercontent.com/atomist/k8vent/master/kube/deployment-no-rbac.yaml \
+    | sed -e 's/T0REPLACE/TEAM_ID/g' -e 's/ENV_REPLACE/CLUSTER_ENV/g' | kubectl apply -f -
 ```
+
+replacing `TEAM_ID` with your Atomist team ID and `CLUSTER_ENV` with
+your desired environment name.
 
 If the logs from the k8vent pod have lines like the following:
 
