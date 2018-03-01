@@ -209,7 +209,7 @@ func (c *Controller) processItem(key string) error {
 		return fmt.Errorf("Error fetching object with key %s from store: %v", key, err)
 	}
 	pod := v1.Pod{}
-	env := map[string]string{}
+	env := c.env
 	webhookURLs := c.urls
 	if exists {
 		var extractErr error
@@ -220,12 +220,11 @@ func (c *Controller) processItem(key string) error {
 		}
 		if annot != nil {
 			if annot.Environment != "" {
+				env = map[string]string{}
 				for k, v := range c.env {
 					env[k] = v
 				}
 				env["ATOMIST_ENVIRONMENT"] = annot.Environment
-			} else {
-				env = c.env
 			}
 			if annot.Webhooks != nil && len(annot.Webhooks) > 0 {
 				webhookURLs = annot.Webhooks

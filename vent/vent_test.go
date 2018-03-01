@@ -46,13 +46,13 @@ func TestExtractPod(t *testing.T) {
 		containerImage := fmt.Sprintf("atomist/sleep:0.2.%d", i)
 		hostIP := fmt.Sprintf("192.168.99.10%d", i)
 		podIP := fmt.Sprintf("172.17.0.%d", i)
-		pod, webhooks, err := extractPod(objects[i], logger)
+		pod, annot, err := extractPod(objects[i], logger)
 		if err != nil {
 			t.Errorf("failed to extract object %d: %v", i, err)
 			continue
 		}
-		if webhooks != nil {
-			t.Errorf("erroneously extracted webhooks from object %d: %v", i, webhooks)
+		if annot != nil {
+			t.Errorf("erroneously extracted webhooks from object %d: %v", i, annot)
 		}
 		if pod.Name != podName {
 			t.Errorf("pod name (%s) for object %d does not match expected (%s)", pod.Name, i, podName)
