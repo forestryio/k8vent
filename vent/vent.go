@@ -267,8 +267,7 @@ func (c *Controller) processItem(key string) error {
 		}
 		if annot, ok := annotationCache[key]; ok {
 			pod.Annotations[k8ventAnnotationKey] = annot
-			// delete may happen after its replacement exists, so do not delete from cache
-			// delete(annotationCache, key)
+			delete(annotationCache, key)
 		}
 	}
 
