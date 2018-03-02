@@ -5,11 +5,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/k8vent/compare/0.5.0...HEAD
+[Unreleased]: https://github.com/atomist/k8vent/compare/0.5.1...HEAD
+
+## [0.5.1]
+
+[0.5.1]: https://github.com/atomist/k8vent/compare/0.5.0...0.5.1
+
+Nil release
 
 ### Fixed
 
--   Crash due to assignment to empty annotation map
+-   Crash due to assignment to nil annotation map
 
 ## [0.5.0]
 
