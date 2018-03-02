@@ -255,20 +255,7 @@ func (c *Controller) processItem(key string) error {
 			}
 		}
 	} else {
-		splitName := strings.SplitN(key, "/", 2)
-		pod = v1.Pod{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      splitName[1],
-				Namespace: splitName[0],
-			},
-			Status: v1.PodStatus{
-				Phase: "Deleted",
-			},
-		}
-		if annot, ok := annotationCache[key]; ok {
-			pod.Annotations[k8ventAnnotationKey] = annot
-			delete(annotationCache, key)
-		}
+		pod = fakePod(key)
 	}
 
 	postIt := K8PodEnv{
@@ -307,4 +294,25 @@ func extractPod(obj interface{}, logger *logrus.Entry) (p v1.Pod, d *K8VentPodAn
 	}
 
 	return pod, annot, nil
+}
+
+// fakePod creates a pod from its cache key.  Well, it does its best.
+func fakePod(key string) (p v1.Pod) {
+	splitName := strings.SplitN(key, "/", 2)
+	pod := v1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      splitName[1],
+			Namespace: splitName[0],
+		},
+		Status: v1.PodStatus{
+			Phase: "Deleted",
+		},
+	}
+	if annot, ok := annotationCache[key]; ok {
+		pod.Annotations = map[string]string{
+			k8ventAnnotationKey: annot,
+		}
+		delete(annotationCache, key)
+	}
+	return pod
 }

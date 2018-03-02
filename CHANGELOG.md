@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]: https://github.com/atomist/k8vent/compare/0.5.0...HEAD
 
+### Fixed
+
+-   Crash due to assignment to empty annotation map
+
 ## [0.5.0]
 
 [0.5.0]: https://github.com/atomist/k8vent/compare/0.4.0...0.5.0
