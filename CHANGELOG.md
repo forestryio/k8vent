@@ -5,9 +5,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/k8vent/compare/0.5.1...HEAD
+[Unreleased]: https://github.com/atomist/k8vent/compare/0.6.0...HEAD
 
-## [0.5.1]
+## [0.6.0][] - 2018-03-06
+
+[0.6.0]: https://github.com/atomist/k8vent/compare/0.5.0...0.6.0
+
+Undelete release
+
+### Changed
+
+-   Stop sending pod deleted events
+
+## [0.5.1][] - 2018-03-02
 
 [0.5.1]: https://github.com/atomist/k8vent/compare/0.5.0...0.5.1
 
@@ -17,7 +27,7 @@ Nil release
 
 -   Crash due to assignment to nil annotation map
 
-## [0.5.0]
+## [0.5.0][] - 2018-03-01
 
 [0.5.0]: https://github.com/atomist/k8vent/compare/0.4.0...0.5.0
 
@@ -27,7 +37,7 @@ Cache release
 
 -   Cache for k8vent pod annotations
 
-## [0.4.0]
+## [0.4.0][] - 2018-03-01
 
 [0.4.0]: https://github.com/atomist/k8vent/compare/0.3.0...0.4.0
 
@@ -37,7 +47,7 @@ Empty release
 
 -   No longer require a global webhook URL
 
-## [0.3.0]
+## [0.3.0][] - 2018-02-28
 
 [0.3.0]: https://github.com/atomist/k8vent/compare/0.2.0...0.3.0
 
@@ -52,7 +62,7 @@ Environment release
 [3]: https://github.com/atomist/k8vent/issues/3
 [4]: https://github.com/atomist/k8vent/issues/4
 
-## [0.2.0]
+## [0.2.0][] - 2018-02-08
 
 [0.2.0]: https://github.com/atomist/k8vent/compare/0.1.0...0.2.0
 
@@ -65,7 +75,7 @@ Multi-tenant release
 
 [2]: https://github.com/atomist/k8vent/issues/2
 
-## [0.1.0] - 2018-01-04
+## [0.1.0][] - 2018-01-04
 
 [0.1.0]: https://github.com/atomist/k8vent/tree/0.1.0
 

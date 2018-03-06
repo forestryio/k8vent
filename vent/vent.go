@@ -208,10 +208,6 @@ type K8VentPodAnnotation struct {
 	Environment string   `json:"environment"`
 }
 
-// annotationCache provides a way for deleted pods to still use their
-// k8vent annotations.
-var annotationCache = map[string]string{}
-
 // processItem looks up key in the indexer, converts it into a v1.Pod,
 // and calls PostToWebhooks.
 func (c *Controller) processItem(key string) error {
@@ -221,41 +217,27 @@ func (c *Controller) processItem(key string) error {
 	if err != nil {
 		return fmt.Errorf("Error fetching object with key %s from store: %v", key, err)
 	}
-	pod := v1.Pod{}
+	if !exists {
+		c.logger.Infof("failed to look up object %s, probably deleted", key)
+		return nil
+	}
 	env := c.env
 	webhookURLs := c.urls
-	if exists {
-		var extractErr error
-		var annot *K8VentPodAnnotation
-		pod, annot, extractErr = extractPod(obj, c.logger)
-		if extractErr != nil {
-			return extractErr
+	pod, annot, extractErr := extractPod(obj, c.logger)
+	if extractErr != nil {
+		return extractErr
+	}
+	if annot != nil {
+		if annot.Environment != "" {
+			env = map[string]string{}
+			for k, v := range c.env {
+				env[k] = v
+			}
+			env["ATOMIST_ENVIRONMENT"] = annot.Environment
 		}
-		if annot != nil {
-			if annot.Environment != "" {
-				env = map[string]string{}
-				for k, v := range c.env {
-					env[k] = v
-				}
-				env["ATOMIST_ENVIRONMENT"] = annot.Environment
-			}
-			if annot.Webhooks != nil && len(annot.Webhooks) > 0 {
-				webhookURLs = annot.Webhooks
-			}
-			annotJSON, jsonErr := json.Marshal(annot)
-			if jsonErr != nil {
-				c.logger.Infof("failed to marshal k8vent annotation '%v': %v", annot, jsonErr)
-			} else {
-				annotationCache[key] = string(annotJSON)
-			}
-		} else {
-			if _, ok := annotationCache[key]; ok {
-				// old version had an annotation and this one does not
-				delete(annotationCache, key)
-			}
+		if annot.Webhooks != nil && len(annot.Webhooks) > 0 {
+			webhookURLs = annot.Webhooks
 		}
-	} else {
-		pod = fakePod(key)
 	}
 
 	postIt := K8PodEnv{
@@ -270,9 +252,11 @@ func (c *Controller) processItem(key string) error {
 // extractPod tries to convert object into a v1.Pod by marshaling it
 // to JSON and back again, returning it as p.  If there is an
 // "atomist.com/k8vent" annotation on the pod, it parses it as JSON
-// and returns the value of the webhooks key, if it exists, as w.  If
-// an error occurs, e will be non-nil.
-func extractPod(obj interface{}, logger *logrus.Entry) (p v1.Pod, d *K8VentPodAnnotation, e error) {
+// and returns the value of the annotation, if it exists, as a.  If
+// unmarshaling of the annotation failed, the annotation is returned
+// as nil but the pod is still returned.  If an error occurs, e will
+// be non-nil.
+func extractPod(obj interface{}, logger *logrus.Entry) (p v1.Pod, a *K8VentPodAnnotation, e error) {
 	objJSON, jsonErr := json.Marshal(obj)
 	if jsonErr != nil {
 		return p, nil, fmt.Errorf("failed to marshal object to JSON: %v", jsonErr)
@@ -294,25 +278,4 @@ func extractPod(obj interface{}, logger *logrus.Entry) (p v1.Pod, d *K8VentPodAn
 	}
 
 	return pod, annot, nil
-}
-
-// fakePod creates a pod from its cache key.  Well, it does its best.
-func fakePod(key string) (p v1.Pod) {
-	splitName := strings.SplitN(key, "/", 2)
-	pod := v1.Pod{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      splitName[1],
-			Namespace: splitName[0],
-		},
-		Status: v1.PodStatus{
-			Phase: "Deleted",
-		},
-	}
-	if annot, ok := annotationCache[key]; ok {
-		pod.Annotations = map[string]string{
-			k8ventAnnotationKey: annot,
-		}
-		delete(annotationCache, key)
-	}
-	return pod
 }
