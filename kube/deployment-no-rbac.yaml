@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: k8vent
-        image: atomist/k8vent:0.5.0
+        image: atomist/k8vent:0.6.0
         env:
         - name: ATOMIST_ENVIRONMENT
           value: ENV_REPLACE
