@@ -24,19 +24,21 @@ import (
 	"github.com/cenk/backoff"
 )
 
-// PostToWebhooks marshals obj into JSON and posts it to the webhook
+// PostToWebhooks marshals podEnv into JSON and posts it to the webhook
 // URLs provided.
-func PostToWebhooks(urls []string, obj interface{}) {
-	objJSON, jsonErr := json.Marshal(obj)
+func PostToWebhooks(urls []string, podEnv *K8PodEnv) {
+	objJSON, jsonErr := json.Marshal(podEnv)
 	if jsonErr != nil {
-		logrus.Errorf("failed to marshal event to JSON: %v: %+v", jsonErr, obj)
+		logrus.Errorf("failed to marshal event to JSON: %v: %+v", jsonErr, podEnv)
 		return
 	}
 
+	podSlug := podEnv.Pod.Namespace + "/" + podEnv.Pod.Name
 	for _, url := range urls {
 		go func(u string) {
+			logrus.Infof("posting pod '%s' to '%s'", podSlug, u)
 			if err := postToWebhook(u, objJSON); err != nil {
-				logrus.Error(err.Error())
+				logrus.Errorf("failed to post pod '%s' to '%s': %s", podSlug, u, err.Error())
 			}
 		}(url)
 	}

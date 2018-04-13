@@ -244,7 +244,7 @@ func (c *Controller) processItem(key string) error {
 		Pod: pod,
 		Env: env,
 	}
-	PostToWebhooks(webhookURLs, postIt)
+	PostToWebhooks(webhookURLs, &postIt)
 
 	return nil
 }

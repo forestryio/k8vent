@@ -37,7 +37,7 @@ func TestPostToWebhooks(t *testing.T) {
 	}
 
 	// should accept empty list of webhook URLs
-	PostToWebhooks([]string{}, objects[0])
+	PostToWebhooks([]string{}, &objects[0])
 
 	store := map[string]interface{}{}
 	m := &sync.Mutex{}
@@ -63,7 +63,7 @@ func TestPostToWebhooks(t *testing.T) {
 	urls := []string{"http://127.0.0.1:30256/k8event"}
 
 	for _, o := range objects {
-		PostToWebhooks(urls, o)
+		PostToWebhooks(urls, &o)
 	}
 	for i := 0; i < len(objects); i++ {
 		<-stopCh

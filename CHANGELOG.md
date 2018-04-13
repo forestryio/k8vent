@@ -5,7 +5,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/k8vent/compare/0.6.0...HEAD
+[Unreleased]: https://github.com/atomist/k8vent/compare/0.7.0...HEAD
+
+## [0.7.0][] - 2018-04-13
+
+[0.7.0]: https://github.com/atomist/k8vent/compare/0.6.0...0.7.0
+
+Unlucky release
+
+### Changed
+
+-   Tightened up types
+
+### Added
+
+-   More logging
 
 ## [0.6.0][] - 2018-03-06
 

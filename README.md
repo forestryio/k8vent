@@ -26,9 +26,10 @@ sufficient permissions to run k8vent.
 Before deploying either with or without RBAC, you will need change the
 value of the `K8VENT_WEBHOOKS` environment variable in the appropriate
 deployment spec.  Replace the last element of the URL with the ID of
-your Slack team.  You can get your team ID from
-https://app.atomist.com/teams or by sending `team` as a message to the
-Atomist bot, e.g., `@atomist team`, in Slack.
+your Atomist team/workspace.  You can get your Atomist team/workspace
+ID from its settings page on https://app.atomist.com/ or by sending
+`team` as a message to the Atomist bot, e.g., `@atomist team`, in
+Slack.
 
 You can optionally change the value of the `ATOMIST_ENVIRONMENT`
 environment variable to a meaningful name for your kubernetes cluster,

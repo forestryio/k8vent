@@ -20,13 +20,11 @@ spec:
         app: k8vent
         owner: atomist
         version: '0'
-      annotations:
-        atomist.com/repo-image: '[{"container":"k8vent","repo":{"owner":"atomist","name":"k8vent"},"image":"atomist/k8vent"}]'
     spec:
       serviceAccountName: k8vent-serviceaccount
       containers:
       - name: k8vent
-        image: atomist/k8vent:0.6.0
+        image: atomist/k8vent:0.7.0
         env:
         - name: ATOMIST_ENVIRONMENT
           value: ENV_REPLACE
