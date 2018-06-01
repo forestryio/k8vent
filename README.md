@@ -5,7 +5,7 @@
 Send kubernetes pods as JSON to webhook endpoints.  k8vent is
 typically run from its Docker image in a kubernetes cluster to send
 pod state changes to the Atomist kubernetes webhook endpoint for your
-team.
+Atomist workspace.
 
 ## Running
 
@@ -36,11 +36,11 @@ You can deploy k8vent with the following commands
 ```console
 $ kubectl apply -f https://raw.githubusercontent.com/atomist/k8vent/master/kube/kubectl/cluster-wide.yaml
 $ kubectl create secret --namespace=k8vent generic k8vent --from-literal=environment=CLUSTER_ENV \
-    --from-literal=webhooks=https://webhook.atomist.com/atomist/kube/teams/TEAM_ID
+    --from-literal=webhooks=https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID
 ```
 
-replacing `TEAM_ID` with your Atomist team ID and `CLUSTER_ENV` with
-your desired environment name.
+replacing `WORKSPACE_ID` with your Atomist workspace/team ID and
+`CLUSTER_ENV` with your desired environment name.
 
 If you get the following error when running the first command,
 
@@ -95,20 +95,20 @@ When running k8vent, webhook URLs can be specified in several ways:
             "app": "my-app",
           },
           "annotations": {
-            "atomist.com/k8vent": "{\"webhooks\":[\"https://webhook.atomist.com/atomist/kube/teams/TEAM_ID\"]}"
+            "atomist.com/k8vent": "{\"webhooks\":[\"https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID\"]}"
           }
         },
 
 -   The `--url` command-line option, which can be specified
     multiple times.
 
-        $ k8vent --url=https://webhook.atomist.com/atomist/kube/teams/TEAM_ID \
+        $ k8vent --url=https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID \
             --url=https://second.com/webhook
 
 -   A comma-delimited list as the value of the `K8VENT_WEBHOOKS`
     environment variable.
 
-        $ K8VENT_WEBHOOKS=https://webhook.atomist.com/atomist/kube/teams/TEAM_ID,https://second.com/webhook k8vent
+        $ K8VENT_WEBHOOKS=https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID,https://second.com/webhook k8vent
 
 If webhooks are provided in the pod spec, they override any provided
 on the command line or by the environment.  If webhooks are set using
@@ -154,10 +154,10 @@ Atomist dashboard event stream, you must tell Atomist what Docker
 images are connected with what commits.  The link between a commit and
 a Docker image is created by POSTing data to the Atomist webhook
 endpoint
-`https://webhook.atomist.com/atomist/link-image/teams/TEAM_ID`, where
-`TEAM_ID` should be replaced with the same team ID used in the
-`K8VENT_WEBHOOKS` environment variable above.  The POST data should be
-JSON of the form:
+`https://webhook.atomist.com/atomist/link-image/teams/WORKSPACE_ID`,
+where `WORKSPACE_ID` should be replaced with the same Atomist
+workspace/team ID used in the `K8VENT_WEBHOOKS` environment variable
+above.  The POST data should be JSON of the form:
 
 ```javascript
 {
@@ -187,11 +187,11 @@ has been pushed to the registry.
 ```shell
 curl -s -f -X POST -H "Content-Type: application/json" \
     --data-binary '{"git":{...},"docker":{...},"type":"link-image"}' \
-    https://webhook.atomist.com/atomist/link-image/teams/TEAM_ID
+    https://webhook.atomist.com/atomist/link-image/teams/WORKSPACE_ID
 ```
 
-replacing the ellipses with the appropriate JSON and `TEAM_ID` with
-the appropriate team ID.
+replacing the ellipses with the appropriate JSON and `WORKSPACE_ID` with
+the appropriate Atomist workspace/team ID.
 
 ## Webhook payload
 
