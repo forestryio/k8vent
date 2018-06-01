@@ -16,54 +16,42 @@ kubernetes cluster.
 k8vent needs read access to pods to operate normally.  It uses the
 Kubernetes "in-cluster client" to authenticate against the Kubernetes
 API.  Depending on whether your cluster is using [role-based access
-control (RBAC)][rbac] or not, you must deploy k8vent slightly
-differently.  RBAC is a feature of more recent versions of Kubernetes,
-for example it is enabled by default on [GKE clusters][gke-rbac] using
-Kubernetes 1.6 and higher.  If your cluster is older or is not using
-RBAC, the default system account provided to all pods should have
-sufficient permissions to run k8vent.
+control (RBAC)][rbac].
 
-Before deploying either with or without RBAC, you will need change the
-value of the `K8VENT_WEBHOOKS` environment variable in the appropriate
-deployment spec.  Replace the last element of the URL with the ID of
-your Atomist team/workspace.  You can get your Atomist team/workspace
-ID from its settings page on https://app.atomist.com/ or by sending
+Before deploying either with or without RBAC, you will need your
+Atomist workspace/team ID.  You can get your Atomist team/workspace ID
+from its settings page on https://app.atomist.com/ or by sending
 `team` as a message to the Atomist bot, e.g., `@atomist team`, in
 Slack.
 
-You can optionally change the value of the `ATOMIST_ENVIRONMENT`
-environment variable to a meaningful name for your kubernetes cluster,
-e.g., "production", "qa", or "testing".
+You can  optionally provide  an environment  name for  your kubernetes
+cluster, e.g., "production", "qa", or "testing".
 
 [kube]: ./kube/ (k8vent Kubernetes Resources)
 [rbac]: https://kubernetes.io/docs/admin/authorization/rbac/ (Kubernetes RBAC)
 [gke-rbac]: https://cloud.google.com/kubernetes-engine/docs/how-to/role-based-access-control (GKE RBAC)
 
-### RBAC
-
-If your Kubernetes cluster uses RBAC, you can deploy k8vent with the
-following commands
+You can deploy k8vent with the following commands
 
 ```console
-$ kubectl apply -f https://raw.githubusercontent.com/atomist/k8vent/master/kube/namespace.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/atomist/k8vent/master/kube/rbac.yaml
-$ curl -sL https://raw.githubusercontent.com/atomist/k8vent/master/kube/deployment-rbac.yaml \
-    | sed -e 's/T0REPLACE/TEAM_ID/g' -e 's/ENV_REPLACE/CLUSTER_ENV/g' | kubectl apply -f -
+$ kubectl apply -f https://raw.githubusercontent.com/atomist/k8vent/master/kube/kubectl/cluster-wide.yaml
+$ kubectl create secret --namespace=k8vent generic k8vent --from-literal=environment=CLUSTER_ENV \
+    --from-literal=webhooks=https://webhook.atomist.com/atomist/kube/teams/TEAM_ID
 ```
 
 replacing `TEAM_ID` with your Atomist team ID and `CLUSTER_ENV` with
 your desired environment name.
 
-If you get the following error when running the second command,
+If you get the following error when running the first command,
 
 ```
 Error from server (Forbidden): error when creating "rbac.yaml": clusterroles.rbac.authorization.k8s.io "k8vent-clusterrole" is forbidden: attempt to grant extra privileges: [PolicyRule{Resources:["pods"], APIGroups:[""], Verbs:["get"]} PolicyRule{Resources:["pods"], APIGroups:[""], Verbs:["list"]} PolicyRule{Resources:["pods"], APIGroups:[""], Verbs:["watch"]}] user=&{YOUR_USER  [system:authenticated] map[]} ownerrules=[PolicyRule{Resources:["selfsubjectaccessreviews"], APIGroups:["authorization.k8s.io"], Verbs:["create"]} PolicyRule{NonResourceURLs:["/api" "/api/*" "/apis" "/apis/*" "/healthz" "/swagger-2.0.0.pb-v1" "/swagger.json" "/swaggerapi" "/swaggerapi/*" "/version"], Verbs:["get"]}] ruleResolutionErrors=[]
 ```
 
-then your Kubernetes user does not have administrative privileges on
-your cluster.  You will either need to ask someone who has admin
-privileges on the cluster to create the RBAC resources or try to
-escalate your privileges with the following command.
+then your Kubernetes user does not have cluster-admin role privileges
+on your cluster.  You will either need to ask someone who has
+cluster-admin privileges on the cluster to create the RBAC resources
+or try to escalate your privileges with the following command.
 
 ```console
 $ kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin \
@@ -78,29 +66,7 @@ $ kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-
     --user $(gcloud config get-value account)
 ```
 
-Then run the command to create the `kube/rbac.yaml` resources again.
-
-### Without RBAC
-
-To deploy on clusters without RBAC, run the following commands
-
-```console
-$ kubectl apply -f https://raw.githubusercontent.com/atomist/k8vent/master/kube/namespace.yaml
-$ curl -sL https://raw.githubusercontent.com/atomist/k8vent/master/kube/deployment-no-rbac.yaml \
-    | sed -e 's/T0REPLACE/TEAM_ID/g' -e 's/ENV_REPLACE/CLUSTER_ENV/g' | kubectl apply -f -
-```
-
-replacing `TEAM_ID` with your Atomist team ID and `CLUSTER_ENV` with
-your desired environment name.
-
-If the logs from the k8vent pod have lines like the following:
-
-```
-E0228 14:19:31.532244       5 reflector.go:205] github.com/atomist/k8vent/vent/vent.go:143: Failed to list *v1.Pod: pods is forbidden: User "system:serviceaccount:k8vent:default" cannot list pods at the cluster scope: Unknown user "system:serviceaccount:k8vent:default"
-```
-
-Then the default service account does not have read permissions to
-pods and you likely need to deploy using RBAC.
+Then run the commands again.
 
 ### Updating
 
