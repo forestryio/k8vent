@@ -9,77 +9,23 @@ Atomist workspace.
 
 ## Running
 
-You can use the Kubernetes resource files in the [kube
-directory][kube] as a starting point for deploying k8vent in your
-kubernetes cluster.
+See the [Atomist Kubernetes documentation][atomist-kube] for detailed
+instructions on using Atomist with Kubernetes.  Briefly, if you
+already have an [Atomist workspace][atomist-getting-started], you can
+run the following commands to create the necessary resources in your
+Kubernetes cluster.  Replace `WORKSPACE_ID` with your Atomist
+workspace/team ID and `TOKEN` with a GitHub token with "read:org"
+scopes for a user within the GitHub organization linked to your
+Atomist workspace.
 
-k8vent needs read access to pods to operate normally.  It uses the
-Kubernetes "in-cluster client" to authenticate against the Kubernetes
-API.  Depending on whether your cluster is using [role-based access
-control (RBAC)][rbac].
+[atomist-kube]: https://docs.atomist.com/user/kubernetes/ (Atomist - Kubernetes)
+[atomist-getting-started]: https://docs.atomist.com/user/ (Atomist - Getting Started)
 
-Before deploying either with or without RBAC, you will need your
-Atomist workspace/team ID.  You can get your Atomist team/workspace ID
-from its settings page on https://app.atomist.com/ or by sending
-`team` as a message to the Atomist bot, e.g., `@atomist team`, in
-Slack.
-
-You can  optionally provide  an environment  name for  your kubernetes
-cluster, e.g., "production", "qa", or "testing".
-
-[kube]: ./kube/ (k8vent Kubernetes Resources)
-[rbac]: https://kubernetes.io/docs/admin/authorization/rbac/ (Kubernetes RBAC)
-[gke-rbac]: https://cloud.google.com/kubernetes-engine/docs/how-to/role-based-access-control (GKE RBAC)
-
-You can deploy k8vent with the following commands
-
-```console
+```
 $ kubectl apply -f https://raw.githubusercontent.com/atomist/k8vent/master/kube/kubectl/cluster-wide.yaml
 $ kubectl create secret --namespace=k8vent generic k8vent --from-literal=environment=CLUSTER_ENV \
     --from-literal=webhooks=https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID
 ```
-
-replacing `WORKSPACE_ID` with your Atomist workspace/team ID and
-`CLUSTER_ENV` with your desired environment name.
-
-If you get the following error when running the first command,
-
-```
-Error from server (Forbidden): error when creating "rbac.yaml": clusterroles.rbac.authorization.k8s.io "k8vent-clusterrole" is forbidden: attempt to grant extra privileges: [PolicyRule{Resources:["pods"], APIGroups:[""], Verbs:["get"]} PolicyRule{Resources:["pods"], APIGroups:[""], Verbs:["list"]} PolicyRule{Resources:["pods"], APIGroups:[""], Verbs:["watch"]}] user=&{YOUR_USER  [system:authenticated] map[]} ownerrules=[PolicyRule{Resources:["selfsubjectaccessreviews"], APIGroups:["authorization.k8s.io"], Verbs:["create"]} PolicyRule{NonResourceURLs:["/api" "/api/*" "/apis" "/apis/*" "/healthz" "/swagger-2.0.0.pb-v1" "/swagger.json" "/swaggerapi" "/swaggerapi/*" "/version"], Verbs:["get"]}] ruleResolutionErrors=[]
-```
-
-then your Kubernetes user does not have cluster-admin role privileges
-on your cluster.  You will either need to ask someone who has
-cluster-admin privileges on the cluster to create the RBAC resources
-or try to escalate your privileges with the following command.
-
-```console
-$ kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin \
-    --user YOUR_USER
-```
-
-If you are running on GKE, you can supply your user name using the
-`gcloud` utility.
-
-```console
-$ kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin \
-    --user $(gcloud config get-value account)
-```
-
-Then run the commands again.
-
-### Updating
-
-You can update to a new version of k8vent with the following command.
-
-```console
-$ kubectl patch --namespace=k8vent deployment k8vent \
-    --patch '{"spec":{"template":{"spec":{"containers":[{"name":"k8vent","image":"atomist/k8vent:M.N.P"}]}}}}'
-```
-
-replacing `M.N.P` with the [latest version of k8vent][latest].
-
-[latest]: https://github.com/atomist/k8vent/releases/latest (k8vent Current Release)
 
 ## Webhook URLs
 
@@ -184,8 +130,8 @@ If you have a shell script executing your CI build that creates your
 Docker image, you can add the following command after the Docker image
 has been pushed to the registry.
 
-```shell
-curl -s -f -X POST -H "Content-Type: application/json" \
+```
+$ curl -s -f -X POST -H "Content-Type: application/json" \
     --data-binary '{"git":{...},"docker":{...},"type":"link-image"}' \
     https://webhook.atomist.com/atomist/link-image/teams/WORKSPACE_ID
 ```
@@ -222,7 +168,7 @@ pod POD -o json`.
 You can download, install, and develop locally using the normal Go
 build tools.
 
-```console
+```
 $ go get github.com/atomist/k8vent
 ```
 
@@ -234,19 +180,19 @@ can run k8vent locally simply by invoking `k8vent` from your terminal.
 If you make changes to the code, you can run tests using the Go
 tooling
 
-```console
+```
 $ go test ./...
 ```
 
 or you can use `make`
 
-```console
+```
 $ make test
 ```
 
 To build, test, install, and vet, just run
 
-```console
+```
 $ make
 ```
 

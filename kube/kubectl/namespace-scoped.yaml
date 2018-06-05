@@ -1,44 +1,34 @@
 ---
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: k8vent
-  labels:
-    owner: atomist
----
-apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: k8vent-serviceaccount
-  namespace: k8vent
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
+kind: Role
 metadata:
-  name: k8vent-clusterrole
+  name: k8vent-role
 rules:
   - apiGroups: [""]
     resources: ["pods"]
     verbs: ["get", "list", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
+kind: RoleBinding
 metadata:
-  name: k8vent-clusterrole-binding
+  name: k8vent-role-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: k8vent-clusterrole
+  kind: Role
+  name: k8vent-role
 subjects:
   - kind: ServiceAccount
     name: k8vent-serviceaccount
-    namespace: k8vent
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: k8vent
-  namespace: k8vent
   labels:
     app: k8vent
     owner: atomist
@@ -71,6 +61,10 @@ spec:
                 secretKeyRef:
                   name: k8vent
                   key: webhooks
+            - name: K8VENT_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
           resources:
             limits:
               cpu: 0.1

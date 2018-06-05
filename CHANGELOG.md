@@ -5,7 +5,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/k8vent/compare/0.7.0...HEAD
+[Unreleased]: https://github.com/atomist/k8vent/compare/0.8.0...HEAD
+
+## [0.8.0][] - 2018-06-05
+
+[0.8.0]: https://github.com/atomist/k8vent/compare/0.7.0...0.8.0
+
+Namespace release
+
+### Added
+
+-   Ability to run in a single namespace
 
 ## [0.7.0][] - 2018-04-13
 

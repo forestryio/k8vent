@@ -29,23 +29,30 @@ var cfgFile string
 
 var (
 	webhookURLs = []string{}
+	namespace   string
 )
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "k8vent",
 	Short: "Send kubernetes pod state changes to webhook",
-	Long: `Watch for kubernetes pod state changes and post them to
-the configured webhooks.  You can provide the --url parameter multiple
-times to send to multiple webhooks.
+	Long: `Watch for kubernetes pod state changes and post them to the configured
+webhooks.
+
+You can provide the --url parameter multiple times to send to multiple
+webhooks.
 
   $ k8vent --url=http://one.com/webhook --url=http://two.com/webhook
 
-Alternatively, you can supply a comma-delimited list of webhook URLs in
-the K8VENT_WEBHOOKS environment variable or provide them in the pod
-annotations.`,
+Alternatively, you can supply a comma-delimited list of webhook URLs
+in the K8VENT_WEBHOOKS environment variable or provide them in the pod
+annotations.
+
+By default k8vent watches pods in all namespaces.  If the --namespace
+or K8VENT_NAMESPACE environment variable is provided, only pods in
+that namespace are reported on.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := vent.Vent(webhookURLs); err != nil {
+		if err := vent.Vent(webhookURLs, namespace); err != nil {
 			fmt.Fprintf(os.Stderr, "k8vent: venting failed: %v\n", err)
 			os.Exit(1)
 		}
@@ -73,14 +80,19 @@ func init() {
 	// when this action is called directly.
 	//RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	RootCmd.PersistentFlags().StringSliceVarP(&webhookURLs, "url", "u", []string{}, "Send event to URL")
+	RootCmd.PersistentFlags().StringVarP(&namespace, "namespace", "n", "", "Only watch pods in NAMESPACE")
 }
 
 const webhookEnv = "K8VENT_WEBHOOKS"
+const namespaceEnv = "K8VENT_NAMESPACE"
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if os.Getenv(webhookEnv) != "" {
 		webhookURLs = strings.Split(os.Getenv(webhookEnv), ",")
+	}
+	if os.Getenv(namespaceEnv) != "" {
+		namespace = os.Getenv(namespaceEnv)
 	}
 
 	if cfgFile != "" { // enable ability to specify config file via flag

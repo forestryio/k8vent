@@ -53,7 +53,7 @@ type Controller struct {
 // Vent sets up and starts the listener for pod events, which posts
 // them to the provided webhooks when it receives them.  It should
 // never return.
-func Vent(urls []string) (e error) {
+func Vent(urls []string, namespace string) (e error) {
 
 	config, configErr := rest.InClusterConfig()
 	if configErr != nil {
@@ -65,7 +65,7 @@ func Vent(urls []string) (e error) {
 		return clientErr
 	}
 
-	c := newController(clientset, urls)
+	c := newController(clientset, urls, namespace)
 	stopCh := make(chan struct{})
 	defer close(stopCh)
 
@@ -79,15 +79,21 @@ func Vent(urls []string) (e error) {
 	return nil
 }
 
-func newController(client kubernetes.Interface, urls []string) *Controller {
+func newController(client kubernetes.Interface, urls []string, namespace string) *Controller {
 	queue := workqueue.NewRateLimitingQueue(workqueue.DefaultControllerRateLimiter())
 
 	informer := cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options metav1.ListOptions) (runtime.Object, error) {
+				if namespace != "" {
+					return client.CoreV1().Pods(namespace).List(options)
+				}
 				return client.CoreV1().Pods(metav1.NamespaceAll).List(options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
+				if namespace != "" {
+					return client.CoreV1().Pods(namespace).Watch(options)
+				}
 				return client.CoreV1().Pods(metav1.NamespaceAll).Watch(options)
 			},
 		},

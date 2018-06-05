@@ -21,25 +21,47 @@ import (
 )
 
 func TestEnv(t *testing.T) {
-	if err := os.Setenv(webhookEnv, ""); err != nil {
+	if err := os.Unsetenv(webhookEnv); err != nil {
 		t.Errorf("failed to set environment variable %s: %v", webhookEnv, err)
 	}
 	initConfig()
 	if !reflect.DeepEqual(webhookURLs, []string{}) {
-		t.Errorf("empty value for %s did not result in default webhook: %v", webhookEnv, webhookURLs)
+		t.Errorf("unset %s did not result in default webhook: %v", webhookEnv, webhookURLs)
 	}
 
-	envCheck := map[string][]string{
+	urlCheck := map[string][]string{
 		"http://one":             []string{"http://one"},
 		"http://one,https://two": []string{"http://one", "https://two"},
 	}
-	for k, v := range envCheck {
+	for k, v := range urlCheck {
 		if err := os.Setenv(webhookEnv, k); err != nil {
 			t.Errorf("failed to set environment variable %s: %v", webhookEnv, err)
 		}
 		initConfig()
 		if !reflect.DeepEqual(webhookURLs, v) {
 			t.Errorf("webhook (%v) not equal to expected (%v)", webhookURLs, v)
+		}
+	}
+
+	if err := os.Unsetenv(namespaceEnv); err != nil {
+		t.Errorf("failed to set environment variable %s: %v", webhookEnv, err)
+	}
+	initConfig()
+	if namespace != "" {
+		t.Errorf("unset %s did not result in empty namespace: %v", namespaceEnv, namespace)
+	}
+
+	nsCheck := []string{
+		"police",
+		"reggatta-de-blanc",
+	}
+	for _, ns := range nsCheck {
+		if err := os.Setenv(namespaceEnv, ns); err != nil {
+			t.Errorf("failed to set environment variable %s: %v", namespaceEnv, err)
+		}
+		initConfig()
+		if namespace != ns {
+			t.Errorf("namespace (%v) not equal to expected (%v)", namespace, ns)
 		}
 	}
 }
