@@ -22,7 +22,7 @@ import (
 
 const (
 	pkg     = "k8vent"
-	version = "0.8.0"
+	version = "0.8.1"
 )
 
 // versionCmd represents the version command
