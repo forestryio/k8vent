@@ -18,11 +18,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"testing"
 
-	"github.com/Sirupsen/logrus"
+	log "github.com/Sirupsen/logrus"
 	"k8s.io/api/core/v1"
 )
+
+func TestMain(m *testing.M) {
+	log.SetOutput(ioutil.Discard)
+	os.Exit(m.Run())
+}
 
 func TestExtractPod(t *testing.T) {
 
@@ -37,8 +43,7 @@ func TestExtractPod(t *testing.T) {
 		t.Errorf("failed to unmarshal objects JSON into []interface{}: %v", err)
 	}
 
-	logger := logrus.WithField("pkg", "k8vent-test")
-	logrus.SetOutput(ioutil.Discard)
+	logger := log.WithField("pkg", "k8vent-test")
 
 	for i := 0; i < len(objects); i++ {
 		podName := fmt.Sprintf("sleep-85576868c9-jvtzb-%d", i)
@@ -97,8 +102,7 @@ func TestExtractPodAnnotation(t *testing.T) {
 		t.Errorf("failed to unmarshal objects JSON into []interface{}: %v", err)
 	}
 
-	logger := logrus.WithField("pkg", "k8vent-test")
-	logrus.SetOutput(ioutil.Discard)
+	logger := log.WithField("pkg", "k8vent-test")
 
 	for i := 0; i < len(objects); i++ {
 		podName := fmt.Sprintf("sleep-85576868c9-jvtzb-%d", i)

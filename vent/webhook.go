@@ -18,9 +18,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
-	"github.com/Sirupsen/logrus"
+	log "github.com/Sirupsen/logrus"
 	"github.com/cenk/backoff"
 )
 
@@ -29,34 +30,61 @@ import (
 func PostToWebhooks(urls []string, podEnv *K8PodEnv) {
 	objJSON, jsonErr := json.Marshal(podEnv)
 	if jsonErr != nil {
-		logrus.Errorf("failed to marshal event to JSON: %v: %+v", jsonErr, podEnv)
+		log.Errorf("failed to marshal event to JSON: %v: %+v", jsonErr, podEnv)
 		return
 	}
 
 	podSlug := podEnv.Pod.Namespace + "/" + podEnv.Pod.Name
 	for _, url := range urls {
 		go func(u string) {
-			logrus.Infof("posting pod '%s' to '%s'", podSlug, u)
-			if err := postToWebhook(u, objJSON); err != nil {
-				logrus.Errorf("failed to post pod '%s' to '%s': %s", podSlug, u, err.Error())
+			log.Infof("posting pod '%s' to '%s'", podSlug, u)
+			if err := postToWebhook(podSlug, u, objJSON); err != nil {
+				log.Errorf("failed to post pod '%s' to '%s': %s", podSlug, u, err.Error())
 			}
 		}(url)
 	}
 }
 
-func postToWebhook(url string, payload []byte) (e error) {
+// postToWebhook post the provided payload to the URL.
+func postToWebhook(pod string, url string, payload []byte) (e error) {
 
 	post := func() error {
 		resp, postErr := http.Post(url, "application/json", bytes.NewBuffer(payload))
 		if postErr != nil {
 			return fmt.Errorf("failed to POST event to %s: %v", url, postErr)
 		}
-		_ = resp.Body.Close()
-		if resp.StatusCode < 200 || resp.StatusCode > 299 {
-			return fmt.Errorf("non-200 response from webhook %s: %d", url, resp.StatusCode)
+		defer resp.Body.Close()
+		corrID, corrErr := extractCorrelationID(resp)
+		if corrErr != nil {
+			log.Warnf("failed to extract correlation ID from %s response: %v", url, corrErr)
 		}
+		if resp.StatusCode < 200 || resp.StatusCode > 299 {
+			return fmt.Errorf("non-200 response from webhook %s: code:%d,correlation-id:%s", url, resp.StatusCode, corrID)
+		}
+		log.WithFields(log.Fields{
+			"code":           resp.StatusCode,
+			"correlation-id": corrID,
+		}).Infof("posted pod '%s' to '%s'", pod, url)
 		return nil
 	}
 
 	return backoff.Retry(post, backoff.NewExponentialBackOff())
+}
+
+// extractCorrelationID reads the provided response body, parses it as
+// JSON, and returns the "correlation-id" element.
+func extractCorrelationID(resp *http.Response) (cid string, e error) {
+	body, readErr := ioutil.ReadAll(resp.Body)
+	if readErr != nil {
+		return "", fmt.Errorf("failed to read response: %v", readErr)
+	}
+	var respObj map[string]string
+	if err := json.Unmarshal(body, &respObj); err != nil {
+		return "", fmt.Errorf("failed to parse '%s' as JSON: %v", string(body), err)
+	}
+	corrID, corrExists := respObj["correlation-id"]
+	if !corrExists {
+		return "", fmt.Errorf("response '%s' has no 'correlation-id'", string(body))
+	}
+	return corrID, nil
 }

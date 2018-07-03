@@ -49,7 +49,7 @@ func TestPostToWebhooks(t *testing.T) {
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		resp := []byte(fmt.Sprintf(`{"status":"ok"}`))
+		resp := []byte(fmt.Sprintf(`{"correlation-id":"d95f0bc3-76c7-49a9-8eb3-6c427a44478d","message":"successfully posted event"}`))
 		if _, err := w.Write(resp); err != nil {
 			t.Errorf("failed to write server response: %v", err)
 			return
