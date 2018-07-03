@@ -43,15 +43,13 @@ func TestExtractPod(t *testing.T) {
 		t.Errorf("failed to unmarshal objects JSON into []interface{}: %v", err)
 	}
 
-	logger := log.WithField("pkg", "k8vent-test")
-
 	for i := 0; i < len(objects); i++ {
 		podName := fmt.Sprintf("sleep-85576868c9-jvtzb-%d", i)
 		containerName := fmt.Sprintf("sleep%d", i)
 		containerImage := fmt.Sprintf("atomist/sleep:0.2.%d", i)
 		hostIP := fmt.Sprintf("192.168.99.10%d", i)
 		podIP := fmt.Sprintf("172.17.0.%d", i)
-		pod, annot, err := extractPod(objects[i], logger)
+		pod, annot, err := extractPod(objects[i])
 		if err != nil {
 			t.Errorf("failed to extract object %d: %v", i, err)
 			continue
@@ -102,15 +100,13 @@ func TestExtractPodAnnotation(t *testing.T) {
 		t.Errorf("failed to unmarshal objects JSON into []interface{}: %v", err)
 	}
 
-	logger := log.WithField("pkg", "k8vent-test")
-
 	for i := 0; i < len(objects); i++ {
 		podName := fmt.Sprintf("sleep-85576868c9-jvtzb-%d", i)
 		containerName := fmt.Sprintf("sleep%d", i)
 		containerImage := fmt.Sprintf("atomist/sleep:0.2.%d", i)
 		hostIP := fmt.Sprintf("192.168.99.10%d", i)
 		podIP := fmt.Sprintf("172.17.0.%d", i)
-		pod, annot, err := extractPod(objects[i], logger)
+		pod, annot, err := extractPod(objects[i])
 		if err != nil {
 			t.Errorf("failed to extract object %d: %v", i, err)
 			continue

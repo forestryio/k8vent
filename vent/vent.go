@@ -34,7 +34,7 @@ import (
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
 
-	"github.com/Sirupsen/logrus"
+	log "github.com/Sirupsen/logrus"
 )
 
 const maxRetries = 5
@@ -42,7 +42,7 @@ const maxRetries = 5
 // Controller object
 // Based on Controller from github.com/skippbox/kubewatch
 type Controller struct {
-	logger    *logrus.Entry
+	logger    *log.Entry
 	clientset kubernetes.Interface
 	queue     workqueue.RateLimitingInterface
 	informer  cache.SharedIndexInformer
@@ -130,7 +130,7 @@ func newController(client kubernetes.Interface, urls []string, namespace string)
 	}
 
 	return &Controller{
-		logger:    logrus.WithField("pkg", "k8vent-pod"),
+		logger:    log.WithField("pkg", "k8vent-pod"),
 		clientset: client,
 		informer:  informer,
 		queue:     queue,
@@ -229,7 +229,7 @@ func (c *Controller) processItem(key string) error {
 	}
 	env := c.env
 	webhookURLs := c.urls
-	pod, annot, extractErr := extractPod(obj, c.logger)
+	pod, annot, extractErr := extractPod(obj)
 	if extractErr != nil {
 		return extractErr
 	}
@@ -262,7 +262,7 @@ func (c *Controller) processItem(key string) error {
 // unmarshaling of the annotation failed, the annotation is returned
 // as nil but the pod is still returned.  If an error occurs, e will
 // be non-nil.
-func extractPod(obj interface{}, logger *logrus.Entry) (p v1.Pod, a *K8VentPodAnnotation, e error) {
+func extractPod(obj interface{}) (p v1.Pod, a *K8VentPodAnnotation, e error) {
 	objJSON, jsonErr := json.Marshal(obj)
 	if jsonErr != nil {
 		return p, nil, fmt.Errorf("failed to marshal object to JSON: %v", jsonErr)
@@ -279,7 +279,7 @@ func extractPod(obj interface{}, logger *logrus.Entry) (p v1.Pod, a *K8VentPodAn
 
 	annot := &K8VentPodAnnotation{}
 	if err := json.Unmarshal([]byte(ventAnnot), annot); err != nil {
-		logger.Infof("failed to unmarshal k8vent annotation '%s': %v", ventAnnot, err)
+		log.Infof("failed to unmarshal k8vent annotation '%s': %v", ventAnnot, err)
 		return pod, nil, nil
 	}
 
