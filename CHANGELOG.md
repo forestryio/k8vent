@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/k8vent/compare/0.9.0...HEAD)
 
+### Changed
+
+-   Make logs more structured
+
 ## [0.9.0](https://github.com/atomist/k8vent/compare/0.8.0...0.9.0) - 2018-07-03
 
 Correlation release

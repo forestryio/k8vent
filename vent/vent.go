@@ -39,7 +39,7 @@ import (
 
 const maxRetries = 5
 
-var log = logrus.WithFields(logrus.Fields{
+var logger = logrus.WithFields(logrus.Fields{
 	"pkg":         "k8vent",
 	"environment": os.Getenv("ATOMIST_ENVIRONMENT"),
 })
@@ -47,7 +47,6 @@ var log = logrus.WithFields(logrus.Fields{
 // Controller object
 // Based on Controller from github.com/skippbox/kubewatch
 type Controller struct {
-	logger    *logrus.Entry
 	clientset kubernetes.Interface
 	queue     workqueue.RateLimitingInterface
 	informer  cache.SharedIndexInformer
@@ -135,7 +134,6 @@ func newController(client kubernetes.Interface, urls []string, namespace string)
 	}
 
 	return &Controller{
-		logger:    log,
 		clientset: client,
 		informer:  informer,
 		queue:     queue,
@@ -149,7 +147,7 @@ func (c *Controller) Run(stopCh <-chan struct{}) {
 	defer utilruntime.HandleCrash()
 	defer c.queue.ShutDown()
 
-	c.logger.Info("Starting k8vent controller")
+	logger.Info("Starting k8vent controller")
 
 	go c.informer.Run(stopCh)
 
@@ -158,7 +156,7 @@ func (c *Controller) Run(stopCh <-chan struct{}) {
 		return
 	}
 
-	c.logger.Info("k8vent controller synced and ready")
+	logger.Info("k8vent controller synced and ready")
 
 	wait.Until(c.runWorker, time.Second, stopCh)
 }
@@ -191,11 +189,11 @@ func (c *Controller) processNextItem() bool {
 		// No error, reset the ratelimit counters
 		c.queue.Forget(key)
 	} else if c.queue.NumRequeues(key) < maxRetries {
-		c.logger.Errorf("Error processing %s (will retry): %v", key, err)
+		logger.WithField("item", key).Errorf("Error processing item (will retry): %v", err)
 		c.queue.AddRateLimited(key)
 	} else {
 		// err != nil and too many retries
-		c.logger.Errorf("Error processing %s (giving up): %v", key, err)
+		logger.WithField("item", key).Errorf("Error processing item (giving up): %v", err)
 		c.queue.Forget(key)
 		utilruntime.HandleError(err)
 	}
@@ -222,14 +220,15 @@ type K8VentPodAnnotation struct {
 // processItem looks up key in the indexer, converts it into a v1.Pod,
 // and calls PostToWebhooks.
 func (c *Controller) processItem(key string) error {
-	c.logger.Infof("Processing change to Pod %s", key)
+	log := logger.WithField("pod", key)
+	log.Infof("Processing change to pod %s", key)
 
 	obj, exists, err := c.informer.GetIndexer().GetByKey(key)
 	if err != nil {
 		return fmt.Errorf("Error fetching object with key %s from store: %v", key, err)
 	}
 	if !exists {
-		c.logger.Infof("failed to look up object %s, probably deleted", key)
+		log.Infof("failed to look up object %s, probably deleted", key)
 		return nil
 	}
 	env := c.env
@@ -284,7 +283,7 @@ func extractPod(obj interface{}) (p v1.Pod, a *K8VentPodAnnotation, e error) {
 
 	annot := &K8VentPodAnnotation{}
 	if err := json.Unmarshal([]byte(ventAnnot), annot); err != nil {
-		log.Infof("failed to unmarshal k8vent annotation '%s': %v", ventAnnot, err)
+		logger.Infof("failed to unmarshal k8vent annotation '%s': %v", ventAnnot, err)
 		return pod, nil, nil
 	}
 

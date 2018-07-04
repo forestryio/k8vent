@@ -28,13 +28,15 @@ import (
 // PostToWebhooks marshals podEnv into JSON and posts it to the webhook
 // URLs provided.
 func PostToWebhooks(urls []string, podEnv *K8PodEnv) {
+	podSlug := podEnv.Pod.Namespace + "/" + podEnv.Pod.Name
+	log := logger.WithField("pod", podSlug)
+
 	objJSON, jsonErr := json.Marshal(podEnv)
 	if jsonErr != nil {
 		log.Errorf("failed to marshal event to JSON: %v: %+v", jsonErr, podEnv)
 		return
 	}
 
-	podSlug := podEnv.Pod.Namespace + "/" + podEnv.Pod.Name
 	for _, url := range urls {
 		go func(u string) {
 			log.Infof("posting pod '%s' to '%s'", podSlug, u)
@@ -47,6 +49,7 @@ func PostToWebhooks(urls []string, podEnv *K8PodEnv) {
 
 // postToWebhook post the provided payload to the URL.
 func postToWebhook(pod string, url string, payload []byte) (e error) {
+	log := logger.WithField("pod", pod)
 
 	post := func() error {
 		resp, postErr := http.Post(url, "application/json", bytes.NewBuffer(payload))
