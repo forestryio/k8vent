@@ -24,12 +24,9 @@ import (
 	"net/http"
 	"sync"
 	"testing"
-
-	log "github.com/Sirupsen/logrus"
 )
 
 func TestPostToWebhooks(t *testing.T) {
-	log.Info("starting TestPostToWebhooks")
 	objects, loadErr := loadObjects("testdata/vent.json")
 	if loadErr != nil {
 		t.Error(loadErr.Error())

@@ -21,7 +21,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 	"github.com/cenk/backoff"
 )
 
@@ -61,7 +61,7 @@ func postToWebhook(pod string, url string, payload []byte) (e error) {
 		if resp.StatusCode < 200 || resp.StatusCode > 299 {
 			return fmt.Errorf("non-200 response from webhook %s: code:%d,correlation-id:%s", url, resp.StatusCode, corrID)
 		}
-		log.WithFields(log.Fields{
+		log.WithFields(logrus.Fields{
 			"code":           resp.StatusCode,
 			"correlation-id": corrID,
 		}).Infof("posted pod '%s' to '%s'", pod, url)

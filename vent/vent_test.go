@@ -21,12 +21,12 @@ import (
 	"os"
 	"testing"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 	"k8s.io/api/core/v1"
 )
 
 func TestMain(m *testing.M) {
-	log.SetOutput(ioutil.Discard)
+	logrus.SetOutput(ioutil.Discard)
 	os.Exit(m.Run())
 }
 

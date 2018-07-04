@@ -34,15 +34,20 @@ import (
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 const maxRetries = 5
 
+var log = logrus.WithFields(logrus.Fields{
+	"pkg":         "k8vent",
+	"environment": os.Getenv("ATOMIST_ENVIRONMENT"),
+})
+
 // Controller object
 // Based on Controller from github.com/skippbox/kubewatch
 type Controller struct {
-	logger    *log.Entry
+	logger    *logrus.Entry
 	clientset kubernetes.Interface
 	queue     workqueue.RateLimitingInterface
 	informer  cache.SharedIndexInformer
@@ -130,7 +135,7 @@ func newController(client kubernetes.Interface, urls []string, namespace string)
 	}
 
 	return &Controller{
-		logger:    log.WithField("pkg", "k8vent-pod"),
+		logger:    log,
 		clientset: client,
 		informer:  informer,
 		queue:     queue,
