@@ -59,6 +59,8 @@ type Controller struct {
 // never return.
 func Vent(urls []string, namespace string) (e error) {
 
+	logrus.SetFormatter(&logrus.JSONFormatter{})
+
 	config, configErr := rest.InClusterConfig()
 	if configErr != nil {
 		return configErr
