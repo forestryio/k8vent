@@ -40,7 +40,7 @@ import (
 const maxRetries = 5
 
 var logger = logrus.WithFields(logrus.Fields{
-	"pkg":         "k8vent",
+	"service":     "k8vent",
 	"environment": os.Getenv("ATOMIST_ENVIRONMENT"),
 })
 
