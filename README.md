@@ -14,9 +14,7 @@ instructions on using Atomist with Kubernetes.  Briefly, if you
 already have an [Atomist workspace][atomist-getting-started], you can
 run the following commands to create the necessary resources in your
 Kubernetes cluster.  Replace `WORKSPACE_ID` with your Atomist
-workspace/team ID and `TOKEN` with a GitHub token with "read:org"
-scopes for a user within the GitHub organization linked to your
-Atomist workspace.
+workspace ID.
 
 [atomist-kube]: https://docs.atomist.com/user/kubernetes/ (Atomist - Kubernetes)
 [atomist-getting-started]: https://docs.atomist.com/user/ (Atomist - Getting Started)
@@ -102,8 +100,8 @@ a Docker image is created by POSTing data to the Atomist webhook
 endpoint
 `https://webhook.atomist.com/atomist/link-image/teams/WORKSPACE_ID`,
 where `WORKSPACE_ID` should be replaced with the same Atomist
-workspace/team ID used in the `K8VENT_WEBHOOKS` environment variable
-above.  The POST data should be JSON of the form:
+workspace ID used in the `K8VENT_WEBHOOKS` environment variable above.
+The POST data should be JSON of the form:
 
 ```javascript
 {
@@ -137,7 +135,7 @@ $ curl -s -f -X POST -H "Content-Type: application/json" \
 ```
 
 replacing the ellipses with the appropriate JSON and `WORKSPACE_ID` with
-the appropriate Atomist workspace/team ID.
+the appropriate Atomist workspace ID.
 
 ## Webhook payload
 
