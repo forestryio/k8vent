@@ -3,7 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased](https://github.com/atomist/k8vent/compare/0.10.0...HEAD)
+## [Unreleased](https://github.com/atomist/k8vent/compare/0.11.0...HEAD)
+
+## [0.11.0](https://github.com/atomist/k8vent/compare/0.10.0...0.11.0) - 2019-03-12
+
+### Changed
+
+-   k8vent now runs as non-root user in Docker container
 
 ## [0.10.0](https://github.com/atomist/k8vent/compare/0.9.0...0.10.0) - 2018-08-06
 
