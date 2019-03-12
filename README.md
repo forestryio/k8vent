@@ -13,10 +13,10 @@ See the [Atomist Kubernetes documentation][atomist-kube] for detailed
 instructions on using Atomist with Kubernetes.  Briefly, if you
 already have an [Atomist workspace][atomist-getting-started], you can
 run the following commands to create the necessary resources in your
-Kubernetes cluster.  Replace `WORKSPACE_ID` with your Atomist
-workspace ID.
+Kubernetes cluster.  Replace `CLUSTER_ENV` with a unique name for your
+Kubernetes cluster and `WORKSPACE_ID` with your Atomist workspace ID.
 
-[atomist-kube]: https://docs.atomist.com/user/kubernetes/ (Atomist - Kubernetes)
+[atomist-kube]: https://docs.atomist.com/pack/kubernetes/ (Atomist - Kubernetes)
 [atomist-getting-started]: https://docs.atomist.com/user/ (Atomist - Getting Started)
 
 ```
@@ -34,14 +34,9 @@ When running k8vent, webhook URLs can be specified in several ways:
     a properly escaped JSON object with the key "webhooks" whose value
     is an array of webhook URLs.  For example:
 
-        "metadata": {
-          "labels": {
-            "app": "my-app",
-          },
-          "annotations": {
-            "atomist.com/k8vent": "{\"webhooks\":[\"https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID\"]}"
-          }
-        },
+        metadata:
+          annotations:
+            atomist.com/k8vent: '{"webhooks":["https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID"]}'
 
 -   The `--url` command-line option, which can be specified
     multiple times.
@@ -58,8 +53,7 @@ If webhooks are provided in the pod spec, they override any provided
 on the command line or by the environment.  If webhooks are set using
 the `--url` command-line option, they override any set by the
 `K8VENT_WEBHOOKS` environment variable.  In other words, webhooks
-provided by the different methods are not additive.  If no webhook
-URLs are provided, `k8vent` exits with an error.
+provided by the different methods are not additive.
 
 ## Environment
 
@@ -74,14 +68,9 @@ ways:
     a properly escaped JSON object with the key "environment" whose
     value is the environment string.  For example:
 
-        "metadata": {
-          "labels": {
-            "app": "my-app",
-          },
-          "annotations": {
-            "atomist.com/k8vent": "{\"environment\":\"production\"}"
-          }
-        },
+        metadata:
+          annotations:
+            atomist.com/k8vent: '{"environment":"production"}'
 
 -   The environment variable `ATOMIST_ENVIRONMENT`
 
@@ -103,7 +92,7 @@ where `WORKSPACE_ID` should be replaced with the same Atomist
 workspace ID used in the `K8VENT_WEBHOOKS` environment variable above.
 The POST data should be JSON of the form:
 
-```javascript
+```json
 {
   "git": {
     "owner": "REPO_OWNER",
@@ -130,7 +119,7 @@ has been pushed to the registry.
 
 ```
 $ curl -s -f -X POST -H "Content-Type: application/json" \
-    --data-binary '{"git":{...},"docker":{...},"type":"link-image"}' \
+    --data-binary '{"git":{…},"docker":{…},"type":"link-image"}' \
     https://webhook.atomist.com/atomist/link-image/teams/WORKSPACE_ID
 ```
 
@@ -199,5 +188,5 @@ $ make
 Created by [Atomist][atomist].
 Need Help?  [Join our Slack team][slack].
 
-[atomist]: https://atomist.com/
-[slack]: https://join.atomist.com/
+[atomist]: https://atomist.com/ (Atomist - How Teams Deliver Software)
+[slack]: https://join.atomist.com/ (Atomist Community Slack Workspace)

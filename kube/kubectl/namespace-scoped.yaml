@@ -1,56 +1,76 @@
----
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: k8vent-serviceaccount
+  labels:
+    app.kubernetes.io/component: service-account
+    app.kubernetes.io/name: k8vent
+    app.kubernetes.io/part-of: k8vent
+    atomist.com/workspaceId: T29E48P34
+  name: k8vent
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: k8vent-role
+  labels:
+    app.kubernetes.io/component: role
+    app.kubernetes.io/name: k8vent
+    app.kubernetes.io/part-of: k8vent
+    atomist.com/workspaceId: T29E48P34
+  name: k8vent
 rules:
   - apiGroups: [""]
     resources: ["pods"]
     verbs: ["get", "list", "watch"]
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: k8vent-role-binding
+  labels:
+    app.kubernetes.io/component: role-binding
+    app.kubernetes.io/name: k8vent
+    app.kubernetes.io/part-of: k8vent
+    atomist.com/workspaceId: T29E48P34
+  name: k8vent
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: k8vent-role
+  name: k8vent
 subjects:
   - kind: ServiceAccount
-    name: k8vent-serviceaccount
+    name: k8vent
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: k8vent
   labels:
-    app: k8vent
-    owner: atomist
+    app.kubernetes.io/component: application
+    app.kubernetes.io/name: k8vent
+    app.kubernetes.io/part-of: k8vent
+    atomist.com/workspaceId: T29E48P34
+  name: k8vent
 spec:
-  replicas: 1
-  revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: k8vent
-      owner: atomist
+      app.kubernetes.io/name: k8vent
+      atomist.com/workspaceId: T29E48P34
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   template:
     metadata:
+      annotations:
+        atomist.com/k8vent: '{"webhooks":["https://webhook.atomist.com/atomist/kube/teams/T29E48P34"]}'
       labels:
-        app: k8vent
-        owner: atomist
-        version: '0'
+        app.kubernetes.io/component: application
+        app.kubernetes.io/name: k8vent
+        app.kubernetes.io/part-of: k8vent
+        app.kubernetes.io/version: "0"
+        atomist.com/workspaceId: T29E48P34
     spec:
-      serviceAccountName: k8vent-serviceaccount
       containers:
-        - name: k8vent
-          image: atomist/k8vent:0.10.0
-          env:
+        - env:
             - name: ATOMIST_ENVIRONMENT
               valueFrom:
                 secretKeyRef:
@@ -65,6 +85,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+          image: atomist/k8vent:0.11.0
+          name: k8vent
           resources:
             limits:
               cpu: 100m
@@ -72,10 +94,13 @@ spec:
             requests:
               cpu: 100m
               memory: 50Mi
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+      securityContext:
+        fsGroup: 2866
+        runAsGroup: 2866
+        runAsNonRoot: true
+        runAsUser: 2866
+      serviceAccountName: k8vent
