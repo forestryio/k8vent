@@ -60,8 +60,6 @@ spec:
       maxUnavailable: 0
   template:
     metadata:
-      annotations:
-        atomist.com/k8vent: '{"webhooks":["https://webhook.atomist.com/atomist/kube/teams/T29E48P34"]}'
       labels:
         app.kubernetes.io/component: application
         app.kubernetes.io/name: k8vent
