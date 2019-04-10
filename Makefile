@@ -1,5 +1,3 @@
-# Makefile for Travis CI
-
 GO = go
 GO_FLAGS = -v
 GO_ARGS = $(shell go list ./...)
