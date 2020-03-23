@@ -94,7 +94,7 @@ spec:
                   key: webhooks
             - name: TMPDIR
               value: /tmp
-          image: atomist/k8svent:0.11.0
+          image: atomist/k8svent:0.12.0
           name: k8svent
           resources:
             limits:
