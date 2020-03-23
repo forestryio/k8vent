@@ -71,12 +71,12 @@ spec:
         - env:
             - name: ATOMIST_ENVIRONMENT
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: k8svent
                   key: environment
             - name: K8SVENT_WEBHOOKS
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: k8svent
                   key: webhooks
             - name: K8SVENT_NAMESPACE

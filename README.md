@@ -19,7 +19,7 @@ Kubernetes cluster and `WORKSPACE_ID` with your Atomist workspace ID.
 
 ```
 $ kubectl apply -f https://raw.githubusercontent.com/atomist/k8svent/master/kube/kubectl/cluster-wide.yaml
-$ kubectl create secret --namespace=k8svent generic k8svent --from-literal=environment=CLUSTER_ENV \
+$ kubectl create configmap --namespace=k8svent k8svent --from-literal=environment=CLUSTER_ENV \
     --from-literal=webhooks=https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID
 ```
 
