@@ -26,6 +26,9 @@ install: test
 vet: install
 	$(GO) vet $(GO_FLAGS) $(GO_ARGS)
 
+lint:
+	golangci-lint run $(GO_ARGS)
+
 $(DOCKER_TARGET): clean-local
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build $(GO_FLAGS) $(GO_BUILD_ARGS) -a --installsuffix cgo --ldflags="-s" -o "$(DOCKER_TARGET)"
 
