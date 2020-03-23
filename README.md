@@ -1,10 +1,8 @@
-# k8vent
+# k8svent
 
-[![atomist sdm goals](https://badge.atomist.com/T29E48P34/atomist/k8vent/f4268ca9-b9f2-4717-902b-75892c2ec9ed)](https://app.atomist.com/workspace/T29E48P34)
-
-Send kubernetes pods as JSON to webhook endpoints.  k8vent is
-typically run from its Docker image in a kubernetes cluster to send
-pod state changes to the Atomist kubernetes webhook endpoint for your
+Send Kubernetes pods as JSON to webhook endpoints.  k8svent is
+typically run from its Docker image in a Kubernetes cluster to send
+pod state changes to the Atomist Kubernetes webhook endpoint for your
 Atomist workspace.
 
 ## Running
@@ -20,39 +18,39 @@ Kubernetes cluster and `WORKSPACE_ID` with your Atomist workspace ID.
 [atomist-getting-started]: https://docs.atomist.com/user/ (Atomist - Getting Started)
 
 ```
-$ kubectl apply -f https://raw.githubusercontent.com/atomist/k8vent/master/kube/kubectl/cluster-wide.yaml
-$ kubectl create secret --namespace=k8vent generic k8vent --from-literal=environment=CLUSTER_ENV \
+$ kubectl apply -f https://raw.githubusercontent.com/atomist/k8svent/master/kube/kubectl/cluster-wide.yaml
+$ kubectl create secret --namespace=k8svent generic k8svent --from-literal=environment=CLUSTER_ENV \
     --from-literal=webhooks=https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID
 ```
 
 ## Webhook URLs
 
-When running k8vent, webhook URLs can be specified in several ways:
+When running k8svent, webhook URLs can be specified in several ways:
 
 -   Pod-specific webhook URLs in the pod's metadata annotations.  Use
-    "atomist.com/k8vent" as the annotation key and the value should be
+    "atomist.com/k8svent" as the annotation key and the value should be
     a properly escaped JSON object with the key "webhooks" whose value
     is an array of webhook URLs.  For example:
 
         metadata:
           annotations:
-            atomist.com/k8vent: '{"webhooks":["https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID"]}'
+            atomist.com/k8svent: '{"webhooks":["https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID"]}'
 
 -   The `--url` command-line option, which can be specified
     multiple times.
 
-        $ k8vent --url=https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID \
+        $ k8svent --url=https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID \
             --url=https://second.com/webhook
 
--   A comma-delimited list as the value of the `K8VENT_WEBHOOKS`
+-   A comma-delimited list as the value of the `K8SVENT_WEBHOOKS`
     environment variable.
 
-        $ K8VENT_WEBHOOKS=https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID,https://second.com/webhook k8vent
+        $ K8SVENT_WEBHOOKS=https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID,https://second.com/webhook k8svent
 
 If webhooks are provided in the pod spec, they override any provided
 on the command line or by the environment.  If webhooks are set using
 the `--url` command-line option, they override any set by the
-`K8VENT_WEBHOOKS` environment variable.  In other words, webhooks
+`K8SVENT_WEBHOOKS` environment variable.  In other words, webhooks
 provided by the different methods are not additive.
 
 ## Environment
@@ -64,20 +62,20 @@ clusters, namespaces, etc.  You can provide this value two different
 ways:
 
 -   Pod-specific environment in the pod's metadata annotations.  Use
-    "atomist.com/k8vent" as the annotation key and the value should be
+    "atomist.com/k8svent" as the annotation key and the value should be
     a properly escaped JSON object with the key "environment" whose
     value is the environment string.  For example:
 
         metadata:
           annotations:
-            atomist.com/k8vent: '{"environment":"production"}'
+            atomist.com/k8svent: '{"environment":"production"}'
 
 -   The environment variable `ATOMIST_ENVIRONMENT`
 
-        $ ATOMIST_ENVIRONMENT=production k8vent
+        $ ATOMIST_ENVIRONMENT=production k8svent
 
 The pod-specific annotation overrides any value of
-`ATOMIST_ENVIRONMENT` in the k8vent process' environment.
+`ATOMIST_ENVIRONMENT` in the k8svent process' environment.
 
 ## Linking to Atomist lifecycle events
 
@@ -89,7 +87,7 @@ a Docker image is created by POSTing data to the Atomist webhook
 endpoint
 `https://webhook.atomist.com/atomist/link-image/teams/WORKSPACE_ID`,
 where `WORKSPACE_ID` should be replaced with the same Atomist
-workspace ID used in the `K8VENT_WEBHOOKS` environment variable above.
+workspace ID used in the `K8SVENT_WEBHOOKS` environment variable above.
 The POST data should be JSON of the form:
 
 ```json
@@ -128,9 +126,9 @@ the appropriate Atomist workspace ID.
 
 ## Webhook payload
 
-k8vent subscribes to _all_ pods via the kubernetes watch API.  When a
+k8svent subscribes to _all_ pods via the kubernetes watch API.  When a
 pod changes, e.g., it is created, deleted or otherwise changes state,
-the current pod structure and the environment of the `k8vent` pod is
+the current pod structure and the environment of the `k8svent` pod is
 serialized as JSON and sent to the configured webhook endpoints.  The
 JSON structure is
 
@@ -156,13 +154,13 @@ You can download, install, and develop locally using the normal Go
 build tools.
 
 ```
-$ go get github.com/atomist/k8vent
+$ go get github.com/atomist/k8svent
 ```
 
-The source code will be under `$GOPATH/src/github.com/atomist/k8vent`.
-If `$GOPATH/bin` is in your `PATH`, then the `k8vent` binary will be
+The source code will be under `$GOPATH/src/github.com/atomist/k8svent`.
+If `$GOPATH/bin` is in your `PATH`, then the `k8svent` binary will be
 in your path when the above command completes successfully.  Then you
-can run k8vent locally simply by invoking `k8vent` from your terminal.
+can run k8svent locally simply by invoking `k8svent` from your terminal.
 
 If you make changes to the code, you can run tests using the Go
 tooling

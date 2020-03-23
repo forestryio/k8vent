@@ -15,10 +15,10 @@ RUN curl -s -L -O https://github.com/Yelp/dumb-init/releases/download/v$DUMB_INI
     && dpkg -i dumb-init_${DUMB_INIT_VERSION}_amd64.deb \
     && rm -f dumb-init_${DUMB_INIT_VERSION}_amd64.deb
 
-WORKDIR /opt/k8vent
+WORKDIR /opt/k8svent
 
-COPY ./k8vent ./
+COPY ./k8svent ./
 
-ENTRYPOINT ["dumb-init", "./k8vent"]
+ENTRYPOINT ["dumb-init", "./k8svent"]
 
 USER atomist:atomist

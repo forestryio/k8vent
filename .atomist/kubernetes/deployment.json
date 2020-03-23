@@ -10,7 +10,7 @@
                 "valueFrom": {
                   "secretKeyRef": {
                     "key": "environment",
-                    "name": "k8vent"
+                    "name": "k8svent"
                   }
                 }
               },
@@ -19,7 +19,7 @@
                 "valueFrom": {
                   "secretKeyRef": {
                     "key": "webhooks",
-                    "name": "k8vent"
+                    "name": "k8svent"
                   }
                 }
               }

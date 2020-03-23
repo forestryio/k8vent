@@ -3,10 +3,10 @@ GO_FLAGS = -v
 GO_ARGS = $(shell go list ./...)
 GO_BUILD_ARGS =
 
-TARGET = k8vent
+TARGET = k8svent
 DOCKER_TARGET = docker/$(TARGET)
 DOCKER_IMAGE = atomist/$(TARGET)
-DOCKER_VERSION = 0.11.1
+DOCKER_VERSION = 0.12.0
 DOCKER_TAG = $(DOCKER_IMAGE):$(DOCKER_VERSION)
 
 all: vet

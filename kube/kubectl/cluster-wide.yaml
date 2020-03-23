@@ -3,31 +3,31 @@ kind: Namespace
 metadata:
   labels:
     app.kubernetes.io/component: namespace
-    app.kubernetes.io/name: k8vent
-    app.kubernetes.io/part-of: k8vent
+    app.kubernetes.io/name: k8svent
+    app.kubernetes.io/part-of: k8svent
     atomist.com/workspaceId: T29E48P34
-  name: k8vent
+  name: k8svent
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
     app.kubernetes.io/component: service-account
-    app.kubernetes.io/name: k8vent
-    app.kubernetes.io/part-of: k8vent
+    app.kubernetes.io/name: k8svent
+    app.kubernetes.io/part-of: k8svent
     atomist.com/workspaceId: T29E48P34
-  name: k8vent
-  namespace: k8vent
+  name: k8svent
+  namespace: k8svent
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/component: role
-    app.kubernetes.io/name: k8vent
-    app.kubernetes.io/part-of: k8vent
+    app.kubernetes.io/name: k8svent
+    app.kubernetes.io/part-of: k8svent
     atomist.com/workspaceId: T29E48P34
-  name: k8vent
+  name: k8svent
 rules:
   - apiGroups: [""]
     resources: ["pods"]
@@ -38,33 +38,33 @@ kind: ClusterRoleBinding
 metadata:
   labels:
     app.kubernetes.io/component: role-binding
-    app.kubernetes.io/name: k8vent
-    app.kubernetes.io/part-of: k8vent
+    app.kubernetes.io/name: k8svent
+    app.kubernetes.io/part-of: k8svent
     atomist.com/workspaceId: T29E48P34
-  name: k8vent
+  name: k8svent
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: k8vent
+  name: k8svent
 subjects:
   - kind: ServiceAccount
-    name: k8vent
-    namespace: k8vent
+    name: k8svent
+    namespace: k8svent
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/component: application
-    app.kubernetes.io/name: k8vent
-    app.kubernetes.io/part-of: k8vent
+    app.kubernetes.io/name: k8svent
+    app.kubernetes.io/part-of: k8svent
     atomist.com/workspaceId: T29E48P34
-  name: k8vent
-  namespace: k8vent
+  name: k8svent
+  namespace: k8svent
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: k8vent
+      app.kubernetes.io/name: k8svent
       atomist.com/workspaceId: T29E48P34
   strategy:
     type: RollingUpdate
@@ -75,8 +75,8 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/component: application
-        app.kubernetes.io/name: k8vent
-        app.kubernetes.io/part-of: k8vent
+        app.kubernetes.io/name: k8svent
+        app.kubernetes.io/part-of: k8svent
         app.kubernetes.io/version: "0"
         atomist.com/workspaceId: T29E48P34
     spec:
@@ -85,17 +85,17 @@ spec:
             - name: ATOMIST_ENVIRONMENT
               valueFrom:
                 secretKeyRef:
-                  name: k8vent
+                  name: k8svent
                   key: environment
-            - name: K8VENT_WEBHOOKS
+            - name: K8SVENT_WEBHOOKS
               valueFrom:
                 secretKeyRef:
-                  name: k8vent
+                  name: k8svent
                   key: webhooks
             - name: TMPDIR
               value: /tmp
-          image: atomist/k8vent:0.11.0
-          name: k8vent
+          image: atomist/k8svent:0.11.0
+          name: k8svent
           resources:
             limits:
               cpu: 100m
@@ -115,7 +115,7 @@ spec:
         runAsGroup: 2866
         runAsNonRoot: true
         runAsUser: 2866
-      serviceAccountName: k8vent
+      serviceAccountName: k8svent
       volumes:
         - emptyDir: {}
           name: tmp

@@ -1,4 +1,4 @@
-// Copyright © 2018 Atomist
+// Copyright © 2020 Atomist
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import (
 const maxRetries = 5
 
 var logger = logrus.WithFields(logrus.Fields{
-	"service":     "k8vent",
+	"service":     "k8svent",
 	"environment": os.Getenv("ATOMIST_ENVIRONMENT"),
 })
 
@@ -144,12 +144,12 @@ func newController(client kubernetes.Interface, urls []string, namespace string)
 	}
 }
 
-// Run starts the k8vent controller
+// Run starts the k8svent controller
 func (c *Controller) Run(stopCh <-chan struct{}) {
 	defer utilruntime.HandleCrash()
 	defer c.queue.ShutDown()
 
-	logger.Info("Starting k8vent controller")
+	logger.Info("Starting k8svent controller")
 
 	go c.informer.Run(stopCh)
 
@@ -158,7 +158,7 @@ func (c *Controller) Run(stopCh <-chan struct{}) {
 		return
 	}
 
-	logger.Info("k8vent controller synced and ready")
+	logger.Info("k8svent controller synced and ready")
 
 	wait.Until(c.runWorker, time.Second, stopCh)
 }
@@ -210,11 +210,11 @@ type K8PodEnv struct {
 	Env map[string]string `json:"env"`
 }
 
-const k8ventAnnotationKey = "atomist.com/k8vent"
+const k8sventAnnotationKey = "atomist.com/k8svent"
 
-// K8VentPodAnnotation defines the valid structure of the
-// "atomist.com/k8vent" pod annotation.
-type K8VentPodAnnotation struct {
+// K8sVentPodAnnotation defines the valid structure of the
+// "atomist.com/k8svent" pod annotation.
+type K8sVentPodAnnotation struct {
 	Webhooks    []string `json:"webhooks"`
 	Environment string   `json:"environment"`
 }
@@ -263,12 +263,12 @@ func (c *Controller) processItem(key string) error {
 
 // extractPod tries to convert object into a v1.Pod by marshaling it
 // to JSON and back again, returning it as p.  If there is an
-// "atomist.com/k8vent" annotation on the pod, it parses it as JSON
+// "atomist.com/k8svent" annotation on the pod, it parses it as JSON
 // and returns the value of the annotation, if it exists, as a.  If
 // unmarshaling of the annotation failed, the annotation is returned
 // as nil but the pod is still returned.  If an error occurs, e will
 // be non-nil.
-func extractPod(obj interface{}) (p v1.Pod, a *K8VentPodAnnotation, e error) {
+func extractPod(obj interface{}) (p v1.Pod, a *K8sVentPodAnnotation, e error) {
 	objJSON, jsonErr := json.Marshal(obj)
 	if jsonErr != nil {
 		return p, nil, fmt.Errorf("failed to marshal object to JSON: %v", jsonErr)
@@ -278,14 +278,14 @@ func extractPod(obj interface{}) (p v1.Pod, a *K8VentPodAnnotation, e error) {
 		return p, nil, fmt.Errorf("failed to unmarshal object as Pod: %v", err)
 	}
 
-	ventAnnot, annotOK := pod.Annotations[k8ventAnnotationKey]
+	ventAnnot, annotOK := pod.Annotations[k8sventAnnotationKey]
 	if !annotOK {
 		return pod, nil, nil
 	}
 
-	annot := &K8VentPodAnnotation{}
+	annot := &K8sVentPodAnnotation{}
 	if err := json.Unmarshal([]byte(ventAnnot), annot); err != nil {
-		logger.Infof("failed to unmarshal k8vent annotation '%s': %v", ventAnnot, err)
+		logger.Infof("failed to unmarshal k8svent annotation '%s': %v", ventAnnot, err)
 		return pod, nil, nil
 	}
 

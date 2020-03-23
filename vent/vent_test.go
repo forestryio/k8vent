@@ -1,4 +1,4 @@
-// Copyright © 2018 Atomist
+// Copyright © 2020 Atomist
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ func TestExtractPodAnnotation(t *testing.T) {
 			continue
 		}
 		if annot == nil {
-			t.Errorf("failed to extract k8vent annotation from object %d: %v", i, annot)
+			t.Errorf("failed to extract k8svent annotation from object %d: %v", i, annot)
 		} else {
 			if i > 0 {
 				env := fmt.Sprintf("env-%d", i)

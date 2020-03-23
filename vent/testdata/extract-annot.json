@@ -14,7 +14,7 @@
       },
       "annotations": {
         "kubernetes.io/created-by": "{\"kind\":\"SerializedReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"ReplicaSet\",\"namespace\":\"default\",\"name\":\"sleep-85576868c9\",\"uid\":\"3647fb49-f0c9-11e7-8b0c-080027815bd2\",\"apiVersion\":\"extensions\",\"resourceVersion\":\"164270\"}}\n",
-        "atomist.com/k8vent": "{\"webhooks\":[\"https://webhook.atomist.com/atomist/kube/teams/TEAM_ID0\"]}"
+        "atomist.com/k8svent": "{\"webhooks\":[\"https://webhook.atomist.com/atomist/kube/teams/TEAM_ID0\"]}"
       },
       "ownerReferences": [
         {
@@ -121,7 +121,7 @@
         "pod-template-hash": "4113242475"
       },
       "annotations": {
-        "atomist.com/k8vent": "{\"webhooks\":[\"https://webhook.atomist.com/atomist/kube/teams/TEAM_ID0\",\"https://webhook.atomist.com/atomist/kube/teams/TEAM_ID1\"],\"environment\":\"env-1\"}",
+        "atomist.com/k8svent": "{\"webhooks\":[\"https://webhook.atomist.com/atomist/kube/teams/TEAM_ID0\",\"https://webhook.atomist.com/atomist/kube/teams/TEAM_ID1\"],\"environment\":\"env-1\"}",
         "kubernetes.io/created-by": "{\"kind\":\"SerializedReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"ReplicaSet\",\"namespace\":\"default\",\"name\":\"sleep-85576868c9\",\"uid\":\"3647fb49-f0c9-11e7-8b0c-080027815bd2\",\"apiVersion\":\"extensions\",\"resourceVersion\":\"164270\"}}\n"
       },
       "ownerReferences": [
@@ -230,7 +230,7 @@
       },
       "annotations": {
         "kubernetes.io/created-by": "{\"kind\":\"SerializedReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"ReplicaSet\",\"namespace\":\"default\",\"name\":\"sleep-85576868c9\",\"uid\":\"3647fb49-f0c9-11e7-8b0c-080027815bd2\",\"apiVersion\":\"extensions\",\"resourceVersion\":\"164270\"}}\n",
-        "atomist.com/k8vent": "{\"environment\":\"env-2\",\"webhooks\":[\"https://webhook.atomist.com/atomist/kube/teams/TEAM_ID0\",\"https://webhook.atomist.com/atomist/kube/teams/TEAM_ID1\",\"https://webhook.atomist.com/atomist/kube/teams/TEAM_ID2\"]}"
+        "atomist.com/k8svent": "{\"environment\":\"env-2\",\"webhooks\":[\"https://webhook.atomist.com/atomist/kube/teams/TEAM_ID0\",\"https://webhook.atomist.com/atomist/kube/teams/TEAM_ID1\",\"https://webhook.atomist.com/atomist/kube/teams/TEAM_ID2\"]}"
       },
       "ownerReferences": [
         {

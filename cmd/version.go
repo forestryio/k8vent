@@ -1,4 +1,4 @@
-// Copyright © 2018 Atomist
+// Copyright © 2020 Atomist
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import (
 )
 
 const (
-	pkg     = "k8vent"
-	version = "0.11.1"
+	pkg     = "k8svent"
+	version = "0.12.0"
 )
 
 // versionCmd represents the version command

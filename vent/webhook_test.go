@@ -1,4 +1,4 @@
-// Copyright © 2018 Atomist
+// Copyright © 2020 Atomist
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,14 +39,14 @@ func TestPostToWebhooks(t *testing.T) {
 	m := &sync.Mutex{}
 	stopCh := make(chan bool, len(objects))
 	defer close(stopCh)
-	tail := "/k8vent"
+	tail := "/k8svent"
 	http.HandleFunc(tail, func(w http.ResponseWriter, r *http.Request) {
 		if err := storeObject(m, store, w, r, stopCh); err != nil {
 			t.Errorf("failed to store event %v: %v", r, err)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		resp := []byte(fmt.Sprintf(`{"correlation-id":"d95f0bc3-76c7-49a9-8eb3-6c427a44478d","message":"successfully posted event"}`))
+		resp := []byte(`{"correlation-id":"d95f0bc3-76c7-49a9-8eb3-6c427a44478d","message":"successfully posted event"}`)
 		if _, err := w.Write(resp); err != nil {
 			t.Errorf("failed to write server response: %v", err)
 			return
@@ -84,7 +84,7 @@ func TestPostToWebhook(t *testing.T) {
   "env": {
     "ATOMIST_ENVIRONMENT": "dips",
     "HOME": "/root",
-    "HOSTNAME": "k8vent-65bc5b5c56-9kfkk",
+    "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
     "KUBERNETES_PORT": "tcp://10.96.0.1:443",
     "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
     "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
@@ -211,11 +211,11 @@ func TestPostToWebhook(t *testing.T) {
   }
 }`)
 
-	tail := "/k8vent"
+	tail := "/k8svent"
 	mux := http.NewServeMux()
 	mux.HandleFunc(tail, func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		resp := []byte(fmt.Sprintf(`{"status":"ok"}`))
+		resp := []byte(`{"status":"ok"}`)
 		if _, err := w.Write(resp); err != nil {
 			t.Errorf("failed to write server response: %v", err)
 			return

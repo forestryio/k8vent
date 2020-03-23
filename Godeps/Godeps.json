@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/atomist/k8vent",
+	"ImportPath": "github.com/atomist/k8svent",
 	"GoVersion": "go1.9",
 	"GodepVersion": "v79",
 	"Packages": [
