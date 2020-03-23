@@ -3,7 +3,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased](https://github.com/atomist/k8svent/compare/0.11.0...HEAD)
+## [Unreleased](https://github.com/atomist/k8svent/compare/0.12.0...HEAD)
+
+## [0.11.0](https://github.com/atomist/k8svent/compare/0.11.0...0.12.0) - 2020-03-23
+
+### Changed
+
+-   Name to k8svent
+-   Use Go modules
+-   Update Docker base image
 
 ## [0.11.0](https://github.com/atomist/k8svent/compare/0.10.0...0.11.0) - 2019-03-12
 
