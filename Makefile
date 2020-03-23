@@ -1,6 +1,6 @@
 GO = go
 GO_FLAGS = -v
-GO_ARGS = $(shell go list ./...)
+GO_ARGS = ./...
 GO_BUILD_ARGS =
 
 TARGET = k8svent
