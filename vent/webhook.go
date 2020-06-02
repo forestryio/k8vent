@@ -1,4 +1,4 @@
-// Copyright © 2018 Atomist
+// Copyright © 2020 Atomist
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import (
 
 // PostToWebhooks marshals podEnv into JSON and posts it to the webhook
 // URLs provided.
-func PostToWebhooks(urls []string, podEnv *K8PodEnv) {
+func PostToWebhooks(urls []string, podEnv *K8PodEnv, secret string) {
 	podSlug := podEnv.Pod.Namespace + "/" + podEnv.Pod.Name
 	log := logger.WithField("pod", podSlug)
 
@@ -40,7 +40,7 @@ func PostToWebhooks(urls []string, podEnv *K8PodEnv) {
 	for _, url := range urls {
 		go func(u string) {
 			log.Infof("posting pod '%s' to '%s'", podSlug, u)
-			if err := postToWebhook(podSlug, u, objJSON); err != nil {
+			if err := postToWebhook(podSlug, u, objJSON, secret); err != nil {
 				log.Errorf("failed to post pod '%s' to '%s': %s", podSlug, u, err.Error())
 			}
 		}(url)
@@ -48,11 +48,21 @@ func PostToWebhooks(urls []string, podEnv *K8PodEnv) {
 }
 
 // postToWebhook post the provided payload to the URL.
-func postToWebhook(pod string, url string, payload []byte) (e error) {
+func postToWebhook(pod string, url string, payload []byte, secret string) (e error) {
 	log := logger.WithField("pod", pod)
 
 	post := func() error {
-		resp, postErr := http.Post(url, "application/json", bytes.NewBuffer(payload))
+		client := &http.Client{}
+		req, reqErr := http.NewRequest("POST", url, bytes.NewBuffer(payload))
+		if reqErr != nil {
+			return fmt.Errorf("failed to create POST request to %s: %v", url, reqErr)
+		}
+		req.Header.Add("content-type", "application/json")
+		if secret != "" {
+			signature := generateSignature(payload, secret)
+			req.Header.Add("x-atm-signature", signature)
+		}
+		resp, postErr := client.Do(req)
 		if postErr != nil {
 			return fmt.Errorf("failed to POST event to %s: %v", url, postErr)
 		}

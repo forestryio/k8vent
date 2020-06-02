@@ -8,19 +8,21 @@ Atomist workspace.
 ## Running
 
 See the [Atomist Kubernetes documentation][atomist-kube] for detailed
-instructions on using Atomist with Kubernetes.  Briefly, if you
-already have an [Atomist workspace][atomist-getting-started], you can
-run the following commands to create the necessary resources in your
+instructions on using Atomist with Kubernetes.  Briefly, you can run
+the following commands to create the necessary resources in your
 Kubernetes cluster.  Replace `CLUSTER_ENV` with a unique name for your
-Kubernetes cluster and `WORKSPACE_ID` with your Atomist workspace ID.
+Kubernetes cluster, `WORKSPACE_ID` with your Atomist workspace ID, and
+`SECRET` with the secret you want used to sign webhook payloads.  If
+you do not want your payloads signed, replace `SECRET` with an empty
+string (`""`).
 
 [atomist-kube]: https://docs.atomist.com/pack/kubernetes/ (Atomist - Kubernetes)
-[atomist-getting-started]: https://docs.atomist.com/user/ (Atomist - Getting Started)
 
 ```
 $ kubectl apply -f https://raw.githubusercontent.com/atomist/k8svent/master/kube/kubectl/cluster-wide.yaml
-$ kubectl create configmap --namespace=k8svent k8svent --from-literal=environment=CLUSTER_ENV \
-    --from-literal=webhooks=https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID
+$ kubectl create secret --namespace=k8svent k8svent --from-literal=environment=CLUSTER_ENV \
+    --from-literal=webhooks=https://webhook.atomist.com/atomist/kube/teams/WORKSPACE_ID \
+    --from-literal=secret=SECRET
 ```
 
 ## Webhook URLs
@@ -76,6 +78,23 @@ ways:
 
 The pod-specific annotation overrides any value of
 `ATOMIST_ENVIRONMENT` in the k8svent process' environment.
+
+## Signing webhook payloads
+
+k8svent can optionally sign the webhook payloads it sends using a
+secret.  The secret can be provided
+
+-   The `--secret` command-line option.
+
+        $ k8svent --secret=MyS3c43t
+
+-   The value of the `K8SVENT_WEBHOOK_SECRET` environment variable.
+
+        $ K8SVENT_WEBHOOK_SECRET=MyS3c43t k8svent
+
+A secret provided on the command line takes precedence over one
+provided via the environment variable.  If a secret is provided, it is
+used to sign the payloads send to all configured webhook endpoints.
 
 ## Linking to Atomist lifecycle events
 

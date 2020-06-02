@@ -52,12 +52,13 @@ type Controller struct {
 	informer  cache.SharedIndexInformer
 	urls      []string
 	env       map[string]string
+	secret    string
 }
 
 // Vent sets up and starts the listener for pod events, which posts
 // them to the provided webhooks when it receives them.  It should
 // never return.
-func Vent(urls []string, namespace string) (e error) {
+func Vent(urls []string, namespace string, secret string) (e error) {
 
 	logrus.SetFormatter(&logrus.JSONFormatter{})
 
@@ -71,7 +72,7 @@ func Vent(urls []string, namespace string) (e error) {
 		return clientErr
 	}
 
-	c := newController(clientset, urls, namespace)
+	c := newController(clientset, urls, namespace, secret)
 	stopCh := make(chan struct{})
 	defer close(stopCh)
 
@@ -85,7 +86,7 @@ func Vent(urls []string, namespace string) (e error) {
 	return nil
 }
 
-func newController(client kubernetes.Interface, urls []string, namespace string) *Controller {
+func newController(client kubernetes.Interface, urls []string, namespace string, secret string) *Controller {
 	queue := workqueue.NewRateLimitingQueue(workqueue.DefaultControllerRateLimiter())
 
 	informer := cache.NewSharedIndexInformer(
@@ -141,6 +142,7 @@ func newController(client kubernetes.Interface, urls []string, namespace string)
 		queue:     queue,
 		urls:      urls,
 		env:       env,
+		secret:    secret,
 	}
 }
 
@@ -256,7 +258,7 @@ func (c *Controller) processItem(key string) error {
 		Pod: pod,
 		Env: env,
 	}
-	PostToWebhooks(webhookURLs, &postIt)
+	PostToWebhooks(webhookURLs, &postIt, c.secret)
 
 	return nil
 }

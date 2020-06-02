@@ -33,7 +33,7 @@ func TestPostToWebhooks(t *testing.T) {
 	}
 
 	// should accept empty list of webhook URLs
-	PostToWebhooks([]string{}, &objects[0])
+	PostToWebhooks([]string{}, &objects[0], "")
 
 	store := map[string]interface{}{}
 	m := &sync.Mutex{}
@@ -61,7 +61,7 @@ func TestPostToWebhooks(t *testing.T) {
 	urls := []string{fmt.Sprintf("http://%s%s", addr, tail)}
 
 	for _, o := range objects {
-		PostToWebhooks(urls, &o)
+		PostToWebhooks(urls, &o, "")
 	}
 	for i := 0; i < len(objects); i++ {
 		<-stopCh
@@ -109,9 +109,6 @@ func TestPostToWebhook(t *testing.T) {
       "labels": {
         "app": "sleep",
         "pod-template-hash": "4113242475"
-      },
-      "annotations": {
-        "kubernetes.io/created-by": "{\"kind\":\"SerializedReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"ReplicaSet\",\"namespace\":\"default\",\"name\":\"sleep-85576868c9\",\"uid\":\"3647fb49-f0c9-11e7-8b0c-080027815bd2\",\"apiVersion\":\"extensions\",\"resourceVersion\":\"164270\"}}\n"
       },
       "ownerReferences": [
         {
@@ -214,7 +211,23 @@ func TestPostToWebhook(t *testing.T) {
 	tail := "/k8svent"
 	mux := http.NewServeMux()
 	mux.HandleFunc(tail, func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
+		bodyBytes, bodyErr := ioutil.ReadAll(r.Body)
+		if bodyErr != nil {
+			t.Errorf("failed to read request body: %v", bodyErr)
+		}
+		if string(bodyBytes) != string(payload) {
+			t.Error("sent and received body are not identical")
+		}
+		contentType := r.Header.Get("content-type")
+		if contentType != "application/json" {
+			t.Errorf("request content-type header is not 'application/json': '%s'", contentType)
+		}
+		signature := r.Header.Get("x-atm-signature")
+		eSignature := "sha1=ee9069e20a3b1ccc5bc845924c910d1581c136c0"
+		if signature != eSignature {
+			t.Errorf("request x-atm-signature header is not '%s': '%s'", eSignature, signature)
+		}
+		w.Header().Set("content-type", "application/json")
 		resp := []byte(`{"status":"ok"}`)
 		if _, err := w.Write(resp); err != nil {
 			t.Errorf("failed to write server response: %v", err)
@@ -238,7 +251,7 @@ func TestPostToWebhook(t *testing.T) {
 	}()
 	url := fmt.Sprintf("http://%s%s", addr, tail)
 
-	if err := postToWebhook("some/pod", url, payload); err != nil {
+	if err := postToWebhook("some/pod", url, payload, "Coast2Coast"); err != nil {
 		t.Errorf("failed to handle invalid server response: %v", err)
 	}
 }
