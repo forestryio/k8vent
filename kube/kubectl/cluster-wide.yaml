@@ -84,17 +84,22 @@ spec:
         - env:
             - name: ATOMIST_ENVIRONMENT
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: k8svent
                   key: environment
             - name: K8SVENT_WEBHOOKS
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: k8svent
                   key: webhooks
+            - name: K8SVENT_WEBHOOK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: k8svent
+                  key: secret
             - name: TMPDIR
               value: /tmp
-          image: atomist/k8svent:0.12.0
+          image: atomist/k8svent:0.13.0
           name: k8svent
           resources:
             limits:
