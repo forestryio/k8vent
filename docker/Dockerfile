@@ -1,4 +1,4 @@
-FROM debian:buster-20200224
+FROM debian:buster-20200514
 
 LABEL maintainer="Atomist <docker@atomist.com>"
 
@@ -11,8 +11,8 @@ RUN groupadd --gid 2866 atomist \
 
 WORKDIR /opt/k8svent
 
-COPY ./k8svent ./
-
 ENTRYPOINT ["./k8svent"]
+
+COPY ./k8svent ./
 
 USER atomist:atomist
