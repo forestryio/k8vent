@@ -60,7 +60,8 @@ func postToWebhook(pod string, url string, payload []byte, secret string) (e err
 		req.Header.Add("content-type", "application/json")
 		if secret != "" {
 			signature := generateSignature(payload, secret)
-			req.Header.Add("x-atm-signature", signature)
+			log.Debugf("signing payload with secret: %s", signature)
+			req.Header.Add("x-atomist-signature", signature)
 		}
 		resp, postErr := client.Do(req)
 		if postErr != nil {

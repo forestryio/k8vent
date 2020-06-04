@@ -222,10 +222,10 @@ func TestPostToWebhook(t *testing.T) {
 		if contentType != "application/json" {
 			t.Errorf("request content-type header is not 'application/json': '%s'", contentType)
 		}
-		signature := r.Header.Get("x-atm-signature")
+		signature := r.Header.Get("x-atomist-signature")
 		eSignature := "sha1=ee9069e20a3b1ccc5bc845924c910d1581c136c0"
 		if signature != eSignature {
-			t.Errorf("request x-atm-signature header is not '%s': '%s'", eSignature, signature)
+			t.Errorf("request x-atomist-signature header is not '%s': '%s'", eSignature, signature)
 		}
 		w.Header().Set("content-type", "application/json")
 		resp := []byte(`{"status":"ok"}`)
