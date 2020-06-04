@@ -90,7 +90,7 @@ spec:
                   fieldPath: metadata.namespace
             - name: TMPDIR
               value: /tmp
-          image: atomist/k8svent:0.13.0
+          image: atomist/k8svent:0.13.1
           name: k8svent
           resources:
             limits:
