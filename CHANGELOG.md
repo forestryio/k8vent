@@ -3,7 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased](https://github.com/atomist/k8svent/compare/v0.13.0...HEAD)
+## [Unreleased](https://github.com/atomist/k8svent/compare/v0.13.1...HEAD)
+
+## [0.13.1](https://github.com/atomist/k8svent/compare/v0.13.0...v0.13.1) - 2020-06-04
+
+### Fixed
+
+-   Fix signature header. [729ae2b](https://github.com/atomist/k8svent/commit/729ae2bc125917f3c5793d63b2d554095dca3cab)
 
 ## [0.13.0](https://github.com/atomist/k8svent/compare/v0.12.0...v0.13.0) - 2020-06-02
 
