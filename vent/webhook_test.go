@@ -24,9 +24,13 @@ import (
 	"net/http"
 	"sync"
 	"testing"
+
+	"github.com/sirupsen/logrus/hooks/test"
 )
 
 func TestPostToWebhooks(t *testing.T) {
+	logger, _ = test.NewNullLogger()
+
 	objects, loadErr := loadObjects("testdata/vent.json")
 	if loadErr != nil {
 		t.Error(loadErr.Error())
@@ -80,6 +84,8 @@ func TestPostToWebhooks(t *testing.T) {
 }
 
 func TestPostToWebhook(t *testing.T) {
+	logger, _ = test.NewNullLogger()
+
 	payload := []byte(`{
   "env": {
     "ATOMIST_ENVIRONMENT": "dips",

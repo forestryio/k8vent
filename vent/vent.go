@@ -15,194 +15,121 @@
 package vent
 
 import (
-	"encoding/json"
-	"fmt"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 	"time"
 
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
-	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	"k8s.io/client-go/tools/cache"
-	"k8s.io/client-go/util/workqueue"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/google/go-cmp/cmp"
 )
 
-const maxRetries = 5
-
-var logger = logrus.WithFields(logrus.Fields{
-	"service":     "k8svent",
-	"environment": os.Getenv("ATOMIST_ENVIRONMENT"),
-})
-
-// Controller object
-// Based on Controller from github.com/skippbox/kubewatch
-type Controller struct {
-	clientset kubernetes.Interface
-	queue     workqueue.RateLimitingInterface
-	informer  cache.SharedIndexInformer
-	urls      []string
-	env       map[string]string
-	secret    string
+// Venter contains the information used to send pods to webhook
+// endpoints.
+type Venter struct {
+	env    map[string]string
+	secret string
+	urls   []string
 }
 
 // Vent sets up and starts the listener for pod events, which posts
 // them to the provided webhooks when it receives them.  It should
 // never return.
-func Vent(urls []string, namespace string, secret string) (e error) {
+func Vent(urls []string, namespace string, secret string, logLevel string) error {
 
-	logrus.SetFormatter(&logrus.JSONFormatter{})
+	setupLogger(logLevel)
 
+	logger.Info("Creating Kubernetes API client set")
 	config, configErr := rest.InClusterConfig()
 	if configErr != nil {
+		logger.Errorf("Failed to load in-cluster config: %v", configErr)
 		return configErr
 	}
-
 	clientset, clientErr := kubernetes.NewForConfig(config)
 	if clientErr != nil {
+		logger.Errorf("Failed to create client from config: %v", clientErr)
 		return clientErr
 	}
-
-	c := newController(clientset, urls, namespace, secret)
-	stopCh := make(chan struct{})
-	defer close(stopCh)
-
-	go c.Run(stopCh)
 
 	sigterm := make(chan os.Signal, 1)
 	signal.Notify(sigterm, syscall.SIGTERM)
 	signal.Notify(sigterm, syscall.SIGINT)
-	<-sigterm
+	go func() {
+		<-sigterm
+		logger.Info("Received signal, exiting")
+		os.Exit(0)
+	}()
 
-	return nil
+	env := envMap()
+	venter := &Venter{
+		env,
+		secret,
+		urls,
+	}
+
+	sleepDuration := 0 * time.Second
+	lastPods := map[string]v1.Pod{}
+	logger.Info("Starting to vent")
+	for {
+		time.Sleep(sleepDuration)
+
+		pods, listErr := listPods(clientset, namespace)
+		if listErr != nil {
+			logger.Errorf("Failed to list pods: %v", listErr)
+			sleepDuration = 30 * time.Second
+			continue
+		} else {
+			sleepDuration = 120 * time.Second
+		}
+
+		logger.Debugf("Processing %d pods", len(pods))
+		lastPods = venter.processPods(pods, lastPods)
+	}
 }
 
-func newController(client kubernetes.Interface, urls []string, namespace string, secret string) *Controller {
-	queue := workqueue.NewRateLimitingQueue(workqueue.DefaultControllerRateLimiter())
+// listPods lists all pods in the provided namespace.  Kubernetes
+// convention is that if the namespace is an empty string, pods from
+// all namespaces are returned.
+func listPods(clientset *kubernetes.Clientset, namespace string) ([]v1.Pod, error) {
+	pods := []v1.Pod{}
+	options := metav1.ListOptions{}
+	for ok := true; ok; ok = (options.Continue != "") {
+		podList, listErr := clientset.CoreV1().Pods(namespace).List(options)
+		if listErr != nil {
+			return nil, listErr
+		}
+		pods = append(pods, podList.Items...)
+		options.Continue = podList.Continue
+	}
+	return pods, nil
+}
 
-	informer := cache.NewSharedIndexInformer(
-		&cache.ListWatch{
-			ListFunc: func(options metav1.ListOptions) (runtime.Object, error) {
-				if namespace != "" {
-					return client.CoreV1().Pods(namespace).List(options)
-				}
-				return client.CoreV1().Pods(metav1.NamespaceAll).List(options)
-			},
-			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
-				if namespace != "" {
-					return client.CoreV1().Pods(namespace).Watch(options)
-				}
-				return client.CoreV1().Pods(metav1.NamespaceAll).Watch(options)
-			},
-		},
-		&v1.Pod{},
-		0, // Skip resync
-		cache.Indexers{},
-	)
-
-	informer.AddEventHandler(cache.ResourceEventHandlerFuncs{
-		AddFunc: func(obj interface{}) {
-			key, err := cache.MetaNamespaceKeyFunc(obj)
-			if err == nil {
-				queue.Add(key)
+// processPods iterates through the provided pods and processes those
+// that do not have an identical pod in lastPods.  It returns a map of
+// successfully processed pods.
+func (v *Venter) processPods(pods []v1.Pod, lastPods map[string]v1.Pod) map[string]v1.Pod {
+	newPods := map[string]v1.Pod{}
+	for _, pod := range pods {
+		slug := podSlug(pod)
+		log := logger.WithField("pod", slug)
+		newPods[slug] = pod
+		if lastPod, ok := lastPods[slug]; ok {
+			if podHealthy(pod) && cmp.Diff(pod, lastPod) == "" {
+				log.Debug("Pod is healthy and state is unchanged")
+				continue
 			}
-		},
-		UpdateFunc: func(old, new interface{}) {
-			key, err := cache.MetaNamespaceKeyFunc(new)
-			if err == nil {
-				queue.Add(key)
-			}
-		},
-		DeleteFunc: func(obj interface{}) {
-			key, err := cache.DeletionHandlingMetaNamespaceKeyFunc(obj)
-			if err == nil {
-				queue.Add(key)
-			}
-		},
-	})
-
-	env := map[string]string{}
-	for _, envVar := range os.Environ() {
-		keyVal := strings.SplitN(envVar, "=", 2)
-		env[keyVal[0]] = keyVal[1]
+		}
+		if err := v.processPod(pod); err != nil {
+			log.Errorf("Failed to process pod: %v", err)
+			delete(newPods, slug)
+			continue
+		}
 	}
-
-	return &Controller{
-		clientset: client,
-		informer:  informer,
-		queue:     queue,
-		urls:      urls,
-		env:       env,
-		secret:    secret,
-	}
-}
-
-// Run starts the k8svent controller
-func (c *Controller) Run(stopCh <-chan struct{}) {
-	defer utilruntime.HandleCrash()
-	defer c.queue.ShutDown()
-
-	logger.Info("Starting k8svent controller")
-
-	go c.informer.Run(stopCh)
-
-	if !cache.WaitForCacheSync(stopCh, c.HasSynced) {
-		utilruntime.HandleError(fmt.Errorf("Timed out waiting for caches to sync"))
-		return
-	}
-
-	logger.Info("k8svent controller synced and ready")
-
-	wait.Until(c.runWorker, time.Second, stopCh)
-}
-
-// HasSynced is required for the cache.Controller interface.
-func (c *Controller) HasSynced() bool {
-	return c.informer.HasSynced()
-}
-
-// LastSyncResourceVersion is required for the cache.Controller interface.
-func (c *Controller) LastSyncResourceVersion() string {
-	return c.informer.LastSyncResourceVersion()
-}
-
-func (c *Controller) runWorker() {
-	for c.processNextItem() {
-		// continue looping
-	}
-}
-
-func (c *Controller) processNextItem() bool {
-	key, quit := c.queue.Get()
-	if quit {
-		return false
-	}
-	defer c.queue.Done(key)
-
-	err := c.processItem(key.(string))
-	if err == nil {
-		// No error, reset the ratelimit counters
-		c.queue.Forget(key)
-	} else if c.queue.NumRequeues(key) < maxRetries {
-		logger.WithField("item", key).Errorf("Error processing item (will retry): %v", err)
-		c.queue.AddRateLimited(key)
-	} else {
-		// err != nil and too many retries
-		logger.WithField("item", key).Errorf("Error processing item (giving up): %v", err)
-		c.queue.Forget(key)
-		utilruntime.HandleError(err)
-	}
-
-	return true
+	return newPods
 }
 
 // K8PodEnv is the structure serialized and sent to the webhook
@@ -212,84 +139,13 @@ type K8PodEnv struct {
 	Env map[string]string `json:"env"`
 }
 
-const k8sventAnnotationKey = "atomist.com/k8svent"
-
-// K8sVentPodAnnotation defines the valid structure of the
-// "atomist.com/k8svent" pod annotation.
-type K8sVentPodAnnotation struct {
-	Webhooks    []string `json:"webhooks"`
-	Environment string   `json:"environment"`
-}
-
-// processItem looks up key in the indexer, converts it into a v1.Pod,
-// and calls PostToWebhooks.
-func (c *Controller) processItem(key string) error {
-	log := logger.WithField("pod", key)
-	log.Infof("Processing change to pod %s", key)
-
-	obj, exists, err := c.informer.GetIndexer().GetByKey(key)
-	if err != nil {
-		return fmt.Errorf("Error fetching object with key %s from store: %v", key, err)
-	}
-	if !exists {
-		log.Infof("failed to look up object %s, probably deleted", key)
-		return nil
-	}
-	env := c.env
-	webhookURLs := c.urls
-	pod, annot, extractErr := extractPod(obj)
-	if extractErr != nil {
-		return extractErr
-	}
-	if annot != nil {
-		if annot.Environment != "" {
-			env = map[string]string{}
-			for k, v := range c.env {
-				env[k] = v
-			}
-			env["ATOMIST_ENVIRONMENT"] = annot.Environment
-		}
-		if annot.Webhooks != nil && len(annot.Webhooks) > 0 {
-			webhookURLs = annot.Webhooks
-		}
-	}
-
-	postIt := K8PodEnv{
+// ProcessPods iterates through the pods and calls PostToWebhooks for
+// each.
+func (v *Venter) processPod(pod v1.Pod) error {
+	podEnv := K8PodEnv{
 		Pod: pod,
-		Env: env,
+		Env: v.env,
 	}
-	PostToWebhooks(webhookURLs, &postIt, c.secret)
-
+	PostToWebhooks(v.urls, &podEnv, v.secret)
 	return nil
-}
-
-// extractPod tries to convert object into a v1.Pod by marshaling it
-// to JSON and back again, returning it as p.  If there is an
-// "atomist.com/k8svent" annotation on the pod, it parses it as JSON
-// and returns the value of the annotation, if it exists, as a.  If
-// unmarshaling of the annotation failed, the annotation is returned
-// as nil but the pod is still returned.  If an error occurs, e will
-// be non-nil.
-func extractPod(obj interface{}) (p v1.Pod, a *K8sVentPodAnnotation, e error) {
-	objJSON, jsonErr := json.Marshal(obj)
-	if jsonErr != nil {
-		return p, nil, fmt.Errorf("failed to marshal object to JSON: %v", jsonErr)
-	}
-	pod := v1.Pod{}
-	if err := json.Unmarshal(objJSON, &pod); err != nil {
-		return p, nil, fmt.Errorf("failed to unmarshal object as Pod: %v", err)
-	}
-
-	ventAnnot, annotOK := pod.Annotations[k8sventAnnotationKey]
-	if !annotOK {
-		return pod, nil, nil
-	}
-
-	annot := &K8sVentPodAnnotation{}
-	if err := json.Unmarshal([]byte(ventAnnot), annot); err != nil {
-		logger.Infof("failed to unmarshal k8svent annotation '%s': %v", ventAnnot, err)
-		return pod, nil, nil
-	}
-
-	return pod, annot, nil
 }

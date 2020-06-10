@@ -28,10 +28,16 @@ import (
 var cfgFile string
 
 var (
+	logLevel      string
 	namespace     string
 	webhookSecret string
 	webhookURLs   = []string{}
 )
+
+const logLevelEnv = "K8SVENT_LOG_LEVEL"
+const namespaceEnv = "K8SVENT_NAMESPACE"
+const webhookEnv = "K8SVENT_WEBHOOKS"
+const webhookSecretEnv = "K8SVENT_WEBHOOK_SECRET"
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -57,7 +63,7 @@ By default k8svent does not sign the webhook payloads.  If the
 --secret or K8SVENT_WEBHOOK_SECRET environment variable is provided,
 webhook payloads are signed using HMAC/SHA-1.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := vent.Vent(webhookURLs, namespace, webhookSecret); err != nil {
+		if err := vent.Vent(webhookURLs, namespace, webhookSecret, logLevel); err != nil {
 			fmt.Fprintf(os.Stderr, "k8svent: venting failed: %v\n", err)
 			os.Exit(1)
 		}
@@ -84,25 +90,16 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	//RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	RootCmd.PersistentFlags().StringVarP(&namespace, "namespace", "n", "", "Only watch pods in NAMESPACE")
-	RootCmd.PersistentFlags().StringVarP(&webhookSecret, "secret", "s", "", "Sign webhook payloads using SECRET")
+	RootCmd.PersistentFlags().StringVarP(&logLevel, "log-level", "l", os.Getenv(logLevelEnv), "Set log level to LOG_LEVEL")
+	RootCmd.PersistentFlags().StringVarP(&namespace, "namespace", "n", os.Getenv(namespaceEnv), "Only watch pods in NAMESPACE")
+	RootCmd.PersistentFlags().StringVarP(&webhookSecret, "secret", "s", os.Getenv(webhookSecretEnv), "Sign webhook payloads using SECRET")
 	RootCmd.PersistentFlags().StringSliceVarP(&webhookURLs, "url", "u", []string{}, "Send event to URL")
 }
-
-const webhookEnv = "K8SVENT_WEBHOOKS"
-const namespaceEnv = "K8SVENT_NAMESPACE"
-const webhookSecretEnv = "K8SVENT_WEBHOOK_SECRET"
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if os.Getenv(webhookEnv) != "" {
 		webhookURLs = strings.Split(os.Getenv(webhookEnv), ",")
-	}
-	if os.Getenv(namespaceEnv) != "" {
-		namespace = os.Getenv(namespaceEnv)
-	}
-	if os.Getenv(webhookSecretEnv) != "" {
-		webhookSecret = os.Getenv(webhookSecretEnv)
 	}
 
 	if cfgFile != "" { // enable ability to specify config file via flag

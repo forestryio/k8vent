@@ -1,0 +1,508 @@
+[
+  {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "local-honey",
+      "namespace": "brian-fallon"
+    },
+    "status": {
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-02T16:04:31Z",
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-02T16:05:20Z",
+          "status": "True",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-02T16:05:20Z",
+          "status": "True",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-02T16:04:31Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "containerID": "containerd://7382a906689a405b54a3d34a81b9e93dba2100ac763881e4370c82a3d32c1038",
+          "image": "docker.io/atomist/aspect-sdm:1.1.17-master.20200602160026",
+          "imageID": "docker.io/atomist/aspect-sdm@sha256:9d4a0f264b8898030f10123cb4a7df3a20c59549ddc27bc1dfeb25576399a3e2",
+          "lastState": {},
+          "name": "aspect-sdm",
+          "ready": true,
+          "restartCount": 0,
+          "state": {
+            "running": {
+              "startedAt": "2020-06-02T16:04:50Z"
+            }
+          }
+        }
+      ],
+      "hostIP": "10.159.0.7",
+      "phase": "Running",
+      "podIP": "10.12.1.7",
+      "podIPs": [
+        {
+          "ip": "10.12.1.7"
+        }
+      ],
+      "qosClass": "Burstable",
+      "startTime": "2020-06-02T16:04:31Z"
+    }
+  },
+  {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "local-honey",
+      "namespace": "brian-fallon"
+    },
+    "status": {
+      "phase": "Pending",
+      "conditions": [
+        {
+          "type": "Initialized",
+          "status": "True",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:04Z"
+        },
+        {
+          "type": "Ready",
+          "status": "False",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:04Z",
+          "reason": "ContainersNotReady",
+          "message": "containers with unready status: [image-pull]"
+        },
+        {
+          "type": "ContainersReady",
+          "status": "False",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:04Z",
+          "reason": "ContainersNotReady",
+          "message": "containers with unready status: [image-pull]"
+        },
+        {
+          "type": "PodScheduled",
+          "status": "True",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:04Z"
+        }
+      ],
+      "hostIP": "10.159.0.6",
+      "podIP": "10.12.0.199",
+      "podIPs": [{ "ip": "10.12.0.199" }],
+      "startTime": "2020-06-11T19:36:04Z",
+      "containerStatuses": [
+        {
+          "name": "image-pull",
+          "state": {
+            "waiting": {
+              "reason": "ImagePullBackOff",
+              "message": "Back-off pulling image \"notanimage/thatexistsanywhere:badtag\""
+            }
+          },
+          "lastState": {},
+          "ready": false,
+          "restartCount": 0,
+          "image": "notanimage/thatexistsanywhere:badtag",
+          "imageID": ""
+        }
+      ],
+      "qosClass": "Burstable"
+    }
+  },
+  {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "local-honey",
+      "namespace": "brian-fallon"
+    },
+    "status": {
+      "phase": "Running",
+      "conditions": [
+        {
+          "type": "Initialized",
+          "status": "True",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:03Z"
+        },
+        {
+          "type": "Ready",
+          "status": "False",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:48:32Z",
+          "reason": "ContainersNotReady",
+          "message": "containers with unready status: [crash]"
+        },
+        {
+          "type": "ContainersReady",
+          "status": "False",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:48:32Z",
+          "reason": "ContainersNotReady",
+          "message": "containers with unready status: [crash]"
+        },
+        {
+          "type": "PodScheduled",
+          "status": "True",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:03Z"
+        }
+      ],
+      "hostIP": "10.159.0.6",
+      "podIP": "10.12.0.198",
+      "podIPs": [{ "ip": "10.12.0.198" }],
+      "startTime": "2020-06-11T19:36:03Z",
+      "containerStatuses": [
+        {
+          "name": "crash",
+          "state": {
+            "waiting": {
+              "reason": "CrashLoopBackOff",
+              "message": "Back-off 5m0s restarting failed container=crash pod=crash-loop-0_default(b672791b-3d74-4640-b6dc-c78c18e70a45)"
+            }
+          },
+          "lastState": {
+            "terminated": {
+              "exitCode": 0,
+              "reason": "Completed",
+              "startedAt": "2020-06-11T19:48:21Z",
+              "finishedAt": "2020-06-11T19:48:31Z",
+              "containerID": "containerd://5878911367fca27f851b8e8305dda03c76f26e96f1a10bb864b446c3987cc897"
+            }
+          },
+          "ready": false,
+          "restartCount": 7,
+          "image": "docker.io/library/busybox:1.31.1-uclibc",
+          "imageID": "docker.io/library/busybox@sha256:cd421f41ebaab52ae1ac91a8391ddbd094595264c6e689954b79b3d24ea52f88",
+          "containerID": "containerd://5878911367fca27f851b8e8305dda03c76f26e96f1a10bb864b446c3987cc897"
+        }
+      ],
+      "qosClass": "Burstable"
+    }
+  },
+  {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "local-honey",
+      "namespace": "brian-fallon"
+    },
+    "status": {
+      "startTime": "2020-06-11T19:36:05Z",
+      "podIP": "10.12.0.200",
+      "phase": "Pending",
+      "initContainerStatuses": [
+        {
+          "name": "fail",
+          "state": {
+            "waiting": {
+              "reason": "CrashLoopBackOff",
+              "message": "Back-off 5m0s restarting failed container=fail pod=init-fail-0_default(ebfc7af1-d601-4592-9065-dfa8d859c960)"
+            }
+          },
+          "lastState": {
+            "terminated": {
+              "exitCode": 1,
+              "reason": "Error",
+              "startedAt": "2020-06-11T19:47:07Z",
+              "finishedAt": "2020-06-11T19:47:07Z",
+              "containerID": "containerd://bb173800cf6226a52e0631f37713fccb2b6c62cba94de5c6da01ee5df72162a6"
+            }
+          },
+          "ready": false,
+          "restartCount": 7,
+          "image": "docker.io/library/busybox:1.31.1-uclibc",
+          "imageID": "docker.io/library/busybox@sha256:cd421f41ebaab52ae1ac91a8391ddbd094595264c6e689954b79b3d24ea52f88",
+          "containerID": "containerd://bb173800cf6226a52e0631f37713fccb2b6c62cba94de5c6da01ee5df72162a6"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "sleep",
+          "state": { "waiting": { "reason": "PodInitializing" } },
+          "lastState": {},
+          "ready": false,
+          "restartCount": 0,
+          "image": "busybox:1.31.1-uclibc",
+          "imageID": ""
+        }
+      ],
+      "conditions": [
+        {
+          "type": "Initialized",
+          "status": "False",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:05Z",
+          "reason": "ContainersNotInitialized",
+          "message": "containers with incomplete status: [fail]"
+        },
+        {
+          "type": "Ready",
+          "status": "False",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:05Z",
+          "reason": "ContainersNotReady",
+          "message": "containers with unready status: [sleep]"
+        },
+        {
+          "type": "ContainersReady",
+          "status": "False",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:05Z",
+          "reason": "ContainersNotReady",
+          "message": "containers with unready status: [sleep]"
+        },
+        {
+          "type": "PodScheduled",
+          "status": "True",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:05Z"
+        }
+      ],
+      "hostIP": "10.159.0.6",
+      "podIPs": [{ "ip": "10.12.0.200" }],
+      "qosClass": "Burstable"
+    }
+  },
+  {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "local-honey",
+      "namespace": "brian-fallon"
+    },
+    "status": {
+      "startTime": "2020-06-11T19:36:08Z",
+      "podIP": "10.12.0.202",
+      "phase": "Running",
+      "initContainerStatuses": [
+        {
+          "name": "success",
+          "state": {
+            "terminated": {
+              "exitCode": 0,
+              "reason": "Completed",
+              "startedAt": "2020-06-11T19:36:09Z",
+              "finishedAt": "2020-06-11T19:36:19Z",
+              "containerID": "containerd://8b5f196335a42d6a882b4b14633a27eb37cf73b530cb6382e8bc94449dde3290"
+            }
+          },
+          "lastState": {},
+          "ready": true,
+          "restartCount": 0,
+          "image": "docker.io/library/busybox:1.31.1-uclibc",
+          "imageID": "docker.io/library/busybox@sha256:cd421f41ebaab52ae1ac91a8391ddbd094595264c6e689954b79b3d24ea52f88",
+          "containerID": "containerd://8b5f196335a42d6a882b4b14633a27eb37cf73b530cb6382e8bc94449dde3290"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "sleep",
+          "state": {
+            "terminated": {
+              "exitCode": 0,
+              "reason": "Completed",
+              "startedAt": "2020-06-11T19:52:01Z",
+              "finishedAt": "2020-06-11T19:57:02Z",
+              "containerID": "containerd://a65809d2c31ff9dd08bd6d93ee0c6985731955c6b3bb599fd350a9f74d1cd848"
+            }
+          },
+          "ready": true,
+          "restartCount": 4,
+          "image": "docker.io/library/busybox:1.31.1-uclibc",
+          "imageID": "docker.io/library/busybox@sha256:cd421f41ebaab52ae1ac91a8391ddbd094595264c6e689954b79b3d24ea52f88",
+          "containerID": "containerd://6ee1a88ff28fe22265bf6ca953db5c36c4ce883372f6f84103bbac71dad51fd6"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "Initialized",
+          "status": "True",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:19Z"
+        },
+        {
+          "type": "Ready",
+          "status": "True",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:57:48Z"
+        },
+        {
+          "type": "ContainersReady",
+          "status": "True",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:57:48Z"
+        },
+        {
+          "type": "PodScheduled",
+          "status": "True",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:08Z"
+        }
+      ],
+      "hostIP": "10.159.0.6",
+      "podIPs": [{ "ip": "10.12.0.202" }],
+      "qosClass": "Burstable"
+    }
+  },
+  {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "local-honey",
+      "namespace": "brian-fallon"
+    },
+    "status": {
+      "phase": "Pending",
+      "conditions": [
+        {
+          "type": "Initialized",
+          "status": "True",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:06Z"
+        },
+        {
+          "type": "Ready",
+          "status": "False",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:06Z",
+          "reason": "ContainersNotReady",
+          "message": "containers with unready status: [sleep]"
+        },
+        {
+          "type": "ContainersReady",
+          "status": "False",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:06Z",
+          "reason": "ContainersNotReady",
+          "message": "containers with unready status: [sleep]"
+        },
+        {
+          "type": "PodScheduled",
+          "status": "True",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-11T19:36:06Z"
+        }
+      ],
+      "hostIP": "10.159.0.6",
+      "startTime": "2020-06-11T19:36:06Z",
+      "containerStatuses": [
+        {
+          "name": "sleep",
+          "state": { "waiting": { "reason": "ContainerCreating" } },
+          "lastState": {},
+          "ready": false,
+          "restartCount": 0,
+          "image": "busybox:1.31.1-uclibc",
+          "imageID": ""
+        }
+      ],
+      "qosClass": "Burstable"
+    }
+  },
+  {
+    "metadata": {
+      "name": "no-schedule-1",
+      "namespace": "default",
+      "selfLink": "/api/v1/namespaces/default/pods/no-schedule-1",
+      "uid": "1d38284b-8ebc-48ba-92e5-9806e4d34409",
+      "resourceVersion": "24427250",
+      "creationTimestamp": "2020-06-12T12:36:26Z"
+    },
+    "spec": {
+      "volumes": [
+        {
+          "name": "default-token-nzgwc",
+          "secret": {
+            "secretName": "default-token-nzgwc",
+            "defaultMode": 420
+          }
+        }
+      ],
+      "containers": [
+        {
+          "name": "mem",
+          "image": "busybox:1.31.1-uclibc",
+          "command": ["/bin/sleep"],
+          "args": ["3600"],
+          "resources": {
+            "requests": {
+              "cpu": "80",
+              "memory": "100Ti"
+            }
+          },
+          "volumeMounts": [
+            {
+              "name": "default-token-nzgwc",
+              "readOnly": true,
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount"
+            }
+          ],
+          "terminationMessagePath": "/dev/termination-log",
+          "terminationMessagePolicy": "File",
+          "imagePullPolicy": "IfNotPresent"
+        }
+      ],
+      "restartPolicy": "Always",
+      "terminationGracePeriodSeconds": 30,
+      "dnsPolicy": "ClusterFirst",
+      "serviceAccountName": "default",
+      "serviceAccount": "default",
+      "securityContext": {},
+      "schedulerName": "default-scheduler",
+      "tolerations": [
+        {
+          "key": "node.kubernetes.io/not-ready",
+          "operator": "Exists",
+          "effect": "NoExecute",
+          "tolerationSeconds": 300
+        },
+        {
+          "key": "node.kubernetes.io/unreachable",
+          "operator": "Exists",
+          "effect": "NoExecute",
+          "tolerationSeconds": 300
+        }
+      ],
+      "priority": 0,
+      "enableServiceLinks": true
+    },
+    "status": {
+      "phase": "Pending",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "False",
+          "lastProbeTime": null,
+          "lastTransitionTime": "2020-06-12T12:36:26Z",
+          "reason": "Unschedulable",
+          "message": "0/7 nodes are available: 7 Insufficient cpu, 7 Insufficient memory."
+        }
+      ],
+      "qosClass": "Burstable"
+    }
+  },
+  {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "local-honey",
+      "namespace": "brian-fallon"
+    },
+    "status": {}
+  }
+]

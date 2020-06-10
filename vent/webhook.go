@@ -21,27 +21,28 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/cenk/backoff"
+	"github.com/sirupsen/logrus"
 )
 
 // PostToWebhooks marshals podEnv into JSON and posts it to the webhook
 // URLs provided.
 func PostToWebhooks(urls []string, podEnv *K8PodEnv, secret string) {
-	podSlug := podEnv.Pod.Namespace + "/" + podEnv.Pod.Name
-	log := logger.WithField("pod", podSlug)
+	slug := podSlug(podEnv.Pod)
+	log := logger.WithField("pod", slug)
 
 	objJSON, jsonErr := json.Marshal(podEnv)
 	if jsonErr != nil {
-		log.Errorf("failed to marshal event to JSON: %v: %+v", jsonErr, podEnv)
+		log.Errorf("Failed to marshal event to JSON: %v: %+v", jsonErr, podEnv)
 		return
 	}
+	log.Tracef("Sending payload: %s", string(objJSON))
 
 	for _, url := range urls {
 		go func(u string) {
-			log.Infof("posting pod '%s' to '%s'", podSlug, u)
-			if err := postToWebhook(podSlug, u, objJSON, secret); err != nil {
-				log.Errorf("failed to post pod '%s' to '%s': %s", podSlug, u, err.Error())
+			log.Infof("Posting to '%s'", u)
+			if err := postToWebhook(slug, u, objJSON, secret); err != nil {
+				log.Errorf("Failed to post to '%s': %s", u, err.Error())
 			}
 		}(url)
 	}
@@ -60,7 +61,7 @@ func postToWebhook(pod string, url string, payload []byte, secret string) (e err
 		req.Header.Add("content-type", "application/json")
 		if secret != "" {
 			signature := generateSignature(payload, secret)
-			log.Debugf("signing payload with secret: %s", signature)
+			log.Debugf("Signing payload with secret: %s", signature)
 			req.Header.Add("x-atomist-signature", signature)
 		}
 		resp, postErr := client.Do(req)
@@ -70,7 +71,7 @@ func postToWebhook(pod string, url string, payload []byte, secret string) (e err
 		defer resp.Body.Close()
 		corrID, corrErr := extractCorrelationID(resp)
 		if corrErr != nil {
-			log.Warnf("failed to extract correlation ID from %s response: %v", url, corrErr)
+			log.Warnf("Failed to extract correlation ID from %s response: %v", url, corrErr)
 		}
 		if resp.StatusCode < 200 || resp.StatusCode > 299 {
 			return fmt.Errorf("non-200 response from webhook %s: code:%d,correlation-id:%s", url, resp.StatusCode, corrID)
@@ -78,7 +79,7 @@ func postToWebhook(pod string, url string, payload []byte, secret string) (e err
 		log.WithFields(logrus.Fields{
 			"code":           resp.StatusCode,
 			"correlation-id": corrID,
-		}).Infof("posted pod '%s' to '%s'", pod, url)
+		}).Infof("Posted to '%s'", url)
 		return nil
 	}
 
