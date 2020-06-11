@@ -34,10 +34,10 @@ $(DOCKER_TARGET): clean-local
 
 docker-target: $(DOCKER_TARGET)
 
-docker-build: docker-target
+docker: docker-target
 	cd docker && docker build -t "$(DOCKER_TAG)" .
 
-docker: docker-build
+docker-push: docker
 	docker push "$(DOCKER_TAG)"
 
 clean: clean-local
@@ -47,5 +47,5 @@ clean-local:
 	-rm -f "$(DOCKER_TARGET)"
 
 .PHONY: all fast clean build test vet
-.PHONY: docker docker-target docker-build docker-push
+.PHONY: docker docker-push docker-target
 .PHONY: clean-local
