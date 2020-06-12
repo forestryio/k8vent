@@ -18,13 +18,28 @@ import (
 	"testing"
 )
 
-func TestGenerateSignature(t *testing.T) {
-	s1, err := generateSignature([]byte(`{"jason":"isbell"}`), "The400Unit")
+func TestGetDockerTags(t *testing.T) {
+	tags, err := getDockerTags()
 	if err != nil {
-		t.Errorf("failed to create signature: %v", err)
+		t.Errorf("failed to get Docker tags: %v", err)
 	}
-	e1 := "sha1=634212a9128672522f8d9ac32657d996d80ef7be"
-	if s1 != e1 {
-		t.Errorf("failed to generate proper signature: '%s' (expected: '%s')", s1, e1)
+	found := map[string]bool{
+		"0.11.0":                false,
+		"0.12.0":                false,
+		"0.13.0":                false,
+		"0.13.1":                false,
+		"0.14.0":                false,
+		"0.14.1-20200612183032": false,
+		"latest":                false,
+	}
+	for _, v := range tags {
+		if _, ok := found[v]; ok {
+			found[v] = true
+		}
+	}
+	for v, f := range found {
+		if !f {
+			t.Errorf("tags did not include '%s': %v", v, tags)
+		}
 	}
 }

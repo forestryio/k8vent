@@ -15,8 +15,33 @@
 package vent
 
 import (
+	"github.com/google/go-cmp/cmp"
 	v1 "k8s.io/api/core/v1"
 )
+
+// processPods iterates through the provided pods and processes those
+// that do not have an identical pod in lastPods.  It returns a map of
+// successfully processed pods.
+func (v *Venter) processPods(pods []v1.Pod, lastPods map[string]v1.Pod) map[string]v1.Pod {
+	newPods := map[string]v1.Pod{}
+	for _, pod := range pods {
+		slug := podSlug(pod)
+		log := logger.WithField("pod", slug)
+		newPods[slug] = pod
+		if lastPod, ok := lastPods[slug]; ok {
+			if podHealthy(pod) && cmp.Diff(pod, lastPod) == "" {
+				log.Debug("Pod is healthy and state is unchanged")
+				continue
+			}
+		}
+		if err := v.processPod(pod); err != nil {
+			log.Errorf("Failed to process pod: %v", err)
+			delete(newPods, slug)
+			continue
+		}
+	}
+	return newPods
+}
 
 // podSlug returns a string uniquely identifying a pod in a Kubernetes
 // cluster.
@@ -73,4 +98,15 @@ func containerHealthy(containerStatus v1.ContainerStatus, init bool) bool {
 		}
 	}
 	return true
+}
+
+// ProcessPods iterates through the pods and calls PostToWebhooks for
+// each.
+func (v *Venter) processPod(pod v1.Pod) error {
+	podEnv := k8sPodEnv{
+		Pod: pod,
+		Env: v.env,
+	}
+	postToWebhooks(v.urls, &podEnv, v.secret)
+	return nil
 }

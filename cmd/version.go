@@ -18,11 +18,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-)
 
-const (
-	pkg     = "k8svent"
-	version = "0.14.1"
+	"github.com/atomist/k8svent/vent"
 )
 
 // versionCmd represents the version command
@@ -31,7 +28,7 @@ var versionCmd = &cobra.Command{
 	Short: "Print version and exit",
 	Long:  "Print the package name and version in the standard format.",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(pkg, version)
+		fmt.Println(vent.Pkg, vent.Version)
 	},
 }
 

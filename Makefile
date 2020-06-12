@@ -6,7 +6,7 @@ GO_BUILD_ARGS =
 TARGET = k8svent
 DOCKER_TARGET = docker/$(TARGET)
 DOCKER_IMAGE = atomist/$(TARGET)
-DOCKER_VERSION = 0.14.1
+DOCKER_VERSION = $(shell sed -n '/^	Version =/s/.*"\(.*\)".*/\1/p' vent/version.go)
 DOCKER_TAG = $(DOCKER_IMAGE):$(DOCKER_VERSION)
 
 all: vet
@@ -26,7 +26,7 @@ install: test
 vet: install
 	$(GO) vet $(GO_FLAGS) $(GO_ARGS)
 
-lint:
+lint: vet
 	golangci-lint run $(GO_ARGS)
 
 $(DOCKER_TARGET): clean-local

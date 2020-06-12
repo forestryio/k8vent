@@ -18,16 +18,23 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/cenk/backoff"
 	"github.com/sirupsen/logrus"
+	v1 "k8s.io/api/core/v1"
 )
+
+// podEnv is the structure serialized and sent to the webhook
+// endpoints.
+type k8sPodEnv struct {
+	Pod v1.Pod            `json:"pod"`
+	Env map[string]string `json:"env"`
+}
 
 // PostToWebhooks marshals podEnv into JSON and posts it to the webhook
 // URLs provided.
-func PostToWebhooks(urls []string, podEnv *K8PodEnv, secret string) {
+func postToWebhooks(urls []string, podEnv *k8sPodEnv, secret string) {
 	slug := podSlug(podEnv.Pod)
 	log := logger.WithField("pod", slug)
 
@@ -60,7 +67,10 @@ func postToWebhook(pod string, url string, payload []byte, secret string) (e err
 		}
 		req.Header.Add("content-type", "application/json")
 		if secret != "" {
-			signature := generateSignature(payload, secret)
+			signature, signErr := generateSignature(payload, secret)
+			if signErr != nil {
+				return signErr
+			}
 			log.Debugf("Signing payload with secret: %s", signature)
 			req.Header.Add("x-atomist-signature", signature)
 		}
@@ -69,7 +79,7 @@ func postToWebhook(pod string, url string, payload []byte, secret string) (e err
 			return fmt.Errorf("failed to POST event to %s: %v", url, postErr)
 		}
 		defer resp.Body.Close()
-		corrID, corrErr := extractCorrelationID(resp)
+		corrID, corrErr := extractPropertyString(resp, "correlation-id")
 		if corrErr != nil {
 			log.Warnf("Failed to extract correlation ID from %s response: %v", url, corrErr)
 		}
@@ -84,22 +94,4 @@ func postToWebhook(pod string, url string, payload []byte, secret string) (e err
 	}
 
 	return backoff.Retry(post, backoff.NewExponentialBackOff())
-}
-
-// extractCorrelationID reads the provided response body, parses it as
-// JSON, and returns the "correlation-id" element.
-func extractCorrelationID(resp *http.Response) (cid string, e error) {
-	body, readErr := ioutil.ReadAll(resp.Body)
-	if readErr != nil {
-		return "", fmt.Errorf("failed to read response: %v", readErr)
-	}
-	var respObj map[string]string
-	if err := json.Unmarshal(body, &respObj); err != nil {
-		return "", fmt.Errorf("failed to parse '%s' as JSON: %v", string(body), err)
-	}
-	corrID, corrExists := respObj["correlation-id"]
-	if !corrExists {
-		return "", fmt.Errorf("response '%s' has no 'correlation-id'", string(body))
-	}
-	return corrID, nil
 }

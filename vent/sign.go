@@ -18,13 +18,16 @@ import (
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/hex"
+	"fmt"
 )
 
 // generateSignature creates a HMAC/SHA-1 signature for payload using key.
-func generateSignature(payload []byte, key string) string {
+func generateSignature(payload []byte, key string) (s string, e error) {
 	mac := hmac.New(sha1.New, []byte(key))
-	mac.Write(payload)
+	if _, err := mac.Write(payload); err != nil {
+		return s, fmt.Errorf("failed to write payload to HMAC: %v", err)
+	}
 	sum := mac.Sum(nil)
 	sig := hex.EncodeToString(sum)
-	return "sha1=" + sig
+	return "sha1=" + sig, nil
 }

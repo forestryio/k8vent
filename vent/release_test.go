@@ -16,15 +16,13 @@ package vent
 
 import (
 	"testing"
+
+	"github.com/sirupsen/logrus/hooks/test"
 )
 
-func TestGenerateSignature(t *testing.T) {
-	s1, err := generateSignature([]byte(`{"jason":"isbell"}`), "The400Unit")
-	if err != nil {
-		t.Errorf("failed to create signature: %v", err)
-	}
-	e1 := "sha1=634212a9128672522f8d9ac32657d996d80ef7be"
-	if s1 != e1 {
-		t.Errorf("failed to generate proper signature: '%s' (expected: '%s')", s1, e1)
+func TestNewReleaseAvailable(t *testing.T) {
+	logger, _ = test.NewNullLogger()
+	if newReleaseAvailable() {
+		t.Errorf("found newer version of k8svent than current unreleased version: %s", Version)
 	}
 }

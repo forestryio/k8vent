@@ -3,6 +3,7 @@ module github.com/atomist/k8svent
 go 1.13
 
 require (
+	github.com/blang/semver v3.5.1+incompatible
 	github.com/cenk/backoff v2.2.1+incompatible
 	github.com/google/go-cmp v0.4.1
 	github.com/hashicorp/hcl v0.0.0-20171017181929-23c074d0eceb // indirect
@@ -16,7 +17,7 @@ require (
 	github.com/spf13/cobra v0.0.2-0.20171207074935-ccaecb155a21
 	github.com/spf13/jwalterweatherman v0.0.0-20170901151539-12bd96e66386 // indirect
 	github.com/spf13/viper v1.0.1-0.20171207042631-1a0c4a370c3e
-	github.com/stretchr/testify v1.5.1 // indirect
+	github.com/stretchr/testify v1.6.1
 	golang.org/x/sys v0.0.0-20191120155948-bd437916bb0e // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	k8s.io/api v0.17.0

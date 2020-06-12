@@ -15,7 +15,6 @@
 package vent
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -37,7 +36,7 @@ func TestPostToWebhooks(t *testing.T) {
 	}
 
 	// should accept empty list of webhook URLs
-	PostToWebhooks([]string{}, &objects[0], "")
+	postToWebhooks([]string{}, &objects[0], "")
 
 	store := map[string]interface{}{}
 	m := &sync.Mutex{}
@@ -65,7 +64,7 @@ func TestPostToWebhooks(t *testing.T) {
 	urls := []string{fmt.Sprintf("http://%s%s", addr, tail)}
 
 	for _, o := range objects {
-		PostToWebhooks(urls, &o, "")
+		postToWebhooks(urls, &o, "")
 	}
 	for i := 0; i < len(objects); i++ {
 		<-stopCh
@@ -262,49 +261,13 @@ func TestPostToWebhook(t *testing.T) {
 	}
 }
 
-func TestExtractCorrelationID(t *testing.T) {
-	validResponses := []string{
-		`{"correlation-id":"0"}`,
-		`{"correlation-id":"1","message":"successfully posted event"}`,
-		`{"status":"ok","correlation-id":"2","message":"successfully posted event"}`,
-		`{"error":null,"status":"ok","correlation-id":"3","message":"successfully posted event"}`,
-	}
-	for i, r := range validResponses {
-		resp := &http.Response{
-			Body: ioutil.NopCloser(bytes.NewReader([]byte(r))),
-		}
-		if cid, err := extractCorrelationID(resp); err == nil {
-			if cid != fmt.Sprintf("%d", i) {
-				t.Errorf("extracted correlation ID (%s) is not expected value (%d)", cid, i)
-			}
-		} else {
-			t.Errorf("failed to extract correlation ID from '%s': %v", r, err)
-		}
-	}
-
-	invalidResponses := []string{
-		"",
-		"{}",
-		`{"status":"ok"}`,
-		`{"message":"successfully posted event"}`,
-	}
-	for _, r := range invalidResponses {
-		resp := &http.Response{
-			Body: ioutil.NopCloser(bytes.NewReader([]byte(r))),
-		}
-		if cid, err := extractCorrelationID(resp); err == nil {
-			t.Errorf("unexpectedly extracted correlation ID from invalid response '%s': %s", r, cid)
-		}
-	}
-}
-
-func loadObjects(objFile string) (o []K8PodEnv, e error) {
+func loadObjects(objFile string) (o []k8sPodEnv, e error) {
 	objBytes, readErr := ioutil.ReadFile(objFile)
 	if readErr != nil {
 		return o, fmt.Errorf("failed to open event JSON file %s: %v", objFile, readErr)
 	}
 
-	objects := []K8PodEnv{}
+	objects := []k8sPodEnv{}
 	if err := json.Unmarshal(objBytes, &objects); err != nil {
 		return o, fmt.Errorf("failed to unmarshal objects JSON into []interface{}: %v", err)
 	}
@@ -337,7 +300,7 @@ func extracObjectKey(obj interface{}) string {
 		fmt.Printf("failed to marshal object to JSON:%v\n", jsonErr)
 		return fmt.Sprintf("non/pod:%d", rand.Int63())
 	}
-	k8pe := K8PodEnv{}
+	k8pe := k8sPodEnv{}
 	if err := json.Unmarshal(objJSON, &k8pe); err != nil {
 		fmt.Printf("failed to unmarshal object to K8PodEnv:%v\n", err)
 		return fmt.Sprintf("non/K8PodEnv:%d", rand.Int63())
