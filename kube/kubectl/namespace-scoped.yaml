@@ -90,15 +90,16 @@ spec:
                   fieldPath: metadata.namespace
             - name: TMPDIR
               value: /tmp
-          image: atomist/k8svent:0.13.1
+          image: atomist/k8svent:latest
+          imagePullPolicy: Always
           name: k8svent
           resources:
             limits:
               cpu: 100m
-              memory: 50Mi
+              memory: 100Mi
             requests:
               cpu: 100m
-              memory: 50Mi
+              memory: 100Mi
           securityContext:
             allowPrivilegeEscalation: false
             privileged: false
