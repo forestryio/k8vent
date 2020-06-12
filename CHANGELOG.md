@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/k8svent/compare/v0.13.1...HEAD)
 
+### Changed
+
+-   Missing state changes. [#10](https://github.com/atomist/k8svent/issues/10)
+
 ## [0.13.1](https://github.com/atomist/k8svent/compare/v0.13.0...v0.13.1) - 2020-06-04
 
 ### Fixed
@@ -39,15 +43,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.9.0](https://github.com/atomist/k8svent/compare/0.8.0...0.9.0) - 2018-07-03
 
-Correlation release
-
 ### Added
 
 -   Parse response from posting webhook and include correlation in log
 
 ## [0.8.0](https://github.com/atomist/k8svent/compare/0.7.0...0.8.0) - 2018-06-05
-
-Namespace release
 
 ### Added
 
@@ -55,19 +55,15 @@ Namespace release
 
 ## [0.7.0](https://github.com/atomist/k8svent/compare/0.6.0...0.7.0) - 2018-04-13
 
-Unlucky release
+### Added
+
+-   More logging
 
 ### Changed
 
 -   Tightened up types
 
-### Added
-
--   More logging
-
 ## [0.6.0](https://github.com/atomist/k8svent/compare/0.5.0...0.6.0) - 2018-03-06
-
-Undelete release
 
 ### Changed
 
@@ -75,15 +71,11 @@ Undelete release
 
 ## [0.5.1](https://github.com/atomist/k8svent/compare/0.5.0...0.5.1) - 2018-03-02
 
-Nil release
-
 ### Fixed
 
 -   Crash due to assignment to nil annotation map
 
 ## [0.5.0](https://github.com/atomist/k8svent/compare/0.4.0...0.5.0) - 2018-03-01
-
-Cache release
 
 ### Added
 
@@ -91,35 +83,25 @@ Cache release
 
 ## [0.4.0](https://github.com/atomist/k8svent/compare/0.3.0...0.4.0) - 2018-03-01
 
-Empty release
-
 ### Changed
 
 -   No longer require a global webhook URL
 
 ## [0.3.0](https://github.com/atomist/k8svent/compare/0.2.0...0.3.0) - 2018-02-28
 
-Environment release
-
 ### Added
 
 -   Resources and instructions for deploying to Kubernetes clusters
-    using RBAC [#3](https://github.com/atomist/k8svent/issues/3)
 -   Support per-pod environment via annotation [#4](https://github.com/atomist/k8svent/issues/4)
 
 ## [0.2.0](https://github.com/atomist/k8svent/compare/0.1.0...0.2.0) - 2018-02-08
 
-Multi-tenant release
-
 ### Added
 
 -   You can provide pod-specific webhook URLS in the
-    "atomist.com/k8svent" pod annotation [#2](https://github.com/atomist/k8svent/issues/2)
 
 ## [0.1.0](https://github.com/atomist/k8svent/tree/0.1.0) - 2018-01-04
 
-Initial release
-
 ### Added
 
--  Everything
+-   Everything
