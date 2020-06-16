@@ -1,15 +1,14 @@
+TARGET = k8svent
+VERSION = $(shell git describe --always --dirty | sed 's/^v//')
+
 GO = go
 GO_FLAGS = -v
 GO_ARGS = ./...
-GO_BUILD_ARGS =
+GO_BUILD_ARGS = -ldflags="-X github.com/atomist/k8svent/vent.Version=$(VERSION)"
 
-TARGET = k8svent
-DOCKER_TARGET = docker/$(TARGET)
-DOCKER_IMAGE = atomist/$(TARGET)
-DOCKER_VERSION = $(shell sed -n '/^	Version =/s/.*"\(.*\)".*/\1/p' vent/version.go)
-DOCKER_TAG = $(DOCKER_IMAGE):$(DOCKER_VERSION)
+GOLANGCI_LINT_ARGS = --timeout=2m
 
-all: vet
+all: lint
 
 generate:
 	$(GO) generate $(GO_FLAGS) $(GO_ARGS)
@@ -27,25 +26,10 @@ vet: install
 	$(GO) vet $(GO_FLAGS) $(GO_ARGS)
 
 lint: vet
-	golangci-lint run $(GO_ARGS)
+	golangci-lint run $(GOLANGCI_LINT_ARGS)
 
-$(DOCKER_TARGET): clean-local
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build $(GO_FLAGS) $(GO_BUILD_ARGS) -a --installsuffix cgo --ldflags="-s" -o "$(DOCKER_TARGET)"
-
-docker-target: $(DOCKER_TARGET)
-
-docker: docker-target
-	cd docker && docker build -t "$(DOCKER_TAG)" .
-
-docker-push: docker
-	docker push "$(DOCKER_TAG)"
-
-clean: clean-local
+clean:
 	$(GO) clean $(GO_FLAGS) $(GO_ARGS)
 
-clean-local:
-	-rm -f "$(DOCKER_TARGET)"
-
-.PHONY: all fast clean build test vet
-.PHONY: docker docker-push docker-target
-.PHONY: clean-local
+.PHONY: all build generate lint test vet
+.PHONY: clean

@@ -1,4 +1,12 @@
-FROM debian:buster-20200514
+FROM golangci/golangci-lint:v1.27.0 as build
+
+WORKDIR /build
+
+COPY ./ ./
+
+RUN make
+
+FROM debian:buster-20200607
 
 LABEL maintainer="Atomist <docker@atomist.com>"
 
@@ -13,6 +21,6 @@ WORKDIR /opt/k8svent
 
 ENTRYPOINT ["./k8svent"]
 
-COPY ./k8svent ./
+COPY --from=build /build/k8svent ./
 
 USER atomist:atomist

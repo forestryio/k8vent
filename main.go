@@ -14,7 +14,9 @@
 
 package main
 
-import "github.com/atomist/k8svent/cmd"
+import (
+	"github.com/atomist/k8svent/cmd"
+)
 
 func main() {
 	cmd.Execute()

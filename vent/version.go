@@ -19,9 +19,13 @@ import (
 )
 
 const (
-	Pkg     = "k8svent"
-	Version = "0.15.0"
+	Pkg            = "k8svent"
+	ReleaseVersion = "0.15.0"
 )
+
+// Version must be a var and initialized with a constant expression so
+// we can set it during the linking stage of build.
+var Version = ReleaseVersion + ""
 
 // packageSlug returns string containing package name and version.
 func packageSlug() string {
