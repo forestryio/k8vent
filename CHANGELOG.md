@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/k8svent/compare/v0.14.0...HEAD)
 
+### Added
+
+-   Investigate auto-update feature. [#11](https://github.com/atomist/k8svent/issues/11)
+
 ## [0.14.0](https://github.com/atomist/k8svent/compare/v0.13.1...v0.14.0) - 2020-06-12
 
 ### Changed
