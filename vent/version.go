@@ -20,7 +20,7 @@ import (
 
 const (
 	Pkg     = "k8svent"
-	Version = "0.14.1"
+	Version = "0.15.0"
 )
 
 // packageSlug returns string containing package name and version.
