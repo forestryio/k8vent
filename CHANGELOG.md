@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Investigate auto-update feature. [#11](https://github.com/atomist/k8svent/issues/11)
 
+### Changed
+
+-   Multistage Docker build with dynamic version. [bc53b57](https://github.com/atomist/k8svent/commit/bc53b5764f287a0edc5d3166a2d63926efcb7c49)
+
 ## [0.14.0](https://github.com/atomist/k8svent/compare/v0.13.1...v0.14.0) - 2020-06-12
 
 ### Changed
