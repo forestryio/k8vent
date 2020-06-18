@@ -16,7 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Parse version tags tolerantly. [32c1101](https://github.com/atomist/k8svent/commit/32c11015c603ef90378914f82811ee1489c19991)
 
-## [0.15.0](https://github.com/atomist/k8svent/compare/v0.14.0...v0.15.0) - 2020-06-18
+## [v0.15.0](https://github.com/atomist/k8svent/compare/v0.14.0...v0.15.0) - 2020-06-18
 
 ### Added
 
@@ -30,19 +30,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Remove environment from payload. [#12](https://github.com/atomist/k8svent/issues/12)
 
-## [0.14.0](https://github.com/atomist/k8svent/compare/v0.13.1...v0.14.0) - 2020-06-12
+## [v0.14.0](https://github.com/atomist/k8svent/compare/v0.13.1...v0.14.0) - 2020-06-12
 
 ### Changed
 
 -   Missing state changes. [#10](https://github.com/atomist/k8svent/issues/10)
 
-## [0.13.1](https://github.com/atomist/k8svent/compare/v0.13.0...v0.13.1) - 2020-06-04
+## [v0.13.1](https://github.com/atomist/k8svent/compare/v0.13.0...v0.13.1) - 2020-06-04
 
 ### Fixed
 
 -   Fix signature header. [729ae2b](https://github.com/atomist/k8svent/commit/729ae2bc125917f3c5793d63b2d554095dca3cab)
 
-## [0.13.0](https://github.com/atomist/k8svent/compare/v0.12.0...v0.13.0) - 2020-06-02
+## [v0.13.0](https://github.com/atomist/k8svent/compare/v0.12.0...v0.13.0) - 2020-06-02
 
 ### Added
 
