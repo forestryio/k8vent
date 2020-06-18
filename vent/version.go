@@ -24,7 +24,7 @@ const Pkg = "k8svent"
 // Version is the version of this application.  It must be a var and
 // initialized with a constant expression so we can set it during the
 // linking stage of build.
-var Version = "0.15.1"
+var Version = "0.15.2"
 
 // packageSlug returns string containing package name and version.
 func packageSlug() string {
