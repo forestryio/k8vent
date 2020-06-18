@@ -18,14 +18,13 @@ import (
 	"github.com/blang/semver"
 )
 
-const (
-	Pkg            = "k8svent"
-	ReleaseVersion = "0.15.0"
-)
+// Pkg is the canonical package name of this application.
+const Pkg = "k8svent"
 
-// Version must be a var and initialized with a constant expression so
-// we can set it during the linking stage of build.
-var Version = ReleaseVersion + ""
+// Version is the version of this application.  It must be a var and
+// initialized with a constant expression so we can set it during the
+// linking stage of build.
+var Version = "0.15.0"
 
 // packageSlug returns string containing package name and version.
 func packageSlug() string {
