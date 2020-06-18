@@ -21,30 +21,31 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var logger *logrus.Logger
+var logger *logrus.Entry
 
 // setupLogger creates and configures the global logger.
 func setupLogger(logLevel string) {
-	logger = logrus.New()
-	logger.WithFields(logrus.Fields{
-		"service":     "k8svent",
-		"environment": os.Getenv("ATOMIST_ENVIRONMENT"),
-	})
-	logger.SetFormatter(&logrus.JSONFormatter{})
+	l := logrus.New()
+	l.SetFormatter(&logrus.JSONFormatter{})
 	level := strings.ToLower(logLevel)
 	if level == "debug" {
-		logger.SetLevel(logrus.DebugLevel)
+		l.SetLevel(logrus.DebugLevel)
 	} else if level == "error" {
-		logger.SetLevel(logrus.ErrorLevel)
+		l.SetLevel(logrus.ErrorLevel)
 	} else if level == "fatal" {
-		logger.SetLevel(logrus.FatalLevel)
+		l.SetLevel(logrus.FatalLevel)
 	} else if level == "panic" {
-		logger.SetLevel(logrus.PanicLevel)
+		l.SetLevel(logrus.PanicLevel)
 	} else if level == "trace" {
-		logger.SetLevel(logrus.TraceLevel)
+		l.SetLevel(logrus.TraceLevel)
 	} else if level == "warn" {
-		logger.SetLevel(logrus.WarnLevel)
+		l.SetLevel(logrus.WarnLevel)
 	} else {
-		logger.SetLevel(logrus.InfoLevel)
+		l.SetLevel(logrus.InfoLevel)
 	}
+	fields := logrus.Fields{"service": Pkg}
+	if host, hostErr := os.Hostname(); hostErr == nil {
+		fields["host"] = host
+	}
+	logger = l.WithFields(fields)
 }

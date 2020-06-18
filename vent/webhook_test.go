@@ -28,7 +28,8 @@ import (
 )
 
 func TestPostToWebhooks(t *testing.T) {
-	logger, _ = test.NewNullLogger()
+	nullLogger, _ := test.NewNullLogger()
+	logger = nullLogger.WithField("test", "webhook")
 
 	objects, loadErr := loadObjects("testdata/vent.json")
 	if loadErr != nil {
@@ -83,23 +84,10 @@ func TestPostToWebhooks(t *testing.T) {
 }
 
 func TestPostToWebhook(t *testing.T) {
-	logger, _ = test.NewNullLogger()
+	nullLogger, _ := test.NewNullLogger()
+	logger = nullLogger.WithField("test", "webhook")
 
 	payload := []byte(`{
-  "env": {
-    "ATOMIST_ENVIRONMENT": "dips",
-    "HOME": "/root",
-    "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-    "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-    "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-    "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-    "KUBERNETES_PORT_443_TCP_PORT": "443",
-    "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-    "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-    "KUBERNETES_SERVICE_PORT": "443",
-    "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-    "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-  },
   "pod": {
     "metadata": {
       "name": "sleep-85576868c9-jvtzb",
@@ -228,7 +216,7 @@ func TestPostToWebhook(t *testing.T) {
 			t.Errorf("request content-type header is not 'application/json': '%s'", contentType)
 		}
 		signature := r.Header.Get("x-atomist-signature")
-		eSignature := "sha1=ee9069e20a3b1ccc5bc845924c910d1581c136c0"
+		eSignature := "sha1=6e9adaa75d8deb8f893ddd9f557c7de8ab9e2dcf"
 		if signature != eSignature {
 			t.Errorf("request x-atomist-signature header is not '%s': '%s'", eSignature, signature)
 		}
@@ -261,13 +249,13 @@ func TestPostToWebhook(t *testing.T) {
 	}
 }
 
-func loadObjects(objFile string) (o []k8sPodEnv, e error) {
+func loadObjects(objFile string) (o []webhookPayload, e error) {
 	objBytes, readErr := ioutil.ReadFile(objFile)
 	if readErr != nil {
 		return o, fmt.Errorf("failed to open event JSON file %s: %v", objFile, readErr)
 	}
 
-	objects := []k8sPodEnv{}
+	objects := []webhookPayload{}
 	if err := json.Unmarshal(objBytes, &objects); err != nil {
 		return o, fmt.Errorf("failed to unmarshal objects JSON into []interface{}: %v", err)
 	}
@@ -300,10 +288,10 @@ func extracObjectKey(obj interface{}) string {
 		fmt.Printf("failed to marshal object to JSON:%v\n", jsonErr)
 		return fmt.Sprintf("non/pod:%d", rand.Int63())
 	}
-	k8pe := k8sPodEnv{}
-	if err := json.Unmarshal(objJSON, &k8pe); err != nil {
-		fmt.Printf("failed to unmarshal object to K8PodEnv:%v\n", err)
-		return fmt.Sprintf("non/K8PodEnv:%d", rand.Int63())
+	wp := webhookPayload{}
+	if err := json.Unmarshal(objJSON, &wp); err != nil {
+		fmt.Printf("failed to unmarshal object to webhookPayload:%v\n", err)
+		return fmt.Sprintf("non/webhookPayload:%d", rand.Int63())
 	}
-	return k8pe.Pod.ObjectMeta.Namespace + "/" + k8pe.Pod.ObjectMeta.Name + ":" + k8pe.Pod.ObjectMeta.ResourceVersion
+	return wp.Pod.ObjectMeta.Namespace + "/" + wp.Pod.ObjectMeta.Name + ":" + wp.Pod.ObjectMeta.ResourceVersion
 }

@@ -21,7 +21,8 @@ import (
 )
 
 func TestNewReleaseAvailable(t *testing.T) {
-	logger, _ = test.NewNullLogger()
+	nullLogger, _ := test.NewNullLogger()
+	logger = nullLogger.WithField("test", "release")
 	if newReleaseAvailable() {
 		t.Errorf("found newer version of k8svent than current unreleased version: %s", Version)
 	}

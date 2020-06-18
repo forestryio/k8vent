@@ -28,7 +28,6 @@ import (
 // Venter contains the information used to send pods to webhook
 // endpoints.
 type Venter struct {
-	env    map[string]string
 	secret string
 	urls   []string
 }
@@ -65,9 +64,7 @@ func Vent(urls []string, namespace string, secret string, logLevel string) error
 
 	initiateReleaseCheck()
 
-	env := envMap()
 	venter := &Venter{
-		env,
 		secret,
 		urls,
 	}

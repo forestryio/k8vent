@@ -20,8 +20,8 @@ import (
 )
 
 // processPods iterates through the provided pods and processes those
-// that do not have an identical pod in lastPods.  It returns a map of
-// successfully processed pods.
+// that do not have an identical pod in lastPods or are not healthy.
+// It returns a map of successfully processed pods.
 func (v *Venter) processPods(pods []v1.Pod, lastPods map[string]v1.Pod) map[string]v1.Pod {
 	newPods := map[string]v1.Pod{}
 	for _, pod := range pods {
@@ -103,10 +103,7 @@ func containerHealthy(containerStatus v1.ContainerStatus, init bool) bool {
 // ProcessPods iterates through the pods and calls PostToWebhooks for
 // each.
 func (v *Venter) processPod(pod v1.Pod) error {
-	podEnv := k8sPodEnv{
-		Pod: pod,
-		Env: v.env,
-	}
-	postToWebhooks(v.urls, &podEnv, v.secret)
+	payload := webhookPayload{Pod: pod}
+	postToWebhooks(v.urls, &payload, v.secret)
 	return nil
 }

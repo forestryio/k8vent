@@ -25,8 +25,8 @@ import (
 )
 
 func TestNewerVersion(t *testing.T) {
-	var hook *test.Hook
-	logger, hook = test.NewNullLogger()
+	nullLogger, hook := test.NewNullLogger()
+	logger = nullLogger.WithField("test", "version")
 
 	assert := require.New(t)
 
@@ -77,7 +77,7 @@ func TestNewerVersion(t *testing.T) {
 		}
 	}
 
-	logger.SetLevel(logrus.DebugLevel)
+	nullLogger.SetLevel(logrus.DebugLevel)
 	hook.Reset()
 	notSemVer := []string{"should", "ignore", "tags", "like", "latest", "that", "are", "not", "semver"}
 	if newerVersion("0.1.0", notSemVer) {

@@ -1,20 +1,5 @@
 [
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "kube-dns-86f6f55dd5-46bps",
@@ -362,21 +347,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "kubernetes-dashboard-c4ld7",
@@ -513,21 +483,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "storage-provisioner",
@@ -632,21 +587,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "k8svent-65bc5b5c56-9kfkk",
@@ -773,21 +713,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "kube-addon-manager-minikube",
@@ -926,21 +851,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "sleep-85576868c9-jvtzb",
@@ -1010,21 +920,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "sleep-85576868c9-jvtzb",
@@ -1134,21 +1029,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "sleep-85576868c9-jvtzb",
@@ -1258,21 +1138,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "errimg-867c65bcd8-dxrh9",
@@ -1342,21 +1207,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "errimg-867c65bcd8-dxrh9",
@@ -1466,21 +1316,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "errimg-867c65bcd8-dxrh9",
@@ -1592,21 +1427,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "errimg-867c65bcd8-dxrh9",
@@ -1718,21 +1538,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "errimg-867c65bcd8-dxrh9",
@@ -1844,21 +1649,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "errimg-867c65bcd8-dxrh9",
@@ -1970,21 +1760,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "errimg-867c65bcd8-dxrh9",
@@ -2096,21 +1871,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "errimg-867c65bcd8-dxrh9",
@@ -2224,21 +1984,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "errimg-867c65bcd8-dxrh9",
@@ -2353,21 +2098,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "errimg-867c65bcd8-dxrh9",
@@ -2482,21 +2212,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "errimg-867c65bcd8-dxrh9",
@@ -2512,21 +2227,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -2599,21 +2299,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -2695,21 +2380,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -2822,21 +2492,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -2949,21 +2604,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -3082,21 +2722,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -3217,21 +2842,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -3358,21 +2968,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -3496,21 +3091,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -3631,21 +3211,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -3772,21 +3337,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -3910,21 +3460,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -4045,21 +3580,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -4186,21 +3706,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -4324,21 +3829,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -4464,21 +3954,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -4605,21 +4080,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "sleep-85576868c9-jvtzb",
@@ -4735,21 +4195,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "sleep-85576868c9-jvtzb",
@@ -4867,21 +4312,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -5008,21 +4438,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "crash-7fb44866b4-67fgw",
@@ -5038,21 +4453,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "sleep-85576868c9-jvtzb",
@@ -5172,21 +4572,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "sleep-85576868c9-jvtzb",
@@ -5311,21 +4696,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "sleep-85576868c9-jvtzb",
@@ -5442,21 +4812,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "sleep-85576868c9-jvtzb",
@@ -5573,21 +4928,6 @@
     }
   },
   {
-    "env": {
-      "ATOMIST_ENVIRONMENT": "dips",
-      "DUMB_INIT_VERSION": "1.2.1",
-      "HOME": "/root",
-      "HOSTNAME": "k8svent-65bc5b5c56-9kfkk",
-      "KUBERNETES_PORT": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP": "tcp://10.96.0.1:443",
-      "KUBERNETES_PORT_443_TCP_ADDR": "10.96.0.1",
-      "KUBERNETES_PORT_443_TCP_PORT": "443",
-      "KUBERNETES_PORT_443_TCP_PROTO": "tcp",
-      "KUBERNETES_SERVICE_HOST": "10.96.0.1",
-      "KUBERNETES_SERVICE_PORT": "443",
-      "KUBERNETES_SERVICE_PORT_HTTPS": "443",
-      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    },
     "pod": {
       "metadata": {
         "name": "sleep-85576868c9-jvtzb",

@@ -25,22 +25,21 @@ import (
 	v1 "k8s.io/api/core/v1"
 )
 
-// podEnv is the structure serialized and sent to the webhook
+// webhookPayload is the structure serialized and sent to the webhook
 // endpoints.
-type k8sPodEnv struct {
-	Pod v1.Pod            `json:"pod"`
-	Env map[string]string `json:"env"`
+type webhookPayload struct {
+	Pod v1.Pod `json:"pod"`
 }
 
-// PostToWebhooks marshals podEnv into JSON and posts it to the webhook
+// PostToWebhooks marshals payload into JSON and posts it to the webhook
 // URLs provided.
-func postToWebhooks(urls []string, podEnv *k8sPodEnv, secret string) {
-	slug := podSlug(podEnv.Pod)
+func postToWebhooks(urls []string, payload *webhookPayload, secret string) {
+	slug := podSlug(payload.Pod)
 	log := logger.WithField("pod", slug)
 
-	objJSON, jsonErr := json.Marshal(podEnv)
+	objJSON, jsonErr := json.Marshal(payload)
 	if jsonErr != nil {
-		log.Errorf("Failed to marshal event to JSON: %v: %+v", jsonErr, podEnv)
+		log.Errorf("Failed to marshal event to JSON: %v: %+v", jsonErr, payload)
 		return
 	}
 	log.Tracef("Sending payload: %s", string(objJSON))
