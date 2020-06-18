@@ -50,7 +50,7 @@ func newerVersion(version string, tags []string) bool {
 	}
 	release := len(v.Pre) == 0
 	for _, tag := range tags {
-		tagVersion, tvErr := semver.Make(tag)
+		tagVersion, tvErr := semver.ParseTolerant(tag)
 		if tvErr != nil {
 			logger.Debugf("Tag '%s' is not a semantic version: %v", tag, tvErr)
 			continue

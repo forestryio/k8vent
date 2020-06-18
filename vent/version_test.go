@@ -30,14 +30,15 @@ func TestNewerVersion(t *testing.T) {
 
 	assert := require.New(t)
 
-	for _, bad := range []string{"x.y.z", "M.N.P", "1", "2.3", "4.5.6.7", "1.02.3", "1.2.3-x.01"} {
-		if newerVersion(bad, []string{}) {
+	for _, bad := range []string{"x.y.z", "M.N.P", "1", "2.3", "4.5.6.7", "1.02.3", "1.2.3-x.01", "x1.2.3", "3.2.1r"} {
+		if newerVersion(bad, []string{"99.0.0"}) {
 			t.Errorf("successfully parsed bad version: '%s'", bad)
+		} else {
+			assert.Equal(1, len(hook.Entries))
+			assert.Equal(logrus.ErrorLevel, hook.LastEntry().Level)
+			em := fmt.Sprintf("Version '%s' could not be made into a semantic version: ", bad)
+			assert.True(strings.HasPrefix(hook.LastEntry().Message, em))
 		}
-		assert.Equal(1, len(hook.Entries))
-		assert.Equal(logrus.ErrorLevel, hook.LastEntry().Level)
-		em := fmt.Sprintf("Version '%s' could not be made into a semantic version: ", bad)
-		assert.True(strings.HasPrefix(hook.LastEntry().Message, em))
 		hook.Reset()
 	}
 
@@ -75,6 +76,10 @@ func TestNewerVersion(t *testing.T) {
 				t.Errorf("failed to find version newer than '%s' in %v", v, tags)
 			}
 		}
+	}
+
+	if !newerVersion("0.14.0", []string{"0.13.1", "0.14.0", "v0.15.0"}) {
+		t.Errorf("failed to recognize newer version with leading 'v'")
 	}
 
 	nullLogger.SetLevel(logrus.DebugLevel)
