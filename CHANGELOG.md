@@ -5,6 +5,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/k8svent/compare/v0.15.0...HEAD)
 
+### Changed
+
+-   Send all git files to build context. [463ca42](https://github.com/atomist/k8svent/commit/463ca42d3014a0cceadbd4561b8878aa4925818b)
+-   Move kube specs up one directory. [ad3f7aa](https://github.com/atomist/k8svent/commit/ad3f7aa49e3620edb1f8e946c2e4f36aa8bd93d9)
+
+### Fixed
+
+-   Parse version tags tolerantly. [32c1101](https://github.com/atomist/k8svent/commit/32c11015c603ef90378914f82811ee1489c19991)
+
 ## [0.15.0](https://github.com/atomist/k8svent/compare/v0.14.0...v0.15.0) - 2020-06-18
 
 ### Added
