@@ -69,11 +69,6 @@ spec:
     spec:
       containers:
         - env:
-            - name: ATOMIST_ENVIRONMENT
-              valueFrom:
-                secretKeyRef:
-                  name: k8svent
-                  key: environment
             - name: K8SVENT_WEBHOOKS
               valueFrom:
                 secretKeyRef:
