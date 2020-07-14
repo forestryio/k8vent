@@ -85,6 +85,10 @@ func Vent(urls []string, namespace string, secret string, logLevel string) error
 		}
 
 		logger.Debugf("Processing %d pods", len(pods))
-		lastPods = venter.processPods(pods, lastPods)
+		lastPods = processPods(&processPodsArgs{
+			pods:      pods,
+			lastPods:  lastPods,
+			processor: venter.processPod,
+		})
 	}
 }

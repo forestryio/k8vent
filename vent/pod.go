@@ -19,24 +19,44 @@ import (
 	v1 "k8s.io/api/core/v1"
 )
 
+// processPodsArgs provides the argument fo processPods.
+type processPodsArgs struct {
+	// pods are the pods to process.
+	pods []v1.Pod
+	// lastPods are the last set of pods processed.
+	lastPods map[string]v1.Pod
+	// processor is the function that processes each individual pod
+	// that is determined to be either new or unhealthy.
+	processor func(v1.Pod) error
+}
+
 // processPods iterates through the provided pods and processes those
 // that do not have an identical pod in lastPods or are not healthy.
 // It returns a map of successfully processed pods.
-func (v *Venter) processPods(pods []v1.Pod, lastPods map[string]v1.Pod) map[string]v1.Pod {
+func processPods(args *processPodsArgs) map[string]v1.Pod {
 	newPods := map[string]v1.Pod{}
-	for _, pod := range pods {
+	for _, pod := range args.pods {
 		slug := podSlug(pod)
 		log := logger.WithField("pod", slug)
 		newPods[slug] = pod
-		if lastPod, ok := lastPods[slug]; ok {
+		if lastPod, ok := args.lastPods[slug]; ok {
+			delete(args.lastPods, slug)
 			if podHealthy(pod) && cmp.Diff(pod, lastPod) == "" {
 				log.Debug("Pod is healthy and state is unchanged")
 				continue
 			}
 		}
-		if err := v.processPod(pod); err != nil {
+		if err := args.processor(pod); err != nil {
 			log.Errorf("Failed to process pod: %v", err)
 			delete(newPods, slug)
+			continue
+		}
+	}
+	for slug, deletedPod := range args.lastPods {
+		log := logger.WithField("pod", slug)
+		deletedPod.Status.Phase = "Deleted"
+		if err := args.processor(deletedPod); err != nil {
+			log.Errorf("Failed to process pod: %v", err)
 			continue
 		}
 	}

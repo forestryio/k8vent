@@ -3,7 +3,7 @@
     "apiVersion": "v1",
     "kind": "Pod",
     "metadata": {
-      "name": "local-honey",
+      "name": "local-honey-0",
       "namespace": "brian-fallon"
     },
     "status": {
@@ -36,10 +36,10 @@
       "containerStatuses": [
         {
           "containerID": "containerd://7382a906689a405b54a3d34a81b9e93dba2100ac763881e4370c82a3d32c1038",
-          "image": "docker.io/atomist/aspect-sdm:1.1.17-master.20200602160026",
-          "imageID": "docker.io/atomist/aspect-sdm@sha256:9d4a0f264b8898030f10123cb4a7df3a20c59549ddc27bc1dfeb25576399a3e2",
+          "image": "docker.io/atomist/skill-skill:1.1.17-master.20200602160026",
+          "imageID": "docker.io/atomist/skill-skill@sha256:9d4a0f264b8898030f10123cb4a7df3a20c59549ddc27bc1dfeb25576399a3e2",
           "lastState": {},
-          "name": "aspect-sdm",
+          "name": "skill-skill",
           "ready": true,
           "restartCount": 0,
           "state": {
@@ -65,7 +65,7 @@
     "apiVersion": "v1",
     "kind": "Pod",
     "metadata": {
-      "name": "local-honey",
+      "name": "local-honey-1",
       "namespace": "brian-fallon"
     },
     "status": {
@@ -127,7 +127,7 @@
     "apiVersion": "v1",
     "kind": "Pod",
     "metadata": {
-      "name": "local-honey",
+      "name": "local-honey-2",
       "namespace": "brian-fallon"
     },
     "status": {
@@ -198,7 +198,7 @@
     "apiVersion": "v1",
     "kind": "Pod",
     "metadata": {
-      "name": "local-honey",
+      "name": "local-honey-3",
       "namespace": "brian-fallon"
     },
     "status": {
@@ -282,7 +282,7 @@
     "apiVersion": "v1",
     "kind": "Pod",
     "metadata": {
-      "name": "local-honey",
+      "name": "local-honey-4",
       "namespace": "brian-fallon"
     },
     "status": {
@@ -363,7 +363,7 @@
     "apiVersion": "v1",
     "kind": "Pod",
     "metadata": {
-      "name": "local-honey",
+      "name": "local-honey-5",
       "namespace": "brian-fallon"
     },
     "status": {
@@ -500,7 +500,7 @@
     "apiVersion": "v1",
     "kind": "Pod",
     "metadata": {
-      "name": "local-honey",
+      "name": "local-honey-6",
       "namespace": "brian-fallon"
     },
     "status": {}
