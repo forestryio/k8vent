@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/k8svent/compare/v0.15.1...HEAD)
 
+### Added
+
+-   Send deleted pods. [99f2d81](https://github.com/atomist/k8svent/commit/99f2d813387c845e240975403d08b3317544842e)
+
 ## [v0.15.1](https://github.com/atomist/k8svent/compare/v0.15.0...v0.15.1) - 2020-06-18
 
 ### Changed
