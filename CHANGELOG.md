@@ -3,7 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased](https://github.com/atomist/k8svent/compare/v0.15.1...HEAD)
+## [Unreleased](https://github.com/atomist/k8svent/compare/v0.16.0...HEAD)
+
+## [v0.16.0](https://github.com/atomist/k8svent/compare/v0.15.1...v0.16.0) - 2020-07-15
 
 ### Added
 
