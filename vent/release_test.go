@@ -16,19 +16,40 @@ package vent
 
 import (
 	"testing"
+	"time"
 
 	"github.com/blang/semver"
-	"github.com/sirupsen/logrus/hooks/test"
 )
 
-func TestNewReleaseAvailable(t *testing.T) {
-	nullLogger, _ := test.NewNullLogger()
-	logger = nullLogger.WithField("test", "release")
-	v, vErr := semver.Make(Version)
+func TestVersionTag(t *testing.T) {
+	vv := "1.2.3"
+	v, vErr := semver.Make(vv)
 	if vErr != nil {
-		t.Errorf("k8svent version '%s' could not be made into a semantic version: %v", Version, vErr)
+		t.Errorf("version '%s' could not be made into a semantic version: %v", vv, vErr)
 	}
-	if newReleaseAvailable(v) {
-		t.Errorf("found newer version of k8svent than current unreleased version: %s", Version)
+	vt := versionTag(v)
+	if vt != "latest" {
+		t.Errorf("expected version '%s' to map to 'latest' but got '%s'", vv, vt)
+	}
+
+	pvv := "4.5.6-tmg-ciyc.421"
+	pv, pvErr := semver.Make(pvv)
+	if pvErr != nil {
+		t.Errorf("version '%s' could not be made into a semantic version: %v", pvv, pvErr)
+	}
+	pvt := versionTag(pv)
+	if pvt != "next" {
+		t.Errorf("expected version '%s' to map to 'next' but got '%s'", pvv, pvt)
+	}
+}
+
+func TestTagDuration(t *testing.T) {
+	ld := tagDuration("latest")
+	if ld != 24*time.Hour {
+		t.Errorf("expected latest duration to be 24 hours: %v", ld)
+	}
+	nd := tagDuration("next")
+	if nd != 4*time.Hour {
+		t.Errorf("expected next duration to be 4 hours: %v", nd)
 	}
 }

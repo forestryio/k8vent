@@ -31,28 +31,6 @@ func packageSlug() string {
 	return Pkg + "-" + Version
 }
 
-// newVersion returns true if a version newer the `version` is
-// available in the tags.  If `version` is a release semantic version,
-// only semantic versions are considered.  Otherwise, both pre-release
-// and release versions are considered.
-func newerVersion(v semver.Version, tags []string) bool {
-	release := isRelease(v)
-	for _, tag := range tags {
-		tagVersion, tvErr := semver.ParseTolerant(tag)
-		if tvErr != nil {
-			logger.Debugf("Tag '%s' is not a semantic version: %v", tag, tvErr)
-			continue
-		}
-		if release && !isRelease(tagVersion) {
-			continue
-		}
-		if tagVersion.GT(v) {
-			return true
-		}
-	}
-	return false
-}
-
 // isRelease returns true if provided version is a release, i.e., not
 // a prerelease, false otherwise.
 func isRelease(version semver.Version) bool {

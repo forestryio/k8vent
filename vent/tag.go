@@ -19,10 +19,10 @@ import (
 	"net/http"
 )
 
-// getDockerTags queries the Docker Hub API for tags.
-func getDockerTags() (t []string, e error) {
+// getDockerAuthToken gets a read-only Docker Hub registry token for
+// the provided repository.
+func getDockerAuthToken(repository string) (t string, e error) {
 	client := &http.Client{}
-	repository := "atomist/k8svent"
 	clientID := packageSlug()
 	authURL := "https://auth.docker.io/token?service=registry.docker.io&scope=repository:" + repository +
 		":pull&client_id=" + clientID
@@ -40,23 +40,34 @@ func getDockerTags() (t []string, e error) {
 	if tokenErr != nil {
 		return t, fmt.Errorf("failed to extract token from %s response: %v", authURL, tokenErr)
 	}
+	return token, nil
+}
 
-	tagURL := "https://index.docker.io/v2/" + repository + "/tags/list"
-	tagReq, tagReqErr := http.NewRequest("GET", tagURL, nil)
-	if tagReqErr != nil {
-		return t, fmt.Errorf("failed to create GET request to %s: %v", tagURL, tagReqErr)
+// getDockerTagDigest retrieves the digest for atomist/k8svent:tag.
+func getDockerTagDigest(tag string) (d string, e error) {
+	repository := "atomist/k8svent"
+	token, tokenErr := getDockerAuthToken(repository)
+	if tokenErr != nil {
+		return d, tokenErr
 	}
-	tagReq.Header.Add("content-type", "application/json")
-	tagReq.Header.Add("authorization", "Bearer "+token)
-	tagResp, tagRespErr := client.Do(tagReq)
-	if tagRespErr != nil {
-		return t, fmt.Errorf("failed to GET %s: %v", tagURL, tagRespErr)
+	client := &http.Client{}
+	digestURL := "https://index.docker.io/v2/" + repository + "/manifests/" + tag
+	digestReq, digestReqErr := http.NewRequest("HEAD", digestURL, nil)
+	if digestReqErr != nil {
+		return d, fmt.Errorf("failed to create HEAD request to %s: %v", digestURL, digestReqErr)
 	}
-	defer tagResp.Body.Close()
-	tags, tagsErr := extractPropertyStringSlice(tagResp, "tags")
-	if tagsErr != nil {
-		return t, fmt.Errorf("failed to extract token from %s response: %v", tagURL, tagsErr)
+	digestReq.Header.Add("authorization", "Bearer "+token)
+	digestResp, digestRespErr := client.Do(digestReq)
+	if digestRespErr != nil {
+		return d, fmt.Errorf("failed to HEAD %s: %v", digestURL, digestRespErr)
 	}
-
-	return tags, nil
+	defer digestResp.Body.Close()
+	digest, digestOK := digestResp.Header[http.CanonicalHeaderKey("docker-content-digest")]
+	if !digestOK {
+		return d, fmt.Errorf("manifest HEAD response did not contain digest header")
+	}
+	if len(digest) < 1 {
+		return d, fmt.Errorf("manifest HEAD response contained empty digest header: %v", digest)
+	}
+	return digest[0], nil
 }

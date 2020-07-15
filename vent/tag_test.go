@@ -15,31 +15,19 @@
 package vent
 
 import (
+	"strings"
 	"testing"
 )
 
-func TestGetDockerTags(t *testing.T) {
-	tags, err := getDockerTags()
-	if err != nil {
-		t.Errorf("failed to get Docker tags: %v", err)
-	}
-	found := map[string]bool{
-		"0.11.0":                false,
-		"0.12.0":                false,
-		"0.13.0":                false,
-		"0.13.1":                false,
-		"0.14.0":                false,
-		"0.14.1-20200612183032": false,
-		"latest":                false,
-	}
-	for _, v := range tags {
-		if _, ok := found[v]; ok {
-			found[v] = true
+func TestGetDockerTagDigest(t *testing.T) {
+	tags := []string{"latest", "next"}
+	for _, tag := range tags {
+		digest, digestErr := getDockerTagDigest(tag)
+		if digestErr != nil {
+			t.Errorf("failed to get digest for %s: %v", tag, digestErr)
 		}
-	}
-	for v, f := range found {
-		if !f {
-			t.Errorf("tags did not include '%s': %v", v, tags)
+		if !strings.HasPrefix(digest, "sha256:") {
+			t.Errorf("tag %s digest does not appear to be sha256: %s", tag, digest)
 		}
 	}
 }

@@ -25,36 +25,50 @@ import (
 // a new release.
 func initiateReleaseCheck() {
 	go func() {
-		v, vErr := semver.Make(Version)
-		if vErr != nil {
-			logger.Errorf("Version '%s' could not be made into a semantic version, skipping release check: %v",
-				Version, vErr)
-			return
+		tag := "next"
+		if v, vErr := semver.Make(Version); vErr == nil {
+			tag = versionTag(v)
+		} else {
+			logger.Warnf("Version '%s' could not be made into a semantic version: %v", Version, vErr)
 		}
-		rest := 24 * time.Hour
-		if !isRelease(v) {
-			rest = 4 * time.Hour
-		}
+		logger.Infof("Using Docker image tag '%s' for digest check", tag)
+		rest := 0 * time.Second
+		lastDigest := ""
 		for {
 			time.Sleep(rest)
-			if newReleaseAvailable(v) {
+			digest, digestErr := getDockerTagDigest(tag)
+			if digestErr != nil {
+				logger.Errorf("Failed to get Docker image digest for tag %s: %v", tag, digestErr)
+				rest = 1 * time.Hour
+				continue
+			}
+			if lastDigest == "" {
+				lastDigest = digest
+			}
+			if digest != lastDigest {
 				logger.Info("New version detected, exiting")
 				os.Exit(0)
 			}
+			rest = tagDuration(tag)
 		}
 	}()
 }
 
-// newReleaseAvailable queries the Docker Hub API for tags and sees if
-// a newer tag is available.
-func newReleaseAvailable(v semver.Version) bool {
-	tags, tagsErr := getDockerTags()
-	if tagsErr != nil {
-		logger.Errorf("Failed to get Docker tags: %v", tagsErr)
-		return false
+// versionTag returns the Docker image tag that maps to the provided
+// version.  Specifically, it returns "latest" for release versions
+// and "next" for pre-release versions.
+func versionTag(v semver.Version) string {
+	if isRelease(v) {
+		return "latest"
 	}
-	if len(tags) < 1 {
-		return false
+	return "next"
+}
+
+// tagDuration returns the duration to sleep for between checks for a
+// given Docker image tag.
+func tagDuration(tag string) time.Duration {
+	if tag == "latest" {
+		return 24 * time.Hour
 	}
-	return newerVersion(v, tags)
+	return 4 * time.Hour
 }
