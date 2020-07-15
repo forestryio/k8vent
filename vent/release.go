@@ -48,6 +48,8 @@ func initiateReleaseCheck() {
 			if digest != lastDigest {
 				logger.Info("New version detected, exiting")
 				os.Exit(0)
+			} else {
+				logger.Info("No new version detected")
 			}
 			rest = tagDuration(tag)
 		}
