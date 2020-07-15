@@ -24,38 +24,26 @@ const Pkg = "k8svent"
 // Version is the version of this application.  It must be a var and
 // initialized with a constant expression so we can set it during the
 // linking stage of build.
-var Version = "0.16.0"
+var Version = "0.17.0"
 
 // packageSlug returns string containing package name and version.
 func packageSlug() string {
 	return Pkg + "-" + Version
 }
 
-// newerK8sventVersion checks the current k8svent version against the
-// provided tags and returns `true` if the tags contain a newer
-// version
-func newerK8sventVersion(tags []string) bool {
-	return newerVersion(Version, tags)
-}
-
 // newVersion returns true if a version newer the `version` is
 // available in the tags.  If `version` is a release semantic version,
 // only semantic versions are considered.  Otherwise, both pre-release
 // and release versions are considered.
-func newerVersion(version string, tags []string) bool {
-	v, vErr := semver.Make(version)
-	if vErr != nil {
-		logger.Errorf("Version '%s' could not be made into a semantic version: %v", version, vErr)
-		return false
-	}
-	release := len(v.Pre) == 0
+func newerVersion(v semver.Version, tags []string) bool {
+	release := isRelease(v)
 	for _, tag := range tags {
 		tagVersion, tvErr := semver.ParseTolerant(tag)
 		if tvErr != nil {
 			logger.Debugf("Tag '%s' is not a semantic version: %v", tag, tvErr)
 			continue
 		}
-		if release && len(tagVersion.Pre) != 0 {
+		if release && !isRelease(tagVersion) {
 			continue
 		}
 		if tagVersion.GT(v) {
@@ -63,4 +51,10 @@ func newerVersion(version string, tags []string) bool {
 		}
 	}
 	return false
+}
+
+// isRelease returns true if provided version is a release, i.e., not
+// a prerelease, false otherwise.
+func isRelease(version semver.Version) bool {
+	return len(version.Pre) == 0
 }

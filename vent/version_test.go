@@ -19,6 +19,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/blang/semver"
 	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/require"
@@ -27,20 +28,6 @@ import (
 func TestNewerVersion(t *testing.T) {
 	nullLogger, hook := test.NewNullLogger()
 	logger = nullLogger.WithField("test", "version")
-
-	assert := require.New(t)
-
-	for _, bad := range []string{"x.y.z", "M.N.P", "1", "2.3", "4.5.6.7", "1.02.3", "1.2.3-x.01", "x1.2.3", "3.2.1r"} {
-		if newerVersion(bad, []string{"99.0.0"}) {
-			t.Errorf("successfully parsed bad version: '%s'", bad)
-		} else {
-			assert.Equal(1, len(hook.Entries))
-			assert.Equal(logrus.ErrorLevel, hook.LastEntry().Level)
-			em := fmt.Sprintf("Version '%s' could not be made into a semantic version: ", bad)
-			assert.True(strings.HasPrefix(hook.LastEntry().Message, em))
-		}
-		hook.Reset()
-	}
 
 	releaseSlices := [][]string{
 		[]string{"0.1.0", "0.2.0", "0.3.0", "0.4.0", "0.8.0", "0.12.0", "1.42.12", "2.12.22", "latest"},
@@ -54,7 +41,12 @@ func TestNewerVersion(t *testing.T) {
 	tagSlices = append(tagSlices, releaseSlices...)
 	tagSlices = append(tagSlices, prereleaseSlices...)
 	newVersions := []string{"2.14.9", "2.12.23-zbranch.20200101", "2.12.23", "3.1.4", "3.0.0-taj-mahal.3754"}
-	for _, v := range newVersions {
+	for _, vv := range newVersions {
+		v, vErr := semver.Make(vv)
+		if vErr != nil {
+			t.Errorf("Version '%s' could not be made into a semantic version: %v", vv, vErr)
+			return
+		}
 		for _, tags := range tagSlices {
 			if newerVersion(v, tags) {
 				t.Errorf("erroneously found version newer than '%s' in %v", v, tags)
@@ -62,7 +54,12 @@ func TestNewerVersion(t *testing.T) {
 		}
 	}
 	oldVersions := []string{"2.4.99", "2.12.22-before.10", "2.12.21", "0.11.4"}
-	for _, v := range oldVersions {
+	for _, vv := range oldVersions {
+		v, vErr := semver.Make(vv)
+		if vErr != nil {
+			t.Errorf("Version '%s' could not be made into a semantic version: %v", vv, vErr)
+			return
+		}
 		for _, tags := range releaseSlices {
 			if !newerVersion(v, tags) {
 				t.Errorf("failed to find version newer than '%s' in %v", v, tags)
@@ -70,7 +67,12 @@ func TestNewerVersion(t *testing.T) {
 		}
 	}
 	oldPrereleaseVersions := []string{"2.4.99-smog+along", "2.12.23-before.10", "2.12.21-weird.tales.99", "0.11.4-until-you"}
-	for _, v := range oldPrereleaseVersions {
+	for _, vv := range oldPrereleaseVersions {
+		v, vErr := semver.Make(vv)
+		if vErr != nil {
+			t.Errorf("Version '%s' could not be made into a semantic version: %v", vv, vErr)
+			return
+		}
 		for _, tags := range prereleaseSlices {
 			if !newerVersion(v, tags) {
 				t.Errorf("failed to find version newer than '%s' in %v", v, tags)
@@ -78,16 +80,20 @@ func TestNewerVersion(t *testing.T) {
 		}
 	}
 
-	if !newerVersion("0.14.0", []string{"0.13.1", "0.14.0", "v0.15.0"}) {
+	v14, _ := semver.Make("0.14.0")
+	if !newerVersion(v14, []string{"0.13.1", "0.14.0", "v0.15.0"}) {
 		t.Errorf("failed to recognize newer version with leading 'v'")
 	}
 
 	nullLogger.SetLevel(logrus.DebugLevel)
 	hook.Reset()
-	notSemVer := []string{"should", "ignore", "tags", "like", "latest", "that", "are", "not", "semver"}
-	if newerVersion("0.1.0", notSemVer) {
+	notSemVer := []string{"should", "ignore", "tags", "like", "latest", "that", "are", "not", "semver", "x.y.z", "M.N.P",
+		"4.5.6.7", "1.02.3", "1.2.3-x.01", "x1.2.3", "3.2.1r"}
+	v1, _ := semver.Make("0.1.0")
+	if newerVersion(v1, notSemVer) {
 		t.Errorf("treated non-semver tags as semver: %v", notSemVer)
 	}
+	assert := require.New(t)
 	assert.Equalf(len(notSemVer), len(hook.Entries), "debug log messages")
 	for i, log := range hook.Entries {
 		assert.Equal(logrus.DebugLevel, log.Level)
@@ -96,4 +102,29 @@ func TestNewerVersion(t *testing.T) {
 	}
 	hook.Reset()
 
+}
+
+func TestIsRelease(t *testing.T) {
+	releases := []string{"0.1.0", "0.3.0+build.tag.19", "0.8.0", "0.12.0", "1.42.12", "2.12.22+some-build.537", "319.518.333"}
+	for _, version := range releases {
+		v, vErr := semver.Make(version)
+		if vErr != nil {
+			t.Errorf("Version '%s' could not be made into a semantic version: %v", version, vErr)
+		}
+		if !isRelease(v) {
+			t.Errorf("Release version '%s' not recognized as release version: %s", version, v.Pre)
+		}
+	}
+
+	preReleases := []string{"0.9.111-far.far.away", "2.12.23-dark-side.2017", "1.99.999-alpha.23", "2.12.22-bright+wilco.19",
+		"2.12.23-before.11+something.22"}
+	for _, version := range preReleases {
+		v, vErr := semver.Make(version)
+		if vErr != nil {
+			t.Errorf("Version '%s' could not be made into a semantic version: %v", version, vErr)
+		}
+		if isRelease(v) {
+			t.Errorf("Prerelease version '%s' recognized as release version: %s", version, v.Pre)
+		}
+	}
 }

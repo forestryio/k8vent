@@ -17,15 +17,27 @@ package vent
 import (
 	"os"
 	"time"
+
+	"github.com/blang/semver"
 )
 
 // initiateReleaseCheck starts a go routine to periodically check for
 // a new release.
 func initiateReleaseCheck() {
 	go func() {
+		v, vErr := semver.Make(Version)
+		if vErr != nil {
+			logger.Errorf("Version '%s' could not be made into a semantic version, skipping release check: %v",
+				Version, vErr)
+			return
+		}
+		rest := 24 * time.Hour
+		if !isRelease(v) {
+			rest = 4 * time.Hour
+		}
 		for {
-			time.Sleep(24 * time.Hour)
-			if newReleaseAvailable() {
+			time.Sleep(rest)
+			if newReleaseAvailable(v) {
 				logger.Info("New version detected, exiting")
 				os.Exit(0)
 			}
@@ -35,7 +47,7 @@ func initiateReleaseCheck() {
 
 // newReleaseAvailable queries the Docker Hub API for tags and sees if
 // a newer tag is available.
-func newReleaseAvailable() bool {
+func newReleaseAvailable(v semver.Version) bool {
 	tags, tagsErr := getDockerTags()
 	if tagsErr != nil {
 		logger.Errorf("Failed to get Docker tags: %v", tagsErr)
@@ -44,5 +56,5 @@ func newReleaseAvailable() bool {
 	if len(tags) < 1 {
 		return false
 	}
-	return newerK8sventVersion(tags)
+	return newerVersion(v, tags)
 }

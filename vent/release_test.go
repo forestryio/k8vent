@@ -17,13 +17,18 @@ package vent
 import (
 	"testing"
 
+	"github.com/blang/semver"
 	"github.com/sirupsen/logrus/hooks/test"
 )
 
 func TestNewReleaseAvailable(t *testing.T) {
 	nullLogger, _ := test.NewNullLogger()
 	logger = nullLogger.WithField("test", "release")
-	if newReleaseAvailable() {
+	v, vErr := semver.Make(Version)
+	if vErr != nil {
+		t.Errorf("k8svent version '%s' could not be made into a semantic version: %v", Version, vErr)
+	}
+	if newReleaseAvailable(v) {
 		t.Errorf("found newer version of k8svent than current unreleased version: %s", Version)
 	}
 }
