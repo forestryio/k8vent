@@ -10,6 +10,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 -   Check for pre-releases more frequently. [09de3b5](https://github.com/atomist/k8svent/commit/09de3b55b3c84fe6cc2574d2409bd955c476e55f)
 -   Use image digest to check for new version. [b066373](https://github.com/atomist/k8svent/commit/b066373bccc9446ab5d1bc14a73d48effc42a4ca)
 
+### Removed
+
+-   Remove deprecated specs. [5cb3e98](https://github.com/atomist/k8svent/commit/5cb3e9867bdc6a35902c7f10550f87061ae82a1c)
+
 ## [v0.16.0](https://github.com/atomist/k8svent/compare/v0.15.1...v0.16.0) - 2020-07-15
 
 ### Added
