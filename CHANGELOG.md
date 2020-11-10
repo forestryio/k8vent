@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/k8svent/compare/v0.17.0...HEAD)
 
+### Fixed
+
+-   Change correlation-id to correlation_id. [dfd740c](https://github.com/atomist/k8svent/commit/dfd740ccb3b0196268f5e0daa4573a11b7d7819d)
+
 ## [v0.17.0](https://github.com/atomist/k8svent/compare/v0.16.0...v0.17.0) - 2020-07-20
 
 ### Changed
