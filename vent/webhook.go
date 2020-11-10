@@ -78,16 +78,16 @@ func postToWebhook(pod string, url string, payload []byte, secret string) (e err
 			return fmt.Errorf("failed to POST event to %s: %v", url, postErr)
 		}
 		defer resp.Body.Close()
-		corrID, corrErr := extractPropertyString(resp, "correlation-id")
+		corrID, corrErr := extractPropertyString(resp, "correlation_id")
 		if corrErr != nil {
 			log.Warnf("Failed to extract correlation ID from %s response: %v", url, corrErr)
 		}
 		if resp.StatusCode < 200 || resp.StatusCode > 299 {
-			return fmt.Errorf("non-200 response from webhook %s: code:%d,correlation-id:%s", url, resp.StatusCode, corrID)
+			return fmt.Errorf("non-200 response from webhook %s: code:%d,correlation_id:%s", url, resp.StatusCode, corrID)
 		}
 		log.WithFields(logrus.Fields{
 			"code":           resp.StatusCode,
-			"correlation-id": corrID,
+			"correlation_id": corrID,
 		}).Infof("Posted to '%s'", url)
 		return nil
 	}

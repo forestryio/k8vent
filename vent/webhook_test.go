@@ -21,9 +21,11 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"strings"
 	"sync"
 	"testing"
 
+	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
 )
 
@@ -50,7 +52,7 @@ func TestPostToWebhooks(t *testing.T) {
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		resp := []byte(`{"correlation-id":"d95f0bc3-76c7-49a9-8eb3-6c427a44478d","message":"successfully posted event"}`)
+		resp := []byte(`{"correlation_id":"d95f0bc3-76c7-49a9-8eb3-6c427a44478d","message":"successfully posted event"}`)
 		if _, err := w.Write(resp); err != nil {
 			t.Errorf("failed to write server response: %v", err)
 			return
@@ -75,7 +77,7 @@ func TestPostToWebhooks(t *testing.T) {
 		t.Errorf("number of objects processed (%d) does not equal the number sent (%d)", len(store), len(objects))
 	} else {
 		for _, o := range objects {
-			k := extracObjectKey(o)
+			k := extractObjectKey(o)
 			if _, ok := store[k]; !ok {
 				t.Errorf("object %s did not get stored", k)
 			}
@@ -84,7 +86,8 @@ func TestPostToWebhooks(t *testing.T) {
 }
 
 func TestPostToWebhook(t *testing.T) {
-	nullLogger, _ := test.NewNullLogger()
+	nullLogger, hook := test.NewNullLogger()
+	nullLogger.SetLevel(logrus.DebugLevel)
 	logger = nullLogger.WithField("test", "webhook")
 
 	payload := []byte(`{
@@ -202,6 +205,7 @@ func TestPostToWebhook(t *testing.T) {
 }`)
 
 	tail := "/k8svent"
+	first := true
 	mux := http.NewServeMux()
 	mux.HandleFunc(tail, func(w http.ResponseWriter, r *http.Request) {
 		bodyBytes, bodyErr := ioutil.ReadAll(r.Body)
@@ -215,13 +219,17 @@ func TestPostToWebhook(t *testing.T) {
 		if contentType != "application/json" {
 			t.Errorf("request content-type header is not 'application/json': '%s'", contentType)
 		}
-		signature := r.Header.Get("x-atomist-signature")
-		eSignature := "sha1=6e9adaa75d8deb8f893ddd9f557c7de8ab9e2dcf"
-		if signature != eSignature {
-			t.Errorf("request x-atomist-signature header is not '%s': '%s'", eSignature, signature)
-		}
 		w.Header().Set("content-type", "application/json")
 		resp := []byte(`{"status":"ok"}`)
+		if first {
+			resp = []byte(`{"correlation_id":"472c0bab-be3a-4e96-8cac-569ad9d612a5"}`)
+			signature := r.Header.Get("x-atomist-signature")
+			eSignature := "sha1=6e9adaa75d8deb8f893ddd9f557c7de8ab9e2dcf"
+			if signature != eSignature {
+				t.Errorf("request x-atomist-signature header is not '%s': '%s'", eSignature, signature)
+			}
+			first = false
+		}
 		if _, err := w.Write(resp); err != nil {
 			t.Errorf("failed to write server response: %v", err)
 			return
@@ -243,9 +251,56 @@ func TestPostToWebhook(t *testing.T) {
 		}
 	}()
 	url := fmt.Sprintf("http://%s%s", addr, tail)
-
 	if err := postToWebhook("some/pod", url, payload, "Coast2Coast"); err != nil {
+		t.Errorf("failed to handle server response: %v", err)
+	}
+	if len(hook.Entries) != 2 {
+		t.Errorf("expected 2 log entries, got %d", len(hook.Entries))
+	}
+	if hook.Entries[0].Level != logrus.DebugLevel {
+		t.Errorf("first log message should have been debug level: %v", hook.Entries[0].Level)
+	}
+	le := hook.LastEntry()
+	if le.Level != logrus.InfoLevel {
+		t.Errorf("unexpected last log error level: %v", logrus.InfoLevel)
+	}
+	if !strings.HasPrefix(le.Message, "Posted to ") {
+		t.Errorf("expected final log to be post info: %s", le.Message)
+	}
+	corrID, corrIDOk := le.Data["correlation_id"]
+	if !corrIDOk {
+		t.Error("no correlation ID found")
+	}
+	eCorrID := "472c0bab-be3a-4e96-8cac-569ad9d612a5"
+	if corrID != eCorrID {
+		t.Errorf("correlation ID does not match: %s != %s", corrID, eCorrID)
+	}
+	hook.Reset()
+	if err := postToWebhook("some/pod", url, payload, ""); err != nil {
 		t.Errorf("failed to handle invalid server response: %v", err)
+	}
+	if len(hook.Entries) != 2 {
+		t.Errorf("expected 2 log entries, got %d", len(hook.Entries))
+	}
+	if hook.Entries[0].Level != logrus.WarnLevel {
+		t.Errorf("first log message should have been warn level: %v", hook.Entries[0].Level)
+	}
+	if !strings.HasPrefix(hook.Entries[0].Message, "Failed to extract correlation ID from ") {
+		t.Errorf(
+			"expected first log entry to be correlation ID extraction failure warning: %s",
+			hook.Entries[0].Message,
+		)
+	}
+	le = hook.LastEntry()
+	if le.Level != logrus.InfoLevel {
+		t.Errorf("expected last log error level to be info: %v", logrus.InfoLevel)
+	}
+	corrID, corrIDOk = le.Data["correlation_id"]
+	if !corrIDOk {
+		t.Error("no correlation ID found")
+	}
+	if corrID != "" {
+		t.Errorf("correlation ID is not empty: %s", corrID)
 	}
 }
 
@@ -274,7 +329,7 @@ func storeObject(m *sync.Mutex, store map[string]interface{}, w http.ResponseWri
 		return err
 	}
 
-	key := extracObjectKey(obj)
+	key := extractObjectKey(obj)
 	m.Lock()
 	store[key] = obj
 	m.Unlock()
@@ -282,7 +337,7 @@ func storeObject(m *sync.Mutex, store map[string]interface{}, w http.ResponseWri
 	return nil
 }
 
-func extracObjectKey(obj interface{}) string {
+func extractObjectKey(obj interface{}) string {
 	objJSON, jsonErr := json.Marshal(obj)
 	if jsonErr != nil {
 		fmt.Printf("failed to marshal object to JSON:%v\n", jsonErr)
