@@ -88,7 +88,7 @@ func TestPostToWebhooks(t *testing.T) {
 
 func TestPostToWebhook(t *testing.T) {
 	nullLogger, hook := test.NewNullLogger()
-	nullLogger.SetLevel(logrus.DebugLevel)
+	nullLogger.SetLevel(logrus.InfoLevel)
 	logger = nullLogger.WithField("test", "webhook")
 
 	payload := []byte(`{
@@ -256,15 +256,12 @@ func TestPostToWebhook(t *testing.T) {
 	if err := postToWebhook("some/pod", url, payload, "Coast2Coast"); err != nil {
 		t.Errorf("failed to handle server response: %v", err)
 	}
-	if len(hook.Entries) != 2 {
+	if len(hook.Entries) != 1 {
 		logEntries := ""
 		for i, entry := range hook.Entries {
 			logEntries += " " + strconv.Itoa(i) + ":" + entry.Message + ";"
 		}
-		t.Errorf("expected 2 log entries, got %d: %s", len(hook.Entries), logEntries)
-	}
-	if hook.Entries[0].Level != logrus.DebugLevel {
-		t.Errorf("first log level should be debug: %v", hook.Entries[0].Level)
+		t.Errorf("expected 1 log entries, got %d: %s", len(hook.Entries), logEntries)
 	}
 	le := hook.LastEntry()
 	if le.Level != logrus.InfoLevel {
