@@ -255,7 +255,8 @@ func TestPostToWebhook(t *testing.T) {
 		t.Errorf("failed to handle server response: %v", err)
 	}
 	if len(hook.Entries) != 2 {
-		t.Errorf("expected 2 log entries, got %d", len(hook.Entries))
+		logJSON, _ := json.Marshal(hook.Entries)
+		t.Errorf("expected 2 log entries, got %d: %s", len(hook.Entries), string(logJSON))
 	}
 	if hook.Entries[0].Level != logrus.DebugLevel {
 		t.Errorf("first log message should have been debug level: %v", hook.Entries[0].Level)
@@ -280,7 +281,8 @@ func TestPostToWebhook(t *testing.T) {
 		t.Errorf("failed to handle invalid server response: %v", err)
 	}
 	if len(hook.Entries) != 2 {
-		t.Errorf("expected 2 log entries, got %d", len(hook.Entries))
+		logJSON, _ := json.Marshal(hook.Entries)
+		t.Errorf("expected 2 log entries, got %d: %s", len(hook.Entries), logJSON)
 	}
 	if hook.Entries[0].Level != logrus.WarnLevel {
 		t.Errorf("first log message should have been warn level: %v", hook.Entries[0].Level)
