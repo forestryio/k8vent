@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/k8svent/compare/v0.17.0...HEAD)
 
+### Changed
+
+-   Update Docker base images. [4bd3a7e](https://github.com/atomist/k8svent/commit/4bd3a7e42b51690e53745ca428a12d2fe4d88e44)
+
 ### Fixed
 
 -   Change correlation-id to correlation_id. [dfd740c](https://github.com/atomist/k8svent/commit/dfd740ccb3b0196268f5e0daa4573a11b7d7819d)
