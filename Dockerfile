@@ -1,4 +1,4 @@
-FROM golangci/golangci-lint:v1.27.0 as build
+FROM golangci/golangci-lint:v1.32.2 as build
 
 WORKDIR /build
 
@@ -6,7 +6,7 @@ COPY ./ ./
 
 RUN make
 
-FROM debian:buster-20200607
+FROM debian:buster-20201012
 
 LABEL maintainer="Atomist <docker@atomist.com>"
 
