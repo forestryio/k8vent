@@ -21,6 +21,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"strconv"
 	"strings"
 	"sync"
 	"testing"
@@ -251,19 +252,23 @@ func TestPostToWebhook(t *testing.T) {
 		}
 	}()
 	url := fmt.Sprintf("http://%s%s", addr, tail)
+	hook.Reset()
 	if err := postToWebhook("some/pod", url, payload, "Coast2Coast"); err != nil {
 		t.Errorf("failed to handle server response: %v", err)
 	}
 	if len(hook.Entries) != 2 {
-		logJSON, _ := json.Marshal(hook.Entries)
-		t.Errorf("expected 2 log entries, got %d: %s", len(hook.Entries), string(logJSON))
+		logEntries := ""
+		for i, entry := range hook.Entries {
+			logEntries += " " + strconv.Itoa(i) + ":" + entry.Message + ";"
+		}
+		t.Errorf("expected 2 log entries, got %d: %s", len(hook.Entries), logEntries)
 	}
 	if hook.Entries[0].Level != logrus.DebugLevel {
-		t.Errorf("first log message should have been debug level: %v", hook.Entries[0].Level)
+		t.Errorf("first log level should be debug: %v", hook.Entries[0].Level)
 	}
 	le := hook.LastEntry()
 	if le.Level != logrus.InfoLevel {
-		t.Errorf("unexpected last log error level: %v", logrus.InfoLevel)
+		t.Errorf("last log level should be info: %v", le.Level)
 	}
 	if !strings.HasPrefix(le.Message, "Posted to ") {
 		t.Errorf("expected final log to be post info: %s", le.Message)
@@ -281,11 +286,14 @@ func TestPostToWebhook(t *testing.T) {
 		t.Errorf("failed to handle invalid server response: %v", err)
 	}
 	if len(hook.Entries) != 2 {
-		logJSON, _ := json.Marshal(hook.Entries)
-		t.Errorf("expected 2 log entries, got %d: %s", len(hook.Entries), logJSON)
+		logEntries := ""
+		for i, entry := range hook.Entries {
+			logEntries += " " + strconv.Itoa(i) + ":" + entry.Message + ";"
+		}
+		t.Errorf("expected 2 log entries, got %d:%s", len(hook.Entries), logEntries)
 	}
 	if hook.Entries[0].Level != logrus.WarnLevel {
-		t.Errorf("first log message should have been warn level: %v", hook.Entries[0].Level)
+		t.Errorf("first log level should be warn: %v", hook.Entries[0].Level)
 	}
 	if !strings.HasPrefix(hook.Entries[0].Message, "Failed to extract correlation ID from ") {
 		t.Errorf(
@@ -295,7 +303,7 @@ func TestPostToWebhook(t *testing.T) {
 	}
 	le = hook.LastEntry()
 	if le.Level != logrus.InfoLevel {
-		t.Errorf("expected last log error level to be info: %v", logrus.InfoLevel)
+		t.Errorf("last log level should be info: %v", le.Level)
 	}
 	corrID, corrIDOk = le.Data["correlation_id"]
 	if !corrIDOk {
