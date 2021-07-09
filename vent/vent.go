@@ -15,6 +15,7 @@
 package vent
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -23,7 +24,7 @@ import (
 	"syscall"
 	"time"
 
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -88,20 +89,20 @@ func Vent(urls []string, namespace string, secret string) (e error) {
 
 func newController(client kubernetes.Interface, urls []string, namespace string, secret string) *Controller {
 	queue := workqueue.NewRateLimitingQueue(workqueue.DefaultControllerRateLimiter())
-
+	ctx := context.Background()
 	informer := cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options metav1.ListOptions) (runtime.Object, error) {
 				if namespace != "" {
-					return client.CoreV1().Pods(namespace).List(options)
+					return client.CoreV1().Pods(namespace).List(ctx, options)
 				}
-				return client.CoreV1().Pods(metav1.NamespaceAll).List(options)
+				return client.CoreV1().Pods(metav1.NamespaceAll).List(ctx, options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if namespace != "" {
-					return client.CoreV1().Pods(namespace).Watch(options)
+					return client.CoreV1().Pods(namespace).Watch(ctx, options)
 				}
-				return client.CoreV1().Pods(metav1.NamespaceAll).Watch(options)
+				return client.CoreV1().Pods(metav1.NamespaceAll).Watch(ctx, options)
 			},
 		},
 		&v1.Pod{},
